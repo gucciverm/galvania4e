@@ -871,7 +871,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_strength_base" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_strength_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_strength_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_strength" value="(@{strength_base}+@{strength_mod}+@{strength_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_strength" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_str" value="&{template:5eDefault} {{ability=1}} {{title=Strength}} {{roll=[[[[d20]] + [[@{strength}]]]]}}"></button></div>
         </div>
  
@@ -881,7 +881,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity_base" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_dexterity" value="(@{dexterity_base}+@{dexterity_mod}+@{dexterity_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dexterity" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_dex" value="&{template:5eDefault} {{ability=1}} {{title=Dexterity}} {{roll=[[[[d20]] + [[@{dexterity}]]]]}}"></button></div>
         </div>
  
@@ -891,7 +891,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence_base" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_intelligence" value="(@{intelligence_base}+@{intelligence_mod}+@{intelligence_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_intelligence" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_int" value="&{template:5eDefault} {{ability=1}} {{title=Intelligence}} {{roll=[[[[d20]] + [[@{intelligence}]]]]}}"></button></div>
         </div>
  
@@ -901,7 +901,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_charisma_base" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_charisma_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_charisma_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_charisma" value="(@{charisma_base}+@{charisma_mod}+@{charisma_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_charisma" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_cha" value="&{template:5eDefault} {{ability=1}} {{title=Charisma}} {{roll=[[[[d20]] + [[@{charisma}]]]]}}"></button></div>
         </div>
  
@@ -911,7 +911,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_agility_base" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_agility_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_agility_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_agility" value="(@{agility_base}+@{agility_mod}+@{agility_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_agility" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_agi" value="&{template:5eDefault} {{ability=1}} {{title=Agility}} {{roll=[[[[d20]] + [[@{agility}]]]]}}"></button></div>
         </div>
  
@@ -921,7 +921,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_resistance_base" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_resistance_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_resistance_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_resistance" value="(@{resistance_base}+@{resistance_mod}+@{resistance_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_resistance" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_res" value="&{template:5eDefault} {{ability=1}} {{title=Resistance}} {{roll=[[[[d20]] + [[@{resistance}]]]]}}"></button></div>
         </div>
  
@@ -931,7 +931,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_constitution_base" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_constitution_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_constitution_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_constitution" value="(@{constitution_base}+@{constitution_mod}+@{constitution_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_constitution" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_con" value="&{template:5eDefault} {{ability=1}} {{title=Constitution}} {{roll=[[[[d20]] + [[@{constitution}]]]]}}"></button></div>
         </div>
  <div style="height: 2px;"></div>
@@ -939,41 +939,40 @@ on("sheet:opened", function () {
  
         <!-- Vitality -->
         <div class="sheet-stat-row">
-            <div class="sheet-stat-name">Vitality</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_vitality_base" value="floor((@{constitution}+@{strength}+@{resistance})/3)" disabled="true" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_vitality_mod" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_vitality_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_vitality" value="(@{vitality_base}+@{vitality_mod}+@{vitality_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_vit" value="&{template:5eDefault} {{ability=1}} {{title=Vitality}} {{roll=[[[[d20]] + [[@{vitality}]]]]}}"></button></div>
-        </div>
- 
+    <div class="sheet-stat-name">Vitality</div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality_mod" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality_bonus" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_vit" value="&{template:default} {{name=Vitality Check}} {{Result=[[d20 + @{vitality}]]}}"></button></div>
+</div>
         <!-- Finesse -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Finesse</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_finesse_base" value="floor((@{dexterity}+@{strength}+@{agility}+@{intelligence})/4)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_finesse_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_finesse_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_finesse_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_finesse" value="(@{finesse_base}+@{finesse_mod}+@{finesse_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_finesse" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_fin" value="&{template:5eDefault} {{ability=1}} {{title=Finesse}} {{roll=[[[[d20]] + [[@{finesse}]]]]}}"></button></div>
         </div>
  
         <!-- Wisdom -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Wisdom</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_wisdom_base" value="floor(((@{intelligence}+@{charisma})/2)+(@{finesse}/2)/2)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_wisdom_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_wisdom_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_wisdom_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_wisdom" value="(@{wisdom_base}+@{wisdom_mod}+@{wisdom_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_wisdom" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_wis" value="&{template:5eDefault} {{ability=1}} {{title=Wisdom}} {{roll=[[[[d20]] + [[@{wisdom}]]]]}}"></button></div>
         </div>
  
         <!-- Willpower -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Willpower</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_willpower_base" value="floor(((@{strength}+@{charisma})/2)+(@{intelligence}/2)/2)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_willpower_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_willpower_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_willpower_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_willpower" value="(@{willpower_base}+@{willpower_mod}+@{willpower_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_willpower" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=Willpower}} {{roll=[[[[d20]] + [[@{willpower}]]]]}}"></button></div>
         </div>
     </div>
@@ -993,71 +992,71 @@ on("sheet:opened", function () {
  
         <!-- HP -->
         <div class="sheet-stat-row">
-            <div class="sheet-stat-name">HP</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_hp_base" value="floor(((@{vitality}/3)+40+(@{level}*2)))" disabled="true" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_hp_mod" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_hp_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_hp" value="(@{hp_base}+@{hp_mod}+@{hp_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"></div>
-        </div>
+    <div class="sheet-stat-name">HP</div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_mod" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_bonus" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_max" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-roll"></div>
+    </div>
  
         <!-- MP -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">MP</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mp_base" value="floor((@{wisdom}*2.5)+10)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mp_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mp_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mp_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mp" value="(@{mp_base}+@{mp_mod}+@{mp_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mp_max" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
         <!-- STR ATK -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">STR ATK</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_str_atk_base" value="floor(@{strength}/2)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_str_atk_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_str_atk_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_str_atk_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_str_atk" value="(@{str_atk_base}+@{str_atk_mod}+@{str_atk_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_str_atk" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
         <!-- DEX ATK -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">DEX ATK</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_base" value="floor(@{dexterity}/2.5)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_base" value="m" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk" value="(@{dex_atk_base}+@{dex_atk_mod}+@{dex_atk_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk" value="0" dreadonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
         <!-- SPL -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">SPL</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_spl_base" value="floor(@{intelligence}/3)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_spl_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_spl_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_spl_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_spl" value="(@{spl_base}+@{spl_mod}+@{spl_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_spl" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
         <!-- EVA -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">EVA</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_eva_base" value="floor(((@{finesse}/2)+(@{agility}/2))/2)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_eva_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_eva_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_eva_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_eva" value="(@{eva_base}+@{eva_mod}+@{eva_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_eva" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_eva" value="&{template:5eDefault} {{ability=1}} {{title=Evasion}} {{roll=[[[[d20]] + [[@{eva}]]]]}}"></button></div>
         </div>
  
         <!-- MOV -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">MOV</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mov_base" value="floor((@{agility}+@{eva})/10)+6" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mov_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mov_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mov_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mov" value="(@{mov_base}+@{mov_mod}+@{mov_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mov" value="0" dreadonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
@@ -1066,40 +1065,40 @@ on("sheet:opened", function () {
         <!-- Phys ACC -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Phys. ACC</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_acc_base" value="floor(((@{finesse}/2)+(@{dexterity}/2))/2)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_acc_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_acc_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_acc_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_acc" value="(@{acc_base}+@{acc_mod}+@{acc_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_acc" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_acc" value="&{template:5eDefault} {{ability=1}} {{title=Physical Accuracy}} {{roll=[[[[d20]] + [[@{acc}]]]]}}"></button></div>
         </div>
  
         <!-- Mag ACC -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Magi. ACC</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc_base" value="floor(((@{wisdom}+@{intelligence})/2)/2)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mag_acc_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mag_acc_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc" value="(@{mag_acc_base}+@{mag_acc_mod}+@{mag_acc_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_mag_acc" value="&{template:5eDefault} {{ability=1}} {{title=Magical Accuracy}} {{roll=[[[[d20]] + [[@{mag_acc}]]]]}}"></button></div>
         </div>
  
         <!-- Inv Carry -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Inv. Carry</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_icw_base" value="(@{vitality}*3.5)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_icw_base" value="0)" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_icw_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_icw_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_icw" value="(@{icw_base}+@{icw_mod}+@{icw_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_icw" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
         <!-- Equi Carry -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Equi. Carry</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_ecw_base" value="(@{vitality}*2.5)" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_ecw_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_ecw_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_ecw_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_ecw" value="(@{ecw_base}+@{ecw_mod}+@{ecw_bonus})" disabled="true" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_ecw" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
     </div>
@@ -1187,7 +1186,7 @@ on("sheet:opened", function () {
  
  
 	<!--Combat-->
-<div class="sheet-tab-content sheet-tab-combat">
+	<div class="sheet-section-combat">
     <!-- BLOCK 1: DAMAGE CALCULATOR -->
     <div class="sheet-header-bar">Damage & Defense</div>
 
@@ -1250,38 +1249,59 @@ on("sheet:opened", function () {
     <div class="sheet-header-bar sheet-margin-top">Weapons</div>
 
 <fieldset class="repeating_weapons">
-    <!-- Row 1: Primary Stats -->
     <div class="sheet-row sheet-weapon-top-row">
+        <!-- 1. Weapon Name -->
         <div class="sheet-col-1-4 sheet-small-label">
             <input class="sheet-underlined" type="text" name="attr_weapon_name" placeholder="Name">
             <br/>Weapon Name
         </div>
-        <div class="sheet-col-1-8 sheet-small-label">
-            <select name="attr_weapon_scaling">
-                <option value="str" selected>STR</option>
-                <option value="dex">DEX</option>
-                <option value="spl">SPL</option>
-            </select>
-            <br/>Scaling
-        </div>
+
+        <!-- 2. Scaling Dropdown -->
+<div class="sheet-col-1-8 sheet-small-label">
+    <select name="attr_weapon_scaling_type">
+        <option value="str">STR</option>
+        <option value="dex">DEX</option>
+        <option value="spl">SPL</option>
+        <option value="custom">Custom</option>
+        <option value="none" selected>N/A</option>
+    </select>
+    <br/>Scaling
+</div>
+
+<!-- 3. Custom Formula (With CSS Toggle Logic) -->
+<div class="sheet-col-1-8 sheet-small-label">
+    <!-- Hidden input to track the dropdown state -->
+    <input type="hidden" class="sheet-scaling-toggle" name="attr_weapon_scaling_type" value="none">
+    
+    <!-- This div will now be hidden/shown via CSS -->
+    <div class="sheet-custom-formula-wrap">
+        <input class="sheet-underlined" type="text" name="attr_weapon_custom_formula" placeholder="@{mov}/2">
+        <br/>Custom/Bonus
+    </div>
+</div>
+
+        <!-- 4. Base Damage -->
         <div class="sheet-col-1-8 sheet-small-label">
             <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_base_dmg" value="0">
             <br/>Damage
         </div>
+
+        <!-- 5. Weapon Type -->
         <div class="sheet-col-1-8 sheet-small-label">
-            <!-- Changed to text for weapon types like 'Blade', 'Blunt', etc -->
             <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_type" placeholder="Type">
             <br/>Type
         </div>
+
+        <!-- 6. Weight -->
         <div class="sheet-col-1-8 sheet-small-label">
             <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0">
             <br/>Weight
         </div>
+
+        <!-- 7. Attack Button -->
         <div class="sheet-col-1-8 sheet-center">
-            <!-- The button now calculates damage dynamically in the roll -->
-            <button type="roll" name="roll_attack" value="&{template:default} {{name=@{character_name} Attacks!}} {{Weapon=@{weapon_name}}} {{Type=@{weapon_type}}} {{Damage=[[ @{weapon_base_dmg} + @{weapon_scaling_val} ]]}}">ATTACK</button>
-            <!-- Hidden attribute to store the value of the chosen scaling stat for the roll -->
-            <input type="hidden" name="attr_weapon_scaling_val" value="0">
+            <button type="roll" name="roll_attack" value="&{template:default} {{name=@{character_name} Attacks!}} {{Weapon=@{weapon_name}}} {{Type=@{weapon_type}}} {{Damage=[[ @{weapon_base_dmg} + @{weapon_scaling_calc} ]]}}">ATTACK</button>
+            <input type="hidden" name="attr_weapon_scaling_calc" value="0">
         </div>
     </div>
 
@@ -2560,76 +2580,120 @@ on("sheet:opened", function () {
  
  
 <script type="text/worker">
-    /* --- SCRIPT 1: STATS, JOBS, AND PROGRESSION --- */
-    on("change:level change:height_class change:race_rank change:is_human change:repeating_jobs:job_rank remove:repeating_jobs change:strength_base change:dexterity_base change:intelligence_base change:charisma_base change:agility_base change:resistance_base change:constitution_base", function() {
- 
-        const coreStats = ["strength_base", "dexterity_base", "intelligence_base", "charisma_base", "agility_base", "resistance_base", "constitution_base"];
- 
-        getAttrs(["level", "height_class", "race_rank", "is_human", ...coreStats], function(v) {
-            const level = parseInt(v.level) || 1;
-            const height = v.height_class;
-            const isHuman = parseInt(v.is_human) || 0;
-            const cap = level + 10;
-            const raceRank = Math.max(0, parseInt(v.race_rank) || 0);
- 
-            let spentSP = 0;
-            let finalAttrs = {};
- 
-            // 1. Stat Cap & SP Spent Calc
-            coreStats.forEach(stat => {
-                let val = parseInt(v[stat]) || 1;
-                if (val > cap) { val = cap; finalAttrs[stat] = cap; }
-                spentSP += Math.max(0, val - 1);
-            });
- 
-            getSectionIDs("repeating_jobs", function(idarray) {
-                const fields = idarray.map(id => `repeating_jobs_${id}_job_rank`);
- 
-                getAttrs(fields, function(rows) {
-                    let spFromRanks = 0;
-                    let totalJPUsed = raceRank;
- 
-                    const calculateSPFromRank = (rank) => {
-                        let earned = 0;
-                        for (let i = 1; i <= rank; i++) {
-                            if (i === 1 || i === 3) continue; 
-                            if (i > 3 && i % 3 === 0) continue; 
-                            earned++;
-                        }
-                        return earned;
-                    };
- 
-                    spFromRanks += calculateSPFromRank(raceRank);
- 
-                    idarray.forEach(id => {
-                        let r = parseInt(rows[`repeating_jobs_${id}_job_rank`]) || 0;
-                        totalJPUsed += r;
-                        spFromRanks += calculateSPFromRank(r);
-                    });
- 
-                    const spTotalBudget = 10 + (level * 3) + spFromRanks;
-                    const jpTotalBudget = Math.max(0, (level - 1) + isHuman);
-                    let adjustedJPSpent = Math.max(0, totalJPUsed - 2);
- 
-                    Object.assign(finalAttrs, {
-                        "sp_total": spTotalBudget,
-                        "sp_spent": spentSP,
-                        "sp_status": (spentSP > spTotalBudget) ? 1 : 0,
-                        "jp_total": jpTotalBudget,
-                        "jp_spent": adjustedJPSpent,
-                        "jp_status": (adjustedJPSpent > jpTotalBudget) ? 1 : 0,
-                        "eva_mod": (height === "Short" ? 1 : height === "Tall" ? -1 : height === "Giant" ? -2 : 0),
-                        "resistance_mod": (height === "Short" ? -1 : height === "Tall" ? 1 : height === "Giant" ? 2 : 0),
-                        "constitution_mod": (height === "Short" ? -1 : height === "Tall" ? 1 : height === "Giant" ? 2 : 0),
-                        "bracing_dmg": (height === "Short" ? 10 : height === "Tall" ? 30 : height === "Giant" ? 40 : 20),
-                        "stat_cap": cap
-                    });
- 
-                    setAttrs(finalAttrs);
+
+on("change:level change:height_class change:race_rank change:is_human change:repeating_jobs:job_rank remove:repeating_jobs " +
+   "change:strength_base change:dexterity_base change:intelligence_base change:charisma_base change:agility_base change:resistance_base change:constitution_base " +
+   "change:strength_mod change:dexterity_mod change:intelligence_mod change:charisma_mod change:agility_mod change:resistance_mod change:constitution_mod " +
+   "change:strength_bonus change:dexterity_bonus change:intelligence_bonus change:charisma_bonus change:agility_bonus change:resistance_bonus change:constitution_bonus " +
+   "change:vitality_mod change:wisdom_mod change:finesse_mod change:willpower_mod change:reflex_mod " +
+   "change:vitality_bonus change:wisdom_bonus change:finesse_bonus change:willpower_bonus change:reflex_bonus " +
+   "change:hp_mod change:hp_bonus change:mp_mod change:mp_bonus change:acc_mod change:acc_bonus change:macc_mod change:macc_bonus change:eva_base_mod change:eva_base_bonus change:mov_mod change:mov_bonus", function() {
+    
+    const coreNames = ["strength", "dexterity", "intelligence", "charisma", "agility", "resistance", "constitution"];
+    const derivativeNames = ["vitality", "wisdom", "finesse", "willpower", "reflex"];
+    
+    let attrList = ["level", "height_class", "race_rank", "is_human", "hp_mod", "hp_bonus", "mp_mod", "mp_bonus", "acc_mod", "acc_bonus", "macc_mod", "macc_bonus", "eva_base_mod", "eva_base_bonus", "mov_mod", "mov_bonus"];
+    [...coreNames, ...derivativeNames].forEach(s => {
+        attrList.push(s + "_base", s + "_mod", s + "_bonus");
+    });
+
+    getAttrs(attrList, function(v) {
+        const level = parseInt(v.level) || 1;
+        const height = v.height_class;
+        const cap = level + 10;
+        let finalAttrs = {};
+        let spentSP = 0;
+
+        // --- PASS 1: CORE STATS & SP CAPS ---
+        coreNames.forEach(s => {
+            let base = parseInt(v[s + "_base"]) || 0;
+            if (base > cap) { base = cap; finalAttrs[s + "_base"] = cap; }
+            spentSP += Math.max(0, base - 1);
+
+            let hMod = (s === "resistance" || s === "constitution") ? (height === "Short" ? -1 : height === "Tall" ? 1 : height === "Giant" ? 2 : 0) : 0;
+            finalAttrs[s + "_total"] = base + (parseInt(v[s + "_mod"]) || 0) + (parseInt(v[s + "_bonus"]) || 0) + hMod;
+        });
+
+        // --- PASS 2: DERIVATIVE BASES (Higher-Of Logic) ---
+        finalAttrs["vitality_base"]  = Math.floor(((finalAttrs.resistance_total + finalAttrs.constitution_total) / 2) + (finalAttrs.strength_total / 3));
+        finalAttrs["wisdom_base"]    = Math.floor((Math.max(finalAttrs.intelligence_total, finalAttrs.charisma_total) / 2) + (finalAttrs.dexterity_total / 3));
+        finalAttrs["finesse_base"]   = Math.floor((finalAttrs.dexterity_total / 2) + (Math.max(finalAttrs.agility_total, finalAttrs.intelligence_total) / 3));
+        finalAttrs["willpower_base"] = Math.floor((finalAttrs.charisma_total / 2) + (finalAttrs.strength_total / 3));
+        finalAttrs["reflex_base"]    = Math.floor((finalAttrs.agility_total / 2) + (Math.max(finalAttrs.dexterity_total, finalAttrs.intelligence_total) / 3));
+
+        // --- PASS 3: DERIVATIVE TOTALS ---
+        derivativeNames.forEach(s => {
+            finalAttrs[s] = (finalAttrs[s + "_base"] || 0) + (parseInt(v[s + "_mod"]) || 0) + (parseInt(v[s + "_bonus"]) || 0);
+        });
+
+        // --- PASS 4: COMBAT & RESOURCE BASES (With Rounding) ---
+        finalAttrs["hp_base"] = (finalAttrs.vitality * 2) + (level * 2) + 40;
+        finalAttrs["hp_max"]  = finalAttrs.hp_base + (parseInt(v.hp_mod) || 0) + (parseInt(v.hp_bonus) || 0);
+        
+        let rawMP = (finalAttrs.wisdom * 2) + (level * 2) + 5;
+        finalAttrs["mp_base"] = Math.round(rawMP / 10) * 10;
+        finalAttrs["mp_max"]  = finalAttrs.mp_base + (parseInt(v.mp_mod) || 0) + (parseInt(v.mp_bonus) || 0);
+
+        finalAttrs["str_atk"] = Math.floor(finalAttrs.strength_total / 2);
+        finalAttrs["dex_atk"] = Math.floor(finalAttrs.dexterity_total / 2.5);
+        finalAttrs["spl"]     = Math.floor(finalAttrs.intelligence_total / 2.5);
+
+        finalAttrs["eva_base"] = Math.floor(((finalAttrs.agility_total / 2) + (finalAttrs.reflex / 2)) / 2);
+        finalAttrs["eva"]      = finalAttrs.eva_base + (parseInt(v.eva_base_mod) || 0) + (parseInt(v.eva_base_bonus) || 0);
+
+        let rawMov = ((finalAttrs.finesse + finalAttrs.reflex) / 2) + 5;
+        finalAttrs["mov_base"] = Math.round(rawMov / 5) * 5;
+        finalAttrs["mov"]      = finalAttrs.mov_base + (parseInt(v.mov_mod) || 0) + (parseInt(v.mov_bonus) || 0);
+
+        finalAttrs["acc_base"]  = Math.floor(((finalAttrs.dexterity_total / 2) + (finalAttrs.finesse / 2)) / 2);
+        finalAttrs["acc"]       = finalAttrs.acc_base + (parseInt(v.acc_mod) || 0) + (parseInt(v.acc_bonus) || 0);
+        
+        finalAttrs["macc_base"] = Math.floor(((finalAttrs.intelligence_total / 2) + (finalAttrs.wisdom / 2)) / 2);
+        finalAttrs["macc"]      = finalAttrs.macc_base + (parseInt(v.macc_mod) || 0) + (parseInt(v.macc_bonus) || 0);
+
+        finalAttrs["icw_base"] = (finalAttrs.vitality * 3) + 5;
+        finalAttrs["ecw_base"] = (finalAttrs.vitality * 2) + 10;
+
+        // --- PASS 5: BUDGETS (SP/JP System) ---
+        getSectionIDs("repeating_jobs", function(idarray) {
+            const jobFields = idarray.map(id => `repeating_jobs_${id}_job_rank`);
+            getAttrs(jobFields, function(rows) {
+                let spFromRanks = 0;
+                let totalJPUsed = Math.max(0, parseInt(v.race_rank) || 0);
+                const calcSP = (rank) => {
+                    let earned = 0;
+                    for (let i = 1; i <= rank; i++) { if (i !== 1 && i !== 3 && (i <= 3 || i % 3 !== 0)) earned++; }
+                    return earned;
+                };
+                spFromRanks += calcSP(totalJPUsed);
+                idarray.forEach(id => {
+                    let r = parseInt(rows[`repeating_jobs_${id}_job_rank`]) || 0;
+                    totalJPUsed += r;
+                    spFromRanks += calcSP(r);
                 });
+
+                const spTotalBudget = 10 + (level * 3) + spFromRanks;
+                finalAttrs["sp_total"] = spTotalBudget;
+                finalAttrs["sp_spent"] = spentSP;
+                finalAttrs["sp_status"] = (spentSP > spTotalBudget) ? 1 : 0;
+                finalAttrs["jp_total"] = Math.max(0, (level - 1) + (parseInt(v.is_human) || 0));
+                finalAttrs["jp_spent"] = Math.max(0, totalJPUsed - 2);
+                finalAttrs["jp_status"] = (finalAttrs.jp_spent > finalAttrs.jp_total) ? 1 : 0;
+                
+                // Final data mapping to HTML
+                finalAttrs["strength"] = finalAttrs.strength_total;
+                finalAttrs["dexterity"] = finalAttrs.dexterity_total;
+                finalAttrs["intelligence"] = finalAttrs.intelligence_total;
+                finalAttrs["resistance"] = finalAttrs.resistance_total;
+                finalAttrs["constitution"] = finalAttrs.constitution_total;
+                finalAttrs["cha"] = finalAttrs.charisma_total;
+                finalAttrs["agi"] = finalAttrs.agility_total;
+
+                setAttrs(finalAttrs);
             });
         });
     });
+});
  
     /* --- SCRIPT 2: TITLE LIBRARY ENFORCER --- */
     on("change:repeating_titles:title_active", function(eventInfo) {
@@ -2673,118 +2737,53 @@ on("sheet:opened", function () {
         });
     });
     
-        /* --- SCRIPT 3: DAMAGE CALCULATION --- */
-    on("clicked:apply_damage", function() {
-    getAttrs([
-        "incoming_dmg_amount", "incoming_dmg_type", "is_blocking",
-        "resistance_base", "constitution_base", 
-        "shield_res_bonus", "shield_con_bonus",
-        "hp", "hp_max"
-    ], function(v) {
-        const rawDmg = parseInt(v.incoming_dmg_amount) || 0;
-        const type = v.incoming_dmg_type; // 'res' or 'con'
-        const isBlocking = parseInt(v.is_blocking) || 0;
-        
-        // Mitigation Calculation
-        let mitigation = 0;
-        if (type === "res") {
-            mitigation = (parseInt(v.resistance_base) || 0) + (isBlocking ? (parseInt(v.shield_res_bonus) || 0) : 0);
-        } else {
-            mitigation = (parseInt(v.constitution_base) || 0) + (isBlocking ? (parseInt(v.shield_con_bonus) || 0) : 0);
+ /* --- SCRIPT 3: DAMAGE CALCULATOR & BLOCKING --- */
+on("clicked:block_dmg clicked:take_dmg", function(eventInfo) {
+    const isBlocking = (eventInfo.sourceAttribute === "clicked:block_dmg");
+    getAttrs(["incoming_dmg", "dmg_type", "hp", "character_name", "resistance", "constitution", "shield_res_bonus", "shield_con_bonus"], function(v) {
+        const rawDmg = parseInt(v.incoming_dmg) || 0;
+        const type = v.dmg_type;
+        let mitigation = (type === "res" ? (parseInt(v.resistance) || 0) : (parseInt(v.constitution) || 0));
+        if (isBlocking) {
+            mitigation += (type === "res" ? (parseInt(v.shield_res_bonus) || 0) : (parseInt(v.shield_con_bonus) || 0));
         }
-
-        const finalDamage = Math.max(0, rawDmg - mitigation);
-        const currentHP = parseInt(v.hp) || 0;
-        
-        // Update Sheet
-        setAttrs({
-            hp: Math.max(0, currentHP - finalDamage),
-            dmg_result_preview: finalDamage
+        const totalTaken = Math.max(0, rawDmg - mitigation);
+        let msg = `&{template:default} {{name=${v.character_name} ${isBlocking ? 'Blocks' : 'Takes Damage'}}} {{Incoming=${rawDmg}}} {{Mitigation=-${mitigation}}} {{Result=${totalTaken} DMG Taken}}`;
+        if (isBlocking) msg += ` {{Block Roll=[[1d20]]}}`;
+        startRoll(msg, (results) => {
+            finishRoll(results.rollId);
+            setAttrs({ hp: Math.max(0, (parseInt(v.hp) || 0) - totalTaken) });
         });
     });
 });
-
-// Function to handle Damage logic for both buttons
-const handleDamage = (isBlocking, eventInfo) => {
-    getAttrs([
-        "incoming_dmg", "dmg_type", "character_name",
-        "resistance_base", "constitution_base", 
-        "shield_res_bonus", "shield_con_bonus", "shield_name", "shield_effect",
-        "hp"
-    ], function(v) {
-        const rawDmg = parseInt(v.incoming_dmg) || 0;
-        const type = v.dmg_type;
-        const res = parseInt(v.resistance_base) || 0;
-        const con = parseInt(v.constitution_base) || 0;
-        
-        // 1. Calculate Mitigation
-        let baseStat = (type === "res") ? res : con;
-        let shieldBonus = 0;
-        
-        if (isBlocking) {
-            shieldBonus = (type === "res") ? (parseInt(v.shield_res_bonus) || 0) : (parseInt(v.shield_con_bonus) || 0);
-        }
-
-        const finalMitigation = baseStat + shieldBonus;
-        const totalTaken = Math.max(0, rawDmg - finalMitigation);
-        
-        // 2. Build the Chat Message
-        let template = `&{template:default} {{name=${v.character_name} ${isBlocking ? 'Blocks' : 'Takes Damage'}}} `;
-        if (isBlocking) {
-            template += `{{Block Roll=[[1d20]]}} {{Shield=${v.shield_name || 'Shield'}}} {{Effect=${v.shield_effect || 'None'}}} `;
-        }
-        template += `{{Incoming=${rawDmg}}} {{Mitigation=-${finalMitigation}}} {{Result=${totalTaken} Damage Taken}}`;
-
-        // 3. Execute the Roll and Update HP
-        startRoll(template, (results) => {
-            finishRoll(results.rollId); // Finalize the dice display in chat
-            
-            const currentHP = parseInt(v.hp) || 0;
-            setAttrs({
-                hp: Math.max(0, currentHP - totalTaken)
-            });
-        });
-    });
-};
 
 // Listeners for the two buttons
 on("clicked:block_dmg", (info) => handleDamage(true, info));
 on("clicked:take_dmg", (info) => handleDamage(false, info));
 
-/* --- WEAPON, SCALING & WEIGHT LOGIC --- */
-on("change:repeating_weapons:weapon_base_dmg change:repeating_weapons:weapon_scaling change:repeating_weapons:weapon_weight remove:repeating_weapons change:dex_atk change:str_atk change:spl", function() {
-    getSectionIDs("repeating_weapons", function(idarray) {
-        // These are the "Total" stats from your first tab
-        const coreStats = ["dex_atk", "str_atk", "spl"];
-        const weaponFields = [];
-        
-        idarray.forEach(id => {
-            weaponFields.push(`repeating_weapons_${id}_weapon_scaling`, `repeating_weapons_${id}_weapon_weight`);
-        });
+/* --- WEAPON SCALING & ECW WEIGHT --- */
+on("change:repeating_weapons:weapon_scaling_type change:repeating_weapons:weapon_custom_formula change:repeating_weapons:weapon_weight remove:repeating_weapons change:str_atk change:dex_atk change:spl", function() {
+    getSectionIDs("repeating_weapons", function(idArray) {
+        const core = ["str_atk", "dex_atk", "spl"];
+        const weaponFields = idArray.flatMap(id => [`repeating_weapons_${id}_weapon_scaling_type`, `repeating_weapons_${id}_weapon_custom_formula`, `repeating_weapons_${id}_weapon_weight`]);
 
-        getAttrs([...coreStats, ...weaponFields], function(v) {
-            let totalWeight = 0;
+        getAttrs([...core, ...weaponFields], function(v) {
             let update = {};
+            let totalWeight = 0;
+            
+            idArray.forEach(id => {
+                // Scaling Logic
+                const type = v[`repeating_weapons_${id}_weapon_scaling_type`];
+                const custom = v[`repeating_weapons_${id}_weapon_custom_formula`];
+                let calcValue = (type === "str") ? (v.str_atk || 0) : (type === "dex") ? (v.dex_atk || 0) : (type === "spl") ? (v.spl || 0) : (type === "custom") ? custom : 0;
+                update[`repeating_weapons_${id}_weapon_scaling_calc`] = calcValue;
 
-            idarray.forEach(id => {
-                // 1. Calculate Cumulative Weight
+                // Weight Logic
                 totalWeight += parseFloat(v[`repeating_weapons_${id}_weapon_weight`]) || 0;
-
-                // 2. Determine Scaling Value for the Roll Button
-                const scalingType = v[`repeating_weapons_${id}_weapon_scaling`];
-                let statVal = 0;
-                
-                // Mapping the dropdown values to your specific attribute names
-                if (scalingType === "str") statVal = parseInt(v.str_atk) || 0;
-                else if (scalingType === "dex") statVal = parseInt(v.dex_atk) || 0;
-                else if (scalingType === "spl") statVal = parseInt(v.spl) || 0;
-
-                update[`repeating_weapons_${id}_weapon_scaling_val`] = statVal;
             });
 
-            // 3. Update the Equipment Carry Modifier (attr_ecw)
-            update["ecw"] = totalWeight;
-
+            // Apply total weight as a negative to ecw
+            update["ecw"] = -totalWeight; 
             setAttrs(update);
         });
     });
