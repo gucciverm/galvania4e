@@ -976,6 +976,18 @@ on("sheet:opened", function () {
             <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=Willpower}} {{roll=[[[[d20]] + [[@{willpower}]]]]}}"></button></div>
         </div>
     </div>
+    
+    <!-- Reflex -->
+    <div class="sheet-stat-row">
+    <div class="sheet-stat-name">Reflex</div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex_mod" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex_bonus" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-roll">
+        <button type="roll" name="roll_reflex" value="&{template:default} {{name=Reflex Check}} {{Result=[[d20 + @{reflex}]]}}"></button>
+    </div>
+</div>
  
     <!-- RIGHT COLUMN -->
     <div class="sheet-stat-column">
@@ -2681,13 +2693,13 @@ on("change:level change:height_class change:race_rank change:is_human change:rep
                 finalAttrs["jp_status"] = (finalAttrs.jp_spent > finalAttrs.jp_total) ? 1 : 0;
                 
                 // Final data mapping to HTML
-                finalAttrs["strength"] = finalAttrs.strength_total;
-                finalAttrs["dexterity"] = finalAttrs.dexterity_total;
-                finalAttrs["intelligence"] = finalAttrs.intelligence_total;
-                finalAttrs["resistance"] = finalAttrs.resistance_total;
-                finalAttrs["constitution"] = finalAttrs.constitution_total;
-                finalAttrs["cha"] = finalAttrs.charisma_total;
-                finalAttrs["agi"] = finalAttrs.agility_total;
+finalAttrs["strength"]     = finalAttrs.strength_total;
+finalAttrs["dexterity"]    = finalAttrs.dexterity_total;
+finalAttrs["intelligence"] = finalAttrs.intelligence_total;
+finalAttrs["resistance"]   = finalAttrs.resistance_total;
+finalAttrs["constitution"] = finalAttrs.constitution_total;
+finalAttrs["cha"]          = finalAttrs.charisma_total;
+finalAttrs["agi"]          = finalAttrs.agility_total;
 
                 setAttrs(finalAttrs);
             });
