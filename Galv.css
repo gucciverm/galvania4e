@@ -3316,3 +3316,19 @@ span.sheet-title-info {
     padding: 5px;
     border-radius: 4px;
 }
+
+/* Hide the custom formula wrapper by default */
+.sheet-custom-formula-wrap {
+    display: none;
+}
+
+/* Show the wrapper ONLY when the scaling type is exactly 'custom' */
+.sheet-scaling-toggle[value="custom"] + .sheet-custom-formula-wrap {
+    display: block;
+}
+
+/* Optional: Make the text reddish so players know it's a special override */
+.sheet-custom-formula-wrap input {
+    color: #a020f0; 
+    font-weight: bold;
+}
