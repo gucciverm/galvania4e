@@ -822,6 +822,8 @@ on("sheet:opened", function () {
 		<span class="sheet-tab sheet-tab6">Traits</span> <!--line -->
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab99" value="99" />
 		<span class="sheet-tab sheet-tab99">Show All</span>
+		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab7" value="7" />
+        <span class="sheet-tab sheet-tab7">Settings</span>
 		<span class="sheet-spacer"></span>
  
 			<!--Ability section-->
@@ -986,6 +988,7 @@ on("sheet:opened", function () {
     <div class="sheet-stat-roll"><button type="roll" name="roll_reflex" value="&{template:default} {{name=Reflex Check}} {{Result=[[d20 + @{reflex}]]}}"></button>
     </div>
 </div>
+ </div>
  
     <!-- RIGHT COLUMN -->
     <div class="sheet-stat-column">
@@ -1250,7 +1253,6 @@ on("sheet:opened", function () {
     <div class="sheet-row sheet-margin-top">
         <div class="sheet-col-1-1">
             <textarea name="attr_shield_effect" placeholder="Shield Special Effects..." style="height: 40px;"></textarea>
-            <div class="sheet-small-label">Shield Special Effects</div>
         </div>
     </div>
 
@@ -1276,18 +1278,26 @@ on("sheet:opened", function () {
         <option value="none" selected>N/A</option>
     </select>
     <br/>Scaling
+    <input type="hidden" name="attr_weapon_scaling_expr" value="0">
+<input type="hidden" name="attr_weapon_tohit_expr" value="@{acc}">
 </div>
 
-<!-- 3. Custom Formula (With CSS Toggle Logic) -->
+<!-- Hidden input to track the dropdown state -->
+<input type="hidden" class="sheet-scaling-toggle" name="attr_weapon_scaling_toggle" value="none">
+
+<!-- 3. Custom Formula (stays in its own column) -->
 <div class="sheet-col-1-8 sheet-small-label">
-    <!-- Hidden input to track the dropdown state -->
-    <input type="hidden" class="sheet-scaling-toggle" name="attr_weapon_scaling_type" value="none">
-    
-    <!-- This div will now be hidden/shown via CSS -->
-    <div class="sheet-custom-formula-wrap">
-        <input class="sheet-underlined" type="text" name="attr_weapon_custom_formula" placeholder="@{mov}/2">
-        <br/>Custom/Bonus
-    </div>
+  <input type="hidden"
+         class="sheet-scaling-toggle"
+         name="attr_weapon_scaling_toggle"
+         value="none">
+
+  <div class="sheet-custom-formula-wrap">
+    <input class="sheet-underlined" type="text"
+           name="attr_weapon_custom_formula"
+           placeholder="@{mov}/2">
+    <br/>Custom/Bonus
+  </div>
 </div>
 
         <!-- 4. Base Damage -->
@@ -1307,11 +1317,84 @@ on("sheet:opened", function () {
             <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0">
             <br/>Weight
         </div>
+        
+        <!-- Preset -->
+<div class="sheet-col-1-6 sheet-small-label">
+  <select name="attr_weapon_preset">
+    <option value="custom">Custom</option>
+
+<optgroup label="STR Weapons">
+  <option value="greatsword">Greatsword</option>
+  <option value="greataxe">Greataxe</option>
+  <option value="greathammer">Greathammer</option>
+  <option value="gauntlet">Gauntlet</option>
+  <option value="mace">Mace</option>
+</optgroup>
+
+<optgroup label="DEX Weapons">
+  <option value="sword">Sword</option>
+  <option value="hand_axe">Hand-Axe</option>
+  <option value="dagger">Dagger</option>
+  <option value="whip">Whip</option>
+  <option value="polearm">Polearm</option>
+</optgroup>
+
+<optgroup label="INT Weapons">
+  <option value="focus_1h">Focus (1H)</option>
+  <option value="staff_2h">Staff (2H)</option>
+  <option value="prayer_beads_1h">Prayer Beads (1H)</option>
+  <option value="spellbook_varies">Spellbook</option>
+  <option value="consumable_scroll">Consumable Scroll</option>
+</optgroup>
+
+<optgroup label="Ranged Weapons">
+  <option value="shortbow">Shortbow</option>
+  <option value="longbow">Longbow</option>
+  <option value="crossbow">Crossbow</option>
+  <option value="throwing_daggers">Throwing Daggers</option>
+  <option value="chakrams">Chakrams</option>
+  <option value="throwing_axe">Throwing Axe</option>
+</optgroup>
+
+<optgroup label="Guns">
+  <option value="handgun">Handgun</option>
+  <option value="shotgun">Shotgun</option>
+  <option value="submachine_gun">Submachine Gun</option>
+  <option value="rifle">Rifle</option>
+</optgroup>
+  </select>
+  <br>Preset
+</div>
+
+<!-- Rank -->
+<div class="sheet-col-1-12 sheet-small-label">
+  <select name="attr_weapon_rank">
+    <option value="1">Rank 1</option>
+    <option value="2">Rank 2</option>
+    <option value="3">Rank 3</option>
+    <option value="4">Rank 4</option>
+    <option value="5">Rank 5</option>
+  </select>
+  <br>Rank
+</div>
+
+<!-- Flat hit bonus (e.g. +ACC) -->
+<input type="hidden" name="attr_weapon_attack_bonus_flat" value="0">
+
+<!-- Requirements display (optional but handy) -->
+<input type="hidden" name="attr_weapon_req_text" value="">
+
+<!-- Effects fields (your choice: show these as textareas or keep hidden + show on sheet) -->
+<textarea name="attr_weapon_effects_base" class="sheet-small-textarea"></textarea>
+<textarea name="attr_weapon_effects_alt"  class="sheet-small-textarea"></textarea>
 
         <!-- 7. Attack Button -->
         <div class="sheet-col-1-8 sheet-center">
-            <button type="roll" name="roll_attack" value="&{template:default} {{name=@{character_name} Attacks!}} {{Weapon=@{weapon_name}}} {{Type=@{weapon_type}}} {{Damage=[[ @{weapon_base_dmg} + @{weapon_scaling_calc} ]]}}">ATTACK</button>
-            <input type="hidden" name="attr_weapon_scaling_calc" value="0">
+           <button type="roll" name="roll_attack"
+value="&{template:default} {{name=@{character_name} — ATTACK}} {{Weapon=@{weapon_name} (Rank @{weapon_rank})}} {{Type=@{weapon_type}}} {{Hit=[[1d20+@{weapon_attack_bonus_expr}+@{weapon_attack_bonus_flat}]]}} {{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}} {{Effects=@{weapon_effects_base}}} {{Alt=@{weapon_effects_alt}}}">
+ATTACK</button>
+</button><input type="hidden" name="attr_weapon_scaling_expr" value="0">
+            <input type="hidden" name="attr_weapon_attack_bonus_expr" value="@{acc}">
         </div>
     </div>
 
@@ -2417,6 +2500,407 @@ on("sheet:opened", function () {
 					</div>
 				</fieldset>
 			</div>
+			
+			<div class="sheet-section-settings">
+  <h3 class="sheet-center">Settings</h3>
+
+  <!-- Weapon library JSON goes here later -->
+  <div class="sheet-row">
+    <div class="sheet-col-1">
+      <div class="sheet-sub-header">Weapon Library (JSON)</div>
+      <textarea name="attr_weapon_library_json" style="height: 220px;">
+          {
+  "version": 1,
+  "weapons": {
+    "greatsword": {
+      "name": "Greatsword",
+      "category": "STR",
+      "type": "Greatsword",
+      "baseWeight": 2.5,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 4, "dex": 2 }, "dmg": 10, "acc": 0, "effects": "Cleave 2" },
+        "2": { "req": { "str": 6, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Cleave 4" },
+        "3": { "req": { "str": 8, "dex": 6 }, "dmg": 14, "acc": 0, "effects": "Cleave 6" },
+        "4": { "req": { "str": 10, "dex": 8 }, "dmg": 16, "acc": 0, "effects": "Cleave 8", "alts": [{ "label": "Cleave 40% (Or 8)" }] },
+        "5": { "req": { "str": 12, "dex": 10 }, "dmg": 18, "acc": 0, "effects": "Cleave 10", "alts": [{ "label": "Cleave 50% (Or 10)" }] }
+      }
+    },
+
+    "greataxe": {
+      "name": "Greataxe",
+      "category": "STR",
+      "type": "Greataxe",
+      "baseWeight": 3.5,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 3, "dex": 2 }, "dmg": 8, "acc": 0, "effects": "Shred 2" },
+        "2": { "req": { "str": 6, "dex": 4 }, "dmg": 10, "acc": 0, "effects": "Shred 4" },
+        "3": { "req": { "str": 12, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Shred 6" },
+        "4": { "req": { "str": 16, "dex": 6 }, "dmg": 14, "acc": 0, "effects": "Shred 8" },
+        "5": { "req": { "str": 20, "dex": 6 }, "dmg": 16, "acc": 0, "effects": "Shred 10" }
+      }
+    },
+
+    "greathammer": {
+      "name": "Greathammer",
+      "category": "STR",
+      "type": "Greathammer",
+      "baseWeight": 7,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 5, "dex": 2 }, "dmg": 12, "acc": 0, "effects": "DC5 Knockdown" },
+        "2": { "req": { "str": 10, "dex": 4 }, "dmg": 14, "acc": 0, "effects": "DC5 Knockdown" },
+        "3": { "req": { "str": 15, "dex": 4 }, "dmg": 16, "acc": 0, "effects": "DC8 Knockdown" },
+        "4": { "req": { "str": 20, "dex": 6 }, "dmg": 18, "acc": 0, "effects": "DC10 Knockdown" },
+        "5": { "req": { "str": 25, "dex": 6 }, "dmg": 20, "acc": 0, "effects": "DC10 Knockdown" }
+      }
+    },
+
+    "gauntlet": {
+      "name": "Gauntlet",
+      "category": "STR",
+      "type": "Gauntlet",
+      "baseWeight": 0.5,
+      "notes": "Base Weight: 0.5 unless Unarmed, Unarmed is 0",
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 2, "dex": 2 }, "dmg": 3, "acc": 0, "effects": "1d2+1 Punches" },
+        "2": { "req": { "str": 4, "dex": 4 }, "dmg": 4, "acc": 0, "effects": "1d2+1 Punches" },
+        "3": { "req": { "str": 6, "dex": 4 }, "dmg": 5, "acc": 0, "effects": "1d2+1 Punches" },
+        "4": { "req": { "str": 8, "dex": 6 }, "dmg": 5, "acc": 0, "effects": "1d2+2 Punches" },
+        "5": { "req": { "str": 10, "dex": 6 }, "dmg": 6, "acc": 0, "effects": "1d2+2 Punches" }
+      }
+    },
+
+    "mace": {
+      "name": "Mace",
+      "category": "STR",
+      "type": "Mace",
+      "baseWeight": 2,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 3, "dex": 2 }, "dmg": 7, "acc": 0, "effects": "Daze DC 5" },
+        "2": { "req": { "str": 5, "dex": 2 }, "dmg": 8, "acc": 0, "effects": "Daze DC 8" },
+        "3": { "req": { "str": 7, "dex": 2 }, "dmg": 9, "acc": 0, "effects": "Daze DC 10" },
+        "4": { "req": { "str": 9, "dex": 4 }, "dmg": 10, "acc": 0, "effects": "Daze DC 10" },
+        "5": { "req": { "str": 10, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Daze DC 12" }
+      }
+    },
+
+    "sword": {
+      "name": "Sword",
+      "category": "DEX",
+      "type": "Sword",
+      "baseWeight": 0.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 2 }, "dmg": 5, "acc": 1, "effects": "" },
+        "2": { "req": { "dex": 4 }, "dmg": 6, "acc": 2, "effects": "" },
+        "3": { "req": { "dex": 6 }, "dmg": 7, "acc": 3, "effects": "" },
+        "4": { "req": { "dex": 8 }, "dmg": 8, "acc": 4, "effects": "", "alts": [{ "label": "+25% (Base) ACC (Or +4)" }] },
+        "5": { "req": { "dex": 10 }, "dmg": 9, "acc": 5, "effects": "", "alts": [{ "label": "+50% (Base) ACC (Or +5)" }] }
+      }
+    },
+
+    "hand_axe": {
+      "name": "Hand-Axe",
+      "category": "DEX",
+      "type": "Hand-Axe",
+      "baseWeight": 1,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 2, "str": 2 }, "dmg": 6, "acc": 0, "effects": "Cleave 2" },
+        "2": { "req": { "dex": 4, "str": 3 }, "dmg": 7, "acc": 0, "effects": "Cleave 2" },
+        "3": { "req": { "dex": 6, "str": 4 }, "dmg": 8, "acc": 0, "effects": "Cleave 3" },
+        "4": { "req": { "dex": 8, "str": 6 }, "dmg": 9, "acc": 0, "effects": "Cleave 4", "alts": [{ "label": "Cleave 20% (Or 4)" }] },
+        "5": { "req": { "dex": 10, "str": 8 }, "dmg": 10, "acc": 0, "effects": "Cleave 5", "alts": [{ "label": "Cleave 30% (Or 5)" }] }
+      }
+    },
+
+    "dagger": {
+      "name": "Dagger",
+      "category": "DEX",
+      "type": "Dagger",
+      "baseWeight": 0,
+      "defaultScaling": "dex",
+      "notes": "CRT lowers crit requirement. When dual wielded, crits begin at 3x.",
+      "ranks": {
+        "1": { "req": { "dex": 2 }, "dmg": 4, "acc": 0, "effects": "+1 CRT" },
+        "2": { "req": { "dex": 3 }, "dmg": 5, "acc": 0, "effects": "+1 CRT" },
+        "3": { "req": { "dex": 4 }, "dmg": 6, "acc": 0, "effects": "+2 CRT" },
+        "4": { "req": { "dex": 5 }, "dmg": 7, "acc": 0, "effects": "+2 CRT" },
+        "5": { "req": { "dex": 6 }, "dmg": 8, "acc": 0, "effects": "+3 CRT" }
+      }
+    },
+
+    "whip": {
+      "name": "Whip",
+      "category": "DEX",
+      "type": "Whip",
+      "baseWeight": 1,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 3 }, "dmg": 4, "acc": 0, "effects": "DC5 Bleed" },
+        "2": { "req": { "dex": 6 }, "dmg": 6, "acc": 0, "effects": "DC10 Bleed" },
+        "3": { "req": { "dex": 12 }, "dmg": 8, "acc": 0, "effects": "DC10 Bleed" },
+        "4": { "req": { "dex": 18 }, "dmg": 10, "acc": 0, "effects": "DC10 Bleed" },
+        "5": { "req": { "dex": 22 }, "dmg": 10, "acc": 0, "effects": "DC12 Bleed" }
+      }
+    },
+
+    "polearm": {
+      "name": "Polearm",
+      "category": "DEX",
+      "type": "Polearm",
+      "baseWeight": 2,
+      "defaultScaling": "dex",
+      "notes": "Works with Bucklers/Kite Shields.",
+      "ranks": {
+        "1": { "req": { "dex": 3, "str": 2 }, "dmg": 8, "acc": 0, "effects": "2 Square Range" },
+        "2": { "req": { "dex": 6, "str": 4 }, "dmg": 10, "acc": 0, "effects": "2 Square Range" },
+        "3": { "req": { "dex": 12, "str": 4 }, "dmg": 12, "acc": 0, "effects": "2 Square Range" },
+        "4": { "req": { "dex": 16, "str": 6 }, "dmg": 14, "acc": 0, "effects": "2 Square Range" },
+        "5": { "req": { "dex": 20, "str": 6 }, "dmg": 16, "acc": 0, "effects": "2 Square Range" }
+      }
+    },
+
+    "focus_1h": {
+      "name": "Focus (1 Handed)",
+      "category": "INT",
+      "type": "Focus",
+      "baseWeight": 0.5,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 2 }, "dmg": 3, "acc": 1, "effects": "+1 Mag. ACC" },
+        "2": { "req": { "int": 4 }, "dmg": 6, "acc": 1, "effects": "+1 Mag. ACC" },
+        "3": { "req": { "int": 8 }, "dmg": 9, "acc": 2, "effects": "+2 Mag. ACC" },
+        "4": { "req": { "int": 12 }, "dmg": 12, "acc": 3, "effects": "+3 Mag. ACC" },
+        "5": { "req": { "int": 16 }, "dmg": 16, "acc": 4, "effects": "+4 Mag. ACC" }
+      }
+    },
+
+    "staff_2h": {
+      "name": "Staff (2 Handed)",
+      "category": "INT",
+      "type": "Staff",
+      "baseWeight": 1,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 3 }, "dmg": 6, "acc": 0, "effects": "" },
+        "2": { "req": { "int": 6 }, "dmg": 8, "acc": 0, "effects": "" },
+        "3": { "req": { "int": 12 }, "dmg": 12, "acc": 0, "effects": "" },
+        "4": { "req": { "int": 16 }, "dmg": 16, "acc": 0, "effects": "" },
+        "5": { "req": { "int": 20 }, "dmg": 20, "acc": 0, "effects": "" }
+      }
+    },
+
+    "prayer_beads_1h": {
+      "name": "Prayer Beads (1 Handed)",
+      "category": "INT",
+      "type": "Prayer Beads",
+      "baseWeight": 0,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 2 }, "dmg": 4, "acc": 0, "effects": "+3 Healing" },
+        "2": { "req": { "int": 4 }, "dmg": 6, "acc": 0, "effects": "+5 Healing" },
+        "3": { "req": { "int": 8 }, "dmg": 8, "acc": 0, "effects": "+5 Healing" },
+        "4": { "req": { "int": 12 }, "dmg": 10, "acc": 0, "effects": "+10 Healing" },
+        "5": { "req": { "int": 16 }, "dmg": 12, "acc": 0, "effects": "+10 Healing" }
+      }
+    },
+
+    "spellbook_varies": {
+      "name": "Spellbook (Varies)",
+      "category": "INT",
+      "type": "Spellbook",
+      "baseWeight": null,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 4 }, "dmg": 3, "acc": 0, "effects": "+1 Skill", "weight": 0, "notes": "1 Handed" },
+        "2": { "req": { "int": 8 }, "dmg": 5, "acc": 0, "effects": "+2 Skill", "weight": 0.5, "notes": "1 Handed" },
+        "3": { "req": { "int": 16 }, "dmg": 7, "acc": 0, "effects": "+3 Skill", "weight": 1, "notes": "1 Handed" },
+        "4": { "req": { "int": 20 }, "dmg": 9, "acc": 0, "effects": "+3 Skill", "weight": 1, "notes": "2 Handed" },
+        "5": { "req": { "int": 24 }, "dmg": 10, "acc": 0, "effects": "+4 Skill", "weight": 1.5, "notes": "2 Handed" }
+      }
+    },
+
+    "consumable_scroll": {
+      "name": "Consumable Scroll",
+      "category": "INT",
+      "type": "Consumable Scroll",
+      "baseWeight": 0,
+      "defaultScaling": "spl",
+      "notes": "Consumable Scrolls come with a spell and limited uses. Cheaper version of Scrolls; rank version available at half price.",
+      "ranks": {
+        "1": { "req": { "int": 2 }, "dmg": 3, "acc": 0, "effects": "2 Uses" },
+        "2": { "req": { "int": 3 }, "dmg": 6, "acc": 1, "effects": "2 Uses | +1 Mag. ACC" },
+        "3": { "req": { "int": 4 }, "dmg": 9, "acc": 2, "effects": "3 Uses | +2 Mag. ACC" },
+        "4": { "req": { "int": 5 }, "dmg": 12, "acc": 2, "effects": "3 Uses | +2 Mag. ACC" },
+        "5": { "req": { "int": 6 }, "dmg": 16, "acc": 3, "effects": "4 Uses | +3 Mag. ACC" }
+      }
+    },
+
+    "shortbow": {
+      "name": "Shortbow",
+      "category": "RANGED",
+      "type": "Shortbow",
+      "baseWeight": 0.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 3, "str": 2 }, "dmg": 3, "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
+        "2": { "req": { "dex": 6, "str": 4 }, "dmg": 4, "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
+        "3": { "req": { "dex": 9, "str": 6 }, "dmg": 5, "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
+        "4": { "req": { "dex": 12, "str": 8 }, "dmg": 6, "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
+        "5": { "req": { "dex": 16, "str": 10 }, "dmg": 7, "acc": 0, "effects": "20 Range | 1d2+1 Multiplier" }
+      }
+    },
+
+    "longbow": {
+      "name": "Longbow",
+      "category": "RANGED",
+      "type": "Longbow",
+      "baseWeight": 1.5,
+      "defaultScaling": "custom",
+      "notes": "STR OR DEX scaling (player choice).",
+      "ranks": {
+        "1": { "req": { "dex": 5, "str": 5 }, "dmg": 6, "acc": 0, "effects": "15 Range" },
+        "2": { "req": { "dex": 7, "str": 7 }, "dmg": 9, "acc": 0, "effects": "15 Range | CRT +1" },
+        "3": { "req": { "dex": 9, "str": 9 }, "dmg": 12, "acc": 0, "effects": "20 Range | CRT +1" },
+        "4": { "req": { "dex": 11, "str": 11 }, "dmg": 15, "acc": 0, "effects": "20 Range | CRT +2" },
+        "5": { "req": { "dex": 13, "str": 13 }, "dmg": 18, "acc": 0, "effects": "25 Range | CRT +3" }
+      }
+    },
+
+    "crossbow": {
+      "name": "Crossbow",
+      "category": "RANGED",
+      "type": "Crossbow",
+      "baseWeight": 1.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "str": 3, "dex": 4 }, "dmg": 5, "acc": 0, "effects": "15 Range | Cleave 2" },
+        "2": { "req": { "str": 5, "dex": 8 }, "dmg": 8, "acc": 0, "effects": "15 Range | Cleave 4" },
+        "3": { "req": { "str": 7, "dex": 12 }, "dmg": 11, "acc": 0, "effects": "20 Range | Cleave 6" },
+        "4": { "req": { "str": 9, "dex": 16 }, "dmg": 14, "acc": 0, "effects": "20 Range", "alts": [{ "label": "30% Cleave" }] },
+        "5": { "req": { "str": 11, "dex": 20 }, "dmg": 17, "acc": 0, "effects": "25 Range", "alts": [{ "label": "40% Cleave" }] }
+      }
+    },
+
+    "throwing_daggers": {
+      "name": "Throwing Daggers",
+      "category": "RANGED",
+      "type": "Throwing Daggers",
+      "baseWeight": 0,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 3 }, "dmg": 2, "acc": 0, "effects": "1d3 Daggers" },
+        "2": { "req": { "dex": 6 }, "dmg": 3, "acc": 0, "effects": "1d2+1 Daggers" },
+        "3": { "req": { "dex": 12 }, "dmg": 4, "acc": 0, "effects": "1d2+1 Daggers" },
+        "4": { "req": { "dex": 16 }, "dmg": 5, "acc": 0, "effects": "1d3+1 Daggers" },
+        "5": { "req": { "dex": 20 }, "dmg": 6, "acc": 0, "effects": "1d2+2 Daggers" }
+      }
+    },
+
+    "chakrams": {
+      "name": "Chakrams",
+      "category": "RANGED",
+      "type": "Chakrams",
+      "baseWeight": 0.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 4 }, "dmg": 5, "acc": 0, "effects": "DC10 Bleed" },
+        "2": { "req": { "dex": 8 }, "dmg": 8, "acc": 0, "effects": "DC10 Bleed" },
+        "3": { "req": { "dex": 12 }, "dmg": 11, "acc": 0, "effects": "DC12 Bleed" },
+        "4": { "req": { "dex": 16 }, "dmg": 14, "acc": 0, "effects": "DC12 Bleed" },
+        "5": { "req": { "dex": 20 }, "dmg": 17, "acc": 0, "effects": "DC14 Bleed" }
+      }
+    },
+
+    "throwing_axe": {
+      "name": "Throwing Axe",
+      "category": "RANGED",
+      "type": "Throwing Axe",
+      "baseWeight": 1.5,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 4 }, "dmg": 5, "acc": 0, "effects": "1d2 Axes" },
+        "2": { "req": { "str": 8 }, "dmg": 6, "acc": 0, "effects": "1d2 Axes" },
+        "3": { "req": { "str": 12 }, "dmg": 7, "acc": 0, "effects": "1d3 Axes" },
+        "4": { "req": { "str": 16 }, "dmg": 8, "acc": 0, "effects": "1d3 Axes" },
+        "5": { "req": { "str": 20 }, "dmg": 9, "acc": 0, "effects": "1d2+1" }
+      }
+    },
+
+    "handgun": {
+      "name": "Handgun",
+      "category": "GUNS",
+      "type": "Handgun",
+      "baseWeight": 1,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "dex": 5 }, "dmg": 12, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload" },
+        "2": { "req": { "dex": 5 }, "dmg": 14, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload | [Mod]" },
+        "3": { "req": { "dex": 7 }, "dmg": 16, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload | [Mod 1] | [Mod 2]" },
+        "4": { "req": { "dex": 7 }, "dmg": 18, "acc": 0, "effects": "10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3]" },
+        "5": { "req": { "dex": 9 }, "dmg": 20, "acc": 0, "effects": "10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]" }
+      }
+    },
+
+    "shotgun": {
+      "name": "Shotgun",
+      "category": "GUNS",
+      "type": "Shotgun",
+      "baseWeight": 2,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "dex": 5, "str": 5 }, "dmg": 21, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo" },
+        "2": { "req": { "dex": 5, "str": 5 }, "dmg": 23, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo | [Mod 1]" },
+        "3": { "req": { "dex": 7, "str": 7 }, "dmg": 25, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo | [Mod 1] | [Mod 2]" },
+        "4": { "req": { "dex": 7, "str": 7 }, "dmg": 27, "acc": 0, "effects": "3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3]" },
+        "5": { "req": { "dex": 9, "str": 9 }, "dmg": 30, "acc": 0, "effects": "3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]" }
+      }
+    },
+
+    "submachine_gun": {
+      "name": "Submachine Gun",
+      "category": "GUNS",
+      "type": "Submachine Gun",
+      "baseWeight": 1.5,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "dex": 5, "fin": 5 }, "dmg": 6, "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo" },
+        "2": { "req": { "dex": 5, "fin": 5 }, "dmg": 7, "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo | [1 Mod]" },
+        "3": { "req": { "dex": 7, "fin": 7 }, "dmg": 8, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 5 Ammo | [2 Mods]" },
+        "4": { "req": { "dex": 7, "fin": 7 }, "dmg": 9, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 6 Ammo | [3 Mods]" },
+        "5": { "req": { "dex": 9, "fin": 9 }, "dmg": 10, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 7 Ammo | [4 Mods]" }
+      }
+    },
+
+    "rifle": {
+      "name": "Rifle",
+      "category": "GUNS",
+      "type": "Rifle",
+      "baseWeight": 2,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "fin": 5, "str": 5 }, "dmg": 17, "acc": 0, "effects": "15 Range | 2 Ammo" },
+        "2": { "req": { "fin": 5, "str": 5 }, "dmg": 19, "acc": 0, "effects": "15 Range | x2.5 Crit | 2 Ammo | [1 Mod]" },
+        "3": { "req": { "fin": 7, "str": 7 }, "dmg": 21, "acc": 0, "effects": "15 Range | x2.5 Crit | 3 Ammo | [2 Mods]" },
+        "4": { "req": { "fin": 7, "str": 7 }, "dmg": 23, "acc": 0, "effects": "15 Range | x2.5 Crit | 3 Ammo | [3 Mods]" },
+        "5": { "req": { "fin": 9, "str": 9 }, "dmg": 25, "acc": 0, "effects": "15 Range | x3 Crit | 4 Ammo | [4 Mods]" }
+      }
+    }
+  }
+}</textarea>
+    </div>
+  </div>
+</div>
+
 	</div>
 	<span class="sheet-spacer"></span>
 					<h4 class="sheet-center">Game Notes</h4>
@@ -2759,10 +3243,251 @@ finalAttrs["constitution"] = finalAttrs.constitution_total;
         });
     });
     
+const toInt = (v) => parseInt(v, 10) || 0;
+
+function handleDamage(isBlocking, info) {
+  getAttrs([
+    "character_name",
+    "incoming_dmg",
+    "dmg_type",
+    "resistance",
+    "constitution",
+    "shield_res_bonus",
+    "shield_con_bonus"
+  ], (v) => {
+    const name = v.character_name || "Character";
+    const incoming = toInt(v.incoming_dmg);
+
+    const dmgType = (v.dmg_type === "con") ? "con" : "res";
+    const statLabel = (dmgType === "con") ? "CON" : "RES";
+
+    // Total defense stat
+    const baseStat = (dmgType === "con") ? toInt(v.constitution) : toInt(v.resistance);
+
+    // Shield bonus only applies when blocking
+    const shieldBonus =
+      isBlocking
+        ? ((dmgType === "con") ? toInt(v.shield_con_bonus) : toInt(v.shield_res_bonus))
+        : 0;
+
+    const effectiveDefense = baseStat + shieldBonus;
+
+    // Build the roll template output
+    let macro =
+      `&{template:default} {{name=${name} — ${isBlocking ? "BLOCK" : "TAKE DMG"}}} ` +
+      `{{Incoming=${incoming}}} ` +
+      `{{Defense=${statLabel} ${baseStat}${isBlocking ? ` + Shield ${shieldBonus} = ${effectiveDefense}` : ""}}} ` +
+      `{{DamageTaken=[[{${incoming}-${effectiveDefense},0}kh1]]}}`;
+
+    // Add a plain d20 check for BLOCK (NOT used in damage math)
+    if (isBlocking) {
+      macro += ` {{BlockCheck=[[1d20]]}}`;
+    }
+
+    startRoll(macro, (results) => finishRoll(results.rollId));
+  });
+}
 
 // Listeners for the two buttons
 on("clicked:block_dmg", (info) => handleDamage(true, info));
 on("clicked:take_dmg", (info) => handleDamage(false, info));
+
+// Custom Weapon Scaling
+on("change:repeating_weapons:weapon_scaling_type", () => {
+  getSectionIDs("repeating_weapons", (ids) => {
+    const attrs = ids.map(id => `repeating_weapons_${id}_weapon_scaling_type`);
+    getAttrs(attrs, (v) => {
+      const out = {};
+      ids.forEach(id => {
+        const t = v[`repeating_weapons_${id}_weapon_scaling_type`] || "none";
+        out[`repeating_weapons_${id}_weapon_scaling_toggle`] = t;
+      });
+      setAttrs(out);
+    });
+  });
+});
+
+// Attack Button Logic
+on("change:repeating_weapons:weapon_scaling_type change:repeating_weapons:weapon_custom_formula sheet:opened", () => {
+  getSectionIDs("repeating_weapons", (ids) => {
+    const fields = ids.flatMap(id => ([
+      `repeating_weapons_${id}_weapon_scaling_type`,
+      `repeating_weapons_${id}_weapon_custom_formula`
+    ]));
+
+    getAttrs(fields, (v) => {
+      const out = {};
+      ids.forEach(id => {
+        const type = v[`repeating_weapons_${id}_weapon_scaling_type`] || "none";
+        const custom = v[`repeating_weapons_${id}_weapon_custom_formula`] || "0";
+
+        // Damage scaling expression
+        let scalingExpr = "0";
+        if (type === "str") scalingExpr = "@{str_atk}";
+        else if (type === "dex") scalingExpr = "@{dex_atk}";
+        else if (type === "spl") scalingExpr = "@{spl}";
+        else if (type === "custom") scalingExpr = custom; // e.g. @{mov}/2
+
+        // Hit bonus expression (ACC vs MACC)
+        // SPL implies magic accuracy; everything else defaults to ACC.
+        const atkBonusExpr = (type === "spl") ? "@{macc}" : "@{acc}";
+
+        out[`repeating_weapons_${id}_weapon_scaling_expr`] = scalingExpr;
+        out[`repeating_weapons_${id}_weapon_attack_bonus_expr`] = atkBonusExpr;
+
+        // Keep your CSS toggle in sync too
+        out[`repeating_weapons_${id}_weapon_scaling_toggle`] = type;
+      });
+
+      setAttrs(out);
+    });
+  });
+});
+
+// Sum equipped weapon weight
+on("change:repeating_weapons:weapon_weight remove:repeating_weapons sheet:opened", () => {
+  getSectionIDs("repeating_weapons", (ids) => {
+    const fields = ids.map(id => `repeating_weapons_${id}_weapon_weight`);
+    getAttrs(fields, (v) => {
+      const total = ids.reduce((sum, id) => {
+        const w = parseFloat(v[`repeating_weapons_${id}_weapon_weight`]) || 0;
+        return sum + w;
+      }, 0);
+      setAttrs({ weapon_total_weight: total });
+    });
+  });
+});
+
+// ECW remaining = capacity - equipped weapon weight
+on("change:ecw change:weapon_total_weight sheet:opened", () => {
+  getAttrs(["ecw", "weapon_total_weight"], (v) => {
+    const ecwCap  = parseFloat(v.ecw) || 0;
+    const ecwUsed = parseFloat(v.weapon_total_weight) || 0;
+
+    setAttrs({
+      ecw_used: ecwUsed,
+      ecw_remaining: ecwCap - ecwUsed,
+    });
+  });
+});
+
+
+// Custom Weapon Scaling
+on(
+  "change:repeating_weapons:weapon_scaling_type change:repeating_weapons:weapon_custom_formula sheet:opened",
+  () => {
+    getSectionIDs("repeating_weapons", (ids) => {
+      const fields = ids.flatMap((id) => ([
+        `repeating_weapons_${id}_weapon_scaling_type`,
+        `repeating_weapons_${id}_weapon_custom_formula`,
+      ]));
+
+      getAttrs(fields, (v) => {
+        const out = {};
+        ids.forEach((id) => {
+          const type = (v[`repeating_weapons_${id}_weapon_scaling_type`] || "none").toLowerCase();
+          const custom = (v[`repeating_weapons_${id}_weapon_custom_formula`] || "0").trim();
+
+          // Damage scaling expression
+          let scalingExpr = "0";
+          if (type === "str") scalingExpr = "@{str_atk}";
+          else if (type === "dex") scalingExpr = "@{dex_atk}";
+          else if (type === "spl") scalingExpr = "@{spl}";
+          else if (type === "custom") scalingExpr = custom || "0"; // e.g. @{mov}/2
+
+          // To-hit expression (ACC vs MACC)
+          // SPL => magic accuracy; everything else => ACC
+          const tohitExpr = (type === "spl") ? "@{macc}" : "@{acc}";
+
+          out[`repeating_weapons_${id}_weapon_scaling_expr`] = scalingExpr;
+          out[`repeating_weapons_${id}_weapon_tohit_expr`] = tohitExpr;
+
+          // Optional: if you’re using the CSS show/hide toggle from earlier:
+          out[`repeating_weapons_${id}_weapon_scaling_toggle`] = type;
+        });
+
+        setAttrs(out);
+      });
+    });
+  }
+);
+
+
+// Weapon Library
+const safeParseJSON = (s) => {
+  try { return JSON.parse(s || ""); } catch (e) { return null; }
+};
+
+const fmtReq = (reqObj) => {
+  if (!reqObj) return "";
+  const order = ["str","dex","int","spl","mov","con","res"]; // adjust if you want
+  const parts = [];
+  order.forEach((k) => {
+    if (reqObj[k] != null) parts.push(`${k.toUpperCase()} ${reqObj[k]}`);
+  });
+  // include any extra keys not in order
+  Object.keys(reqObj).forEach((k) => {
+    if (!order.includes(k)) parts.push(`${k.toUpperCase()} ${reqObj[k]}`);
+  });
+  return parts.join(" | ");
+};
+
+on(
+  "change:repeating_weapons:weapon_preset change:repeating_weapons:weapon_rank sheet:opened",
+  (evt) => {
+    const prefix = evt.sourceAttribute.replace(/_(weapon_preset|weapon_rank)$/, "");
+
+    getAttrs(
+      [
+        "weapon_library_json",
+        `${prefix}_weapon_preset`,
+        `${prefix}_weapon_rank`,
+      ],
+      (v) => {
+        const preset = (v[`${prefix}_weapon_preset`] || "custom").toLowerCase();
+        const rank = String(v[`${prefix}_weapon_rank`] || "1");
+
+        if (preset === "custom") return;
+
+        const lib = safeParseJSON(v.weapon_library_json);
+        if (!lib || !lib.weapons || !lib.weapons[preset]) {
+          // If the library isn't loaded yet, do nothing (prevents overwriting)
+          return;
+        }
+
+        const weapon = lib.weapons[preset];
+        const r = (weapon.ranks && weapon.ranks[rank]) ? weapon.ranks[rank] : null;
+        if (!r) return;
+
+        const update = {};
+        update[`${prefix}_weapon_name`] = weapon.name || preset;
+        update[`${prefix}_weapon_type`] = weapon.type || weapon.category || "";
+        update[`${prefix}_weapon_rank`] = rank;
+
+        // Weight/damage (rank can override baseWeight if you want later)
+        update[`${prefix}_weapon_weight`] = (r.weight != null) ? r.weight : (weapon.baseWeight != null ? weapon.baseWeight : 0);
+        update[`${prefix}_weapon_base_dmg`] = r.dmg != null ? r.dmg : 0;
+
+        // Flat accuracy bonus (0 if absent)
+        update[`${prefix}_weapon_attack_bonus_flat`] = r.acc != null ? r.acc : 0;
+
+        // Effects split into two fields
+        update[`${prefix}_weapon_effects_base`] = r.effects || "";
+        update[`${prefix}_weapon_effects_alt`] = (r.alts && r.alts.length) ? r.alts.map(a => a.label).join(" / ") : "";
+
+        // Requirements text (display-only)
+        update[`${prefix}_weapon_req_text`] = fmtReq(r.req);
+
+        // Default scaling type if supplied (so your scaling worker can populate expr/tohit)
+        if (weapon.defaultScaling) {
+          update[`${prefix}_weapon_scaling_type`] = weapon.defaultScaling;
+        }
+
+        setAttrs(update);
+      }
+    );
+  }
+);
 
 </script>
  
