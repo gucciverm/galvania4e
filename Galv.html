@@ -2696,8 +2696,8 @@ on("change:level change:height_class change:race_rank change:is_human change:rep
 finalAttrs["strength"]     = finalAttrs.strength_total;
 finalAttrs["dexterity"]    = finalAttrs.dexterity_total;
 finalAttrs["intelligence"] = finalAttrs.intelligence_total;
-finalAttrs["resistance"]   = finalAttrs.resistance_total;
-finalAttrs["constitution"] = finalAttrs.constitution_total;
+finalAttrs["resistance_total"]   = finalAttrs.resistance_total; // Changed to match HTML
+finalAttrs["constitution_total"] = finalAttrs.constitution_total; // Changed to match HTML
 finalAttrs["cha"]          = finalAttrs.charisma_total;
 finalAttrs["agi"]          = finalAttrs.agility_total;
 
@@ -2749,19 +2749,27 @@ finalAttrs["agi"]          = finalAttrs.agility_total;
         });
     });
     
- /* --- SCRIPT 3: DAMAGE CALCULATOR & BLOCKING --- */
+/* --- SCRIPT 3: DAMAGE CALCULATOR & BLOCKING --- */
 on("clicked:block_dmg clicked:take_dmg", function(eventInfo) {
     const isBlocking = (eventInfo.sourceAttribute === "clicked:block_dmg");
-    getAttrs(["incoming_dmg", "dmg_type", "hp", "character_name", "resistance", "constitution", "shield_res_bonus", "shield_con_bonus"], function(v) {
+    
+    // We pull 'resistance_total' and 'constitution_total' to match your HTML
+    getAttrs(["incoming_dmg", "dmg_type", "hp", "character_name", "resistance_total", "constitution_total", "shield_res_bonus", "shield_con_bonus"], function(v) {
         const rawDmg = parseInt(v.incoming_dmg) || 0;
         const type = v.dmg_type;
-        let mitigation = (type === "res" ? (parseInt(v.resistance) || 0) : (parseInt(v.constitution) || 0));
+        
+        // Match the total attributes exactly
+        let mitigation = (type === "res" ? (parseInt(v.resistance_total) || 0) : (parseInt(v.constitution_total) || 0));
+        
         if (isBlocking) {
             mitigation += (type === "res" ? (parseInt(v.shield_res_bonus) || 0) : (parseInt(v.shield_con_bonus) || 0));
         }
+        
         const totalTaken = Math.max(0, rawDmg - mitigation);
+        
         let msg = `&{template:default} {{name=${v.character_name} ${isBlocking ? 'Blocks' : 'Takes Damage'}}} {{Incoming=${rawDmg}}} {{Mitigation=-${mitigation}}} {{Result=${totalTaken} DMG Taken}}`;
         if (isBlocking) msg += ` {{Block Roll=[[1d20]]}}`;
+        
         startRoll(msg, (results) => {
             finishRoll(results.rollId);
             setAttrs({ hp: Math.max(0, (parseInt(v.hp) || 0) - totalTaken) });
