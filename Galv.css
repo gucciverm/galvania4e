@@ -270,12 +270,13 @@
 }
  
  input.sheet-tab1:checked ~ div.sheet-section-main,
- input.sheet-tab2:checked ~ div.sheet-section-class,
- input.sheet-tab3:checked ~ div.sheet-section-combat,
- input.sheet-tab4:checked ~ div.sheet-section-spellbook,
- input.sheet-tab5:checked ~ div.sheet-section-inventory, 
- input.sheet-tab6:checked ~ div.sheet-section-skills {
-	display: block;
+input.sheet-tab2:checked ~ div.sheet-section-class,
+input.sheet-tab3:checked ~ div.sheet-section-combat,
+input.sheet-tab4:checked ~ div.sheet-section-spellbook,
+input.sheet-tab5:checked ~ div.sheet-section-inventory,
+input.sheet-tab6:checked ~ div.sheet-section-skills,
+input.sheet-tab7:checked ~ div.sheet-section-settings {
+  display: block;
 }
  
  input.sheet-tab99:checked ~ div[class^="sheet-section"] {
@@ -308,15 +309,16 @@
 }
  
  input.sheet-tab1:checked + span.sheet-tab1,
- input.sheet-tab2:checked + span.sheet-tab2,
- input.sheet-tab3:checked + span.sheet-tab3,
- input.sheet-tab4:checked + span.sheet-tab4,
- input.sheet-tab5:checked + span.sheet-tab5,
- input.sheet-tab6:checked + span.sheet-tab6,
- input.sheet-tab99:checked + span.sheet-tab99 {
-	background: #ab8b57;
-	color: white;
-	border-radius: 4px;
+input.sheet-tab2:checked + span.sheet-tab2,
+input.sheet-tab3:checked + span.sheet-tab3,
+input.sheet-tab4:checked + span.sheet-tab4,
+input.sheet-tab5:checked + span.sheet-tab5,
+input.sheet-tab6:checked + span.sheet-tab6,
+input.sheet-tab7:checked + span.sheet-tab7,
+input.sheet-tab99:checked + span.sheet-tab99 {
+  background: #ab8b57;
+  color: white;
+  border-radius: 4px;
 }
  
 /* END Main sheet tabs */
@@ -3324,7 +3326,7 @@ span.sheet-title-info {
 
 /* Show the wrapper ONLY when the scaling type is exactly 'custom' */
 .sheet-scaling-toggle[value="custom"] + .sheet-custom-formula-wrap {
-    display: block;
+  display: block;
 }
 
 /* Optional: Make the text reddish so players know it's a special override */
