@@ -984,8 +984,7 @@ on("sheet:opened", function () {
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_mod" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_bonus" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex" value="0" readonly class="sheet-underlined sheet-center"></div>
-    <div class="sheet-stat-roll">
-        <button type="roll" name="roll_reflex" value="&{template:default} {{name=Reflex Check}} {{Result=[[d20 + @{reflex}]]}}"></button>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_reflex" value="&{template:default} {{name=Reflex Check}} {{Result=[[d20 + @{reflex}]]}}"></button>
     </div>
 </div>
  
@@ -1035,10 +1034,10 @@ on("sheet:opened", function () {
         <!-- DEX ATK -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">DEX ATK</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_base" value="m" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk" value="0" dreadonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
@@ -1068,7 +1067,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_mov_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mov_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_mov_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mov" value="0" dreadonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mov" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
@@ -1087,11 +1086,11 @@ on("sheet:opened", function () {
         <!-- Mag ACC -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Magi. ACC</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc_base" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc_mod" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_mag_acc" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_mag_acc" value="&{template:5eDefault} {{ability=1}} {{title=Magical Accuracy}} {{roll=[[[[d20]] + [[@{mag_acc}]]]]}}"></button></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_macc" value="&{template:5eDefault} {{ability=1}} {{title=Magical Accuracy}} {{roll=[[[[d20]] + [[@{mag_acc}]]]]}}"></button></div>
         </div>
  
         <!-- Inv Carry -->
@@ -2599,12 +2598,17 @@ on("change:level change:height_class change:race_rank change:is_human change:rep
    "change:strength_bonus change:dexterity_bonus change:intelligence_bonus change:charisma_bonus change:agility_bonus change:resistance_bonus change:constitution_bonus " +
    "change:vitality_mod change:wisdom_mod change:finesse_mod change:willpower_mod change:reflex_mod " +
    "change:vitality_bonus change:wisdom_bonus change:finesse_bonus change:willpower_bonus change:reflex_bonus " +
-   "change:hp_mod change:hp_bonus change:mp_mod change:mp_bonus change:acc_mod change:acc_bonus change:macc_mod change:macc_bonus change:eva_base_mod change:eva_base_bonus change:mov_mod change:mov_bonus", function() {
+   "change:str_atk_mod change:str_atk_bonus " +
+"change:dex_atk_mod change:dex_atk_bonus " +
+"change:spl_mod change:spl_bonus " +
+"change:icw_mod change:icw_bonus " +
+"change:ecw_mod change:ecw_bonus " +
+   "change:hp_mod change:hp_bonus change:mp_mod change:mp_bonus change:acc_mod change:acc_bonus change:macc_mod change:macc_bonus change:eva_mod change:eva_bonus change:mov_mod change:mov_bonus", function() {
     
     const coreNames = ["strength", "dexterity", "intelligence", "charisma", "agility", "resistance", "constitution"];
     const derivativeNames = ["vitality", "wisdom", "finesse", "willpower", "reflex"];
     
-    let attrList = ["level", "height_class", "race_rank", "is_human", "hp_mod", "hp_bonus", "mp_mod", "mp_bonus", "acc_mod", "acc_bonus", "macc_mod", "macc_bonus", "eva_base_mod", "eva_base_bonus", "mov_mod", "mov_bonus"];
+    let attrList = ["level", "height_class", "race_rank", "is_human", "hp_mod", "hp_bonus", "mp_mod", "mp_bonus", "acc_mod", "acc_bonus", "macc_mod", "macc_bonus", "eva_mod", "eva_bonus", "mov_mod", "mov_bonus","str_atk_mod", "str_atk_bonus", "dex_atk_mod", "dex_atk_bonus", "spl_mod", "spl_bonus", "icw_mod", "icw_bonus", "ecw_mod", "ecw_bonus"];
     [...coreNames, ...derivativeNames].forEach(s => {
         attrList.push(s + "_base", s + "_mod", s + "_bonus");
     });
@@ -2646,12 +2650,17 @@ on("change:level change:height_class change:race_rank change:is_human change:rep
         finalAttrs["mp_base"] = Math.round(rawMP / 10) * 10;
         finalAttrs["mp_max"]  = finalAttrs.mp_base + (parseInt(v.mp_mod) || 0) + (parseInt(v.mp_bonus) || 0);
 
-        finalAttrs["str_atk"] = Math.floor(finalAttrs.strength_total / 2);
-        finalAttrs["dex_atk"] = Math.floor(finalAttrs.dexterity_total / 2.5);
-        finalAttrs["spl"]     = Math.floor(finalAttrs.intelligence_total / 2.5);
+        finalAttrs["str_atk_base"] = Math.floor(finalAttrs.strength_total / 2);
+        finalAttrs["str_atk"]      = finalAttrs.str_atk_base + (parseInt(v.str_atk_mod) || 0) + (parseInt(v.str_atk_bonus) || 0);
+        
+        finalAttrs["dex_atk_base"] = Math.floor(finalAttrs.dexterity_total / 2.5);
+        finalAttrs["dex_atk"]      = finalAttrs.dex_atk_base + (parseInt(v.dex_atk_mod) || 0) + (parseInt(v.dex_atk_bonus) || 0);
+        
+        finalAttrs["spl_base"]     = Math.floor(finalAttrs.intelligence_total / 2.5);
+        finalAttrs["spl"]      = finalAttrs.spl_base + (parseInt(v.spl_mod) || 0) + (parseInt(v.spl_bonus) || 0);
 
         finalAttrs["eva_base"] = Math.floor(((finalAttrs.agility_total / 2) + (finalAttrs.reflex / 2)) / 2);
-        finalAttrs["eva"]      = finalAttrs.eva_base + (parseInt(v.eva_base_mod) || 0) + (parseInt(v.eva_base_bonus) || 0);
+        finalAttrs["eva"]      = finalAttrs.eva_base + (parseInt(v.eva_mod) || 0) + (parseInt(v.eva_bonus) || 0);
 
         let rawMov = ((finalAttrs.finesse + finalAttrs.reflex) / 2) + 5;
         finalAttrs["mov_base"] = Math.round(rawMov / 5) * 5;
@@ -2664,7 +2673,9 @@ on("change:level change:height_class change:race_rank change:is_human change:rep
         finalAttrs["macc"]      = finalAttrs.macc_base + (parseInt(v.macc_mod) || 0) + (parseInt(v.macc_bonus) || 0);
 
         finalAttrs["icw_base"] = (finalAttrs.vitality * 3) + 5;
+        finalAttrs["icw"] = finalAttrs.icw_base + (parseInt(v.icw_mod) || 0) + (parseInt(v.icw_bonus) || 0);
         finalAttrs["ecw_base"] = (finalAttrs.vitality * 2) + 10;
+        finalAttrs["ecw"] = finalAttrs.ecw_base + (parseInt(v.ecw_mod) || 0) + (parseInt(v.ecw_bonus) || 0);
 
         // --- PASS 5: BUDGETS (SP/JP System) ---
         getSectionIDs("repeating_jobs", function(idarray) {
@@ -2696,10 +2707,10 @@ on("change:level change:height_class change:race_rank change:is_human change:rep
 finalAttrs["strength"]     = finalAttrs.strength_total;
 finalAttrs["dexterity"]    = finalAttrs.dexterity_total;
 finalAttrs["intelligence"] = finalAttrs.intelligence_total;
-finalAttrs["resistance_total"]   = finalAttrs.resistance_total; // Changed to match HTML
-finalAttrs["constitution_total"] = finalAttrs.constitution_total; // Changed to match HTML
-finalAttrs["cha"]          = finalAttrs.charisma_total;
-finalAttrs["agi"]          = finalAttrs.agility_total;
+finalAttrs["charisma"]     = finalAttrs.charisma_total;
+finalAttrs["agility"]      = finalAttrs.agility_total;
+finalAttrs["resistance"]   = finalAttrs.resistance_total;
+finalAttrs["constitution"] = finalAttrs.constitution_total;
 
                 setAttrs(finalAttrs);
             });
@@ -2749,64 +2760,10 @@ finalAttrs["agi"]          = finalAttrs.agility_total;
         });
     });
     
-/* --- SCRIPT 3: DAMAGE CALCULATOR & BLOCKING --- */
-on("clicked:block_dmg clicked:take_dmg", function(eventInfo) {
-    const isBlocking = (eventInfo.sourceAttribute === "clicked:block_dmg");
-    
-    // We pull 'resistance_total' and 'constitution_total' to match your HTML
-    getAttrs(["incoming_dmg", "dmg_type", "hp", "character_name", "resistance_total", "constitution_total", "shield_res_bonus", "shield_con_bonus"], function(v) {
-        const rawDmg = parseInt(v.incoming_dmg) || 0;
-        const type = v.dmg_type;
-        
-        // Match the total attributes exactly
-        let mitigation = (type === "res" ? (parseInt(v.resistance_total) || 0) : (parseInt(v.constitution_total) || 0));
-        
-        if (isBlocking) {
-            mitigation += (type === "res" ? (parseInt(v.shield_res_bonus) || 0) : (parseInt(v.shield_con_bonus) || 0));
-        }
-        
-        const totalTaken = Math.max(0, rawDmg - mitigation);
-        
-        let msg = `&{template:default} {{name=${v.character_name} ${isBlocking ? 'Blocks' : 'Takes Damage'}}} {{Incoming=${rawDmg}}} {{Mitigation=-${mitigation}}} {{Result=${totalTaken} DMG Taken}}`;
-        if (isBlocking) msg += ` {{Block Roll=[[1d20]]}}`;
-        
-        startRoll(msg, (results) => {
-            finishRoll(results.rollId);
-            setAttrs({ hp: Math.max(0, (parseInt(v.hp) || 0) - totalTaken) });
-        });
-    });
-});
 
 // Listeners for the two buttons
 on("clicked:block_dmg", (info) => handleDamage(true, info));
 on("clicked:take_dmg", (info) => handleDamage(false, info));
 
-/* --- WEAPON SCALING & ECW WEIGHT --- */
-on("change:repeating_weapons:weapon_scaling_type change:repeating_weapons:weapon_custom_formula change:repeating_weapons:weapon_weight remove:repeating_weapons change:str_atk change:dex_atk change:spl", function() {
-    getSectionIDs("repeating_weapons", function(idArray) {
-        const core = ["str_atk", "dex_atk", "spl"];
-        const weaponFields = idArray.flatMap(id => [`repeating_weapons_${id}_weapon_scaling_type`, `repeating_weapons_${id}_weapon_custom_formula`, `repeating_weapons_${id}_weapon_weight`]);
-
-        getAttrs([...core, ...weaponFields], function(v) {
-            let update = {};
-            let totalWeight = 0;
-            
-            idArray.forEach(id => {
-                // Scaling Logic
-                const type = v[`repeating_weapons_${id}_weapon_scaling_type`];
-                const custom = v[`repeating_weapons_${id}_weapon_custom_formula`];
-                let calcValue = (type === "str") ? (v.str_atk || 0) : (type === "dex") ? (v.dex_atk || 0) : (type === "spl") ? (v.spl || 0) : (type === "custom") ? custom : 0;
-                update[`repeating_weapons_${id}_weapon_scaling_calc`] = calcValue;
-
-                // Weight Logic
-                totalWeight += parseFloat(v[`repeating_weapons_${id}_weapon_weight`]) || 0;
-            });
-
-            // Apply total weight as a negative to ecw
-            update["ecw"] = -totalWeight; 
-            setAttrs(update);
-        });
-    });
-});
 </script>
  
