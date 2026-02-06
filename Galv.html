@@ -874,7 +874,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_strength_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_strength_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_strength" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_str" value="&{template:5eDefault} {{ability=1}} {{title=Strength}} {{roll=[[[[d20]] + [[@{strength}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_str"value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Strength}} {{roll=[[1d20 + @{strength}]]}}"></button></div>
         </div>
  
         <!-- Dexterity -->
@@ -884,7 +884,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_dex" value="&{template:5eDefault} {{ability=1}} {{title=Dexterity}} {{roll=[[[[d20]] + [[@{dexterity}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_dex" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Dexterity}} {{roll=[[1d20 + @{dexterity}]]}}"></button></div>
         </div>
  
         <!-- Intelligence -->
@@ -894,7 +894,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_int" value="&{template:5eDefault} {{ability=1}} {{title=Intelligence}} {{roll=[[[[d20]] + [[@{intelligence}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_int" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Intelligence}} {{roll=[[1d20 + @{intelligence}]]}}"></button></div>
         </div>
  
         <!-- Charisma -->
@@ -904,7 +904,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_charisma_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_charisma_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_charisma" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_cha" value="&{template:5eDefault} {{ability=1}} {{title=Charisma}} {{roll=[[[[d20]] + [[@{charisma}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_cha" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Charisma}} {{roll=[[1d20 + @{charisma}]]}}"></button></div>
         </div>
  
         <!-- Agility -->
@@ -914,7 +914,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_agility_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_agility_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_agility" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_agi" value="&{template:5eDefault} {{ability=1}} {{title=Agility}} {{roll=[[[[d20]] + [[@{agility}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_agi" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Agility}} {{roll=[[1d20 + @{agility}]]}}"></button></div>
         </div>
  
         <!-- Resistance -->
@@ -924,7 +924,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_resistance_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_resistance_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_resistance" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_res" value="&{template:5eDefault} {{ability=1}} {{title=Resistance}} {{roll=[[[[d20]] + [[@{resistance}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_res" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Resistance}} {{roll=[[1d20 + @{resistance}]]}}"></button></div>
         </div>
  
         <!-- Constitution -->
@@ -934,7 +934,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_constitution_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_constitution_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_constitution" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_con" value="&{template:5eDefault} {{ability=1}} {{title=Constitution}} {{roll=[[[[d20]] + [[@{constitution}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_con" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Constitution}} {{roll=[[1d20 + @{constitution}]]}}"></button></div>
         </div>
  <div style="height: 2px;"></div>
         <div class="sheet-sub-header">Derivative Stats</div>
@@ -946,7 +946,7 @@ on("sheet:opened", function () {
     <div class="sheet-stat-num"><input type="number" name="attr_vitality_mod" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_vitality_bonus" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_vitality" value="0" readonly class="sheet-underlined sheet-center"></div>
-    <div class="sheet-stat-roll"><button type="roll" name="roll_vit" value="&{template:5edefault} {{name=Vitality Check}} {{Result=[[d20 + @{vitality}]]}}"></button></div>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_fin" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Vitality}} {{roll=[[1d20 + @{vitality}]]}}"></button></div>
 </div>
         <!-- Finesse -->
         <div class="sheet-stat-row">
@@ -955,7 +955,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_finesse_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_finesse_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_finesse" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_fin" value="&{template:5eDefault} {{ability=1}} {{title=Finesse}} {{roll=[[[[d20]] + [[@{finesse}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_fin" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Finesse}} {{roll=[[1d20 + @{finesse}]]}}"></button></div>
         </div>
  
         <!-- Wisdom -->
@@ -965,7 +965,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_wisdom_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_wisdom_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_wisdom" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_wis" value="&{template:5eDefault} {{ability=1}} {{title=Wisdom}} {{roll=[[[[d20]] + [[@{wisdom}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_wis" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Wisdom}} {{roll=[[1d20 + @{wisdom}]]}}"></button></div>
         </div>
  
         <!-- Willpower -->
@@ -975,7 +975,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_willpower_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_willpower_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_willpower" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=Willpower}} {{roll=[[[[d20]] + [[@{willpower}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Willpower}} {{roll=[[1d20 + @{willpower}]]}}"></button></div>
         </div>
     
     <!-- Reflex -->
@@ -985,7 +985,7 @@ on("sheet:opened", function () {
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_mod" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_bonus" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex" value="0" readonly class="sheet-underlined sheet-center"></div>
-    <div class="sheet-stat-roll"><button type="roll" name="roll_reflex" value="&{template:5edefault} {{name=Reflex Check}} {{Result=[[d20 + @{reflex}]]}}"></button>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Reflex}} {{roll=[[1d20 + @{reflex}]]}}"></button>
     </div>
 </div>
  </div>
@@ -1060,7 +1060,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_eva_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_eva_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_eva" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_eva" value="&{template:5eDefault} {{ability=1}} {{title=Evasion}} {{roll=[[[[d20]] + [[@{eva}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_eva" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Evasion}} {{roll=[[1d20 + @{eva}]]}}"></button></div>
         </div>
  
         <!-- MOV -->
@@ -1082,7 +1082,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_acc_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_acc_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_acc" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_acc" value="&{template:5eDefault} {{ability=1}} {{title=Physical Accuracy}} {{roll=[[[[d20]] + [[@{acc}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_acc" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Physical Accuracy}} {{roll=[[1d20 + @{acc}]]}}"></button></div>
         </div>
  
         <!-- Mag ACC -->
@@ -1092,7 +1092,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_macc_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_macc_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_macc" value="0" readonly class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-roll"><button type="roll" name="roll_macc" value="&{template:5eDefault} {{ability=1}} {{title=Magical Accuracy}} {{roll=[[[[d20]] + [[@{mag_acc}]]]]}}"></button></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_macc" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Magical Accuracy}} {{roll=[[1d20 + @{macc}]]}}"></button></div>
         </div>
  
         <!-- Inv Carry -->
@@ -1257,19 +1257,19 @@ on("sheet:opened", function () {
 
       <!-- BURN -->
       <button type="roll" class="sheet-skill-btn" name="roll_status_burning"
-        value="&{template:5eDefault}{{character_name=@{character_name}}}{{title=Burning}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Damage=[[10 + @{status_scaling}]] vs @{status_defense_target}}}{{Duration=[[1d2+1]]}}{{Effect=On apply + start of target’s turns. Drops by 1 when target is hit or their turn comes up.}}">
+        value="&{template:5eDefault}{{title=@{character_name} — Burning}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Damage=[[10 + @{status_scaling}]] vs @{status_defense_target}}}{{Duration=[[1d2+1]]}}{{Effect=On apply + start of target’s turns. Drops by 1 when target is hit or their turn comes up.}}">
         BURN
       </button>
 
       <!-- POISON -->
       <button type="roll" class="sheet-skill-btn" name="roll_status_poison"
-        value="&{template:default}{{name=Poison}}{{Scaling=Uses @{status_scaling_source}}}{{Damage=[[5 + @{status_scaling}]] true damage per turn}}{{Duration=[[1d2+3]] turns}}{{Effect=Deals true damage at the start of each affected turn.}}">
+        value="&{template:5eDefault}{{title=@{character_name} — Poison}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source}}}{{Damage=[[5 + @{status_scaling}]] true damage per turn}}{{Duration=[[1d2+3]] turns}}{{Effect=Deals true damage at the start of each affected turn.}}">
         POISON
       </button>
 
       <!-- BLEED -->
       <button type="roll" class="sheet-skill-btn" name="roll_status_bleed"
-        value="&{template:default}{{name=Bleed}}{{Damage=[[2d4]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">
+        value="&{template:5eDefault}{{title=@{character_name} — Bleed}}{{outputall=1}}{{Damage=[[2d4]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">
         BLEED
       </button>
       
@@ -1278,14 +1278,14 @@ on("sheet:opened", function () {
 
   <!-- INIT (1d100, adds to tracker) -->
   <button type="roll" name="roll_init" class="sheet-block-btn sheet-defense-btn"
-    value="&{template:5eDefault} {{ability=1}} {{title=Initiative}} {{roll=[[[[1d100]] &{tracker}]]}}">
+    value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Initiative}} {{roll=[[1d100 &{tracker}]]}}">
     INIT
     <span class="sheet-defense-sub">1d100 + Tracker</span>
   </button>
 
   <!-- DODGE (same as EVA roll on Stats tab) -->
   <button type="roll" name="roll_dodge" class="sheet-take-btn sheet-defense-btn"
-    value="&{template:5eDefault} {{ability=1}} {{title=Dodge}} {{roll=[[[[d20]] + [[@{eva}]]]]}}">
+    value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Dodge}} {{roll=[[1d20 + @{eva}]]}}">
     DODGE
     <span class="sheet-defense-sub">D20 + EVA</span>
   </button>
@@ -1400,9 +1400,11 @@ on("sheet:opened", function () {
 
         <div class="sheet-center">
           <button type="roll" class="sheet-skill-btn" name="roll_shield_skill"
-            value="&{template:default} {{name=@{shield_name}: Skill Use}} {{Effect=@{shield_skill_desc}}}">
-            USE SKILL
-          </button>
+  value="&{template:5eDefault}{{title=@{character_name} — @{shield_name} Skill}}{{outputall=1}}{{Effect=@{shield_skill_desc}}}">
+  USE SKILL
+</button>
+
+
         </div>
       </div>
 
@@ -1450,7 +1452,7 @@ on("sheet:opened", function () {
       <!-- Attack -->
       <div class="sheet-center">
         <button type="roll" name="roll_attack" class="sheet-attack-btn sheet-take-btn"
-  value="&{template:default} {{name=@{character_name} — ATTACK}} {{Weapon=@{weapon_name} (Rank @{weapon_rank})}} {{Type=@{weapon_type}}} {{Hit=[[1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}]]}} {{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}} {{Effects=@{weapon_effects_base}}} {{Alt=@{weapon_effects_alt}}}">
+  value="&{template:5eDefault}{{title=@{character_name} — ATTACK}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{Hit=[[1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}]]}}{{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
   ATTACK
   <span class="sheet-defense-sub">1d20 + To-Hit</span>
 </button>
@@ -1602,9 +1604,9 @@ on("sheet:opened", function () {
 
         <div class="sheet-center">
           <button type="roll" class="sheet-skill-btn" name="roll_weapon_skill"
-            value="&{template:default} {{name=@{weapon_name}: Skill Use}} {{Effect=@{weapon_skill_desc}}}">
-            USE SKILL
-          </button>
+  value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name} Skill}}{{outputall=1}}{{Effect=@{weapon_skill_desc}}}">
+  USE SKILL
+</button>
         </div>
       </div>
 
@@ -3375,15 +3377,20 @@ on("change:level change:height_class change:race_rank change:is_human change:rep
         // --- PASS 1: CORE STATS & SP CAPS ---
         coreNames.forEach(s => {
             let base = parseInt(v[s + "_base"]) || 0;
-            if (base > cap) { base = cap; finalAttrs[s + "_base"] = cap; }
-            spentSP += Math.max(0, base - 1);
+if (base > cap) { base = cap; }
+finalAttrs[s + "_base"] = base; // ✅ always store base, capped or not
+spentSP += Math.max(0, base - 1);
 
-            let hMod = (s === "resistance" || s === "constitution") ? (height === "Short" ? -1 : height === "Tall" ? 1 : height === "Giant" ? 2 : 0) : 0;
-            finalAttrs[s + "_total"] = base + (parseInt(v[s + "_mod"]) || 0) + (parseInt(v[s + "_bonus"]) || 0) + hMod;
+let hMod = (s === "resistance" || s === "constitution")
+  ? (height === "Short" ? -1 : height === "Tall" ? 1 : height === "Giant" ? 2 : 0)
+  : 0;
+
+finalAttrs[s + "_total"] =
+  base + (parseInt(v[s + "_mod"]) || 0) + (parseInt(v[s + "_bonus"]) || 0) + hMod;
         });
 
         // --- PASS 2: DERIVATIVE BASES (Higher-Of Logic) ---
-        finalAttrs["vitality_base"]  = Math.floor(((finalAttrs.resistance_total + finalAttrs.constitution_total) / 2) + (finalAttrs.strength_total / 3));
+        finalAttrs["vitality_base"]  = Math.floor(((finalAttrs.resistance_base + finalAttrs.constitution_base) / 2) + (finalAttrs.strength_total / 3));
         finalAttrs["wisdom_base"]    = Math.floor((Math.max(finalAttrs.intelligence_total, finalAttrs.charisma_total) / 2) + (finalAttrs.dexterity_total / 3));
         finalAttrs["finesse_base"]   = Math.floor((finalAttrs.dexterity_total / 2) + (Math.max(finalAttrs.agility_total, finalAttrs.intelligence_total) / 3));
         finalAttrs["willpower_base"] = Math.floor((finalAttrs.charisma_total / 2) + (finalAttrs.strength_total / 3));
@@ -3543,10 +3550,12 @@ function handleDamage(isBlocking, info) {
 
     // Build the roll template output
     let macro =
-      `&{template:default} {{name=${name} — ${isBlocking ? "BLOCK" : "TAKE DMG"}}} ` +
-      `{{Incoming=${incoming}}} ` +
-      `{{Defense=${statLabel} ${baseStat}${isBlocking ? ` + Shield ${shieldBonus} = ${effectiveDefense}` : ""}}} ` +
-      `{{DamageTaken=[[{${incoming}-${effectiveDefense},0}kh1]]}}`;
+  `&{template:5eDefault} ` +
+  `{{title=${name} — ${isBlocking ? "BLOCK" : "TAKE DMG"}}} ` +
+  `{{outputall=1}} ` +
+  `{{Incoming=${incoming}}} ` +
+  `{{Defense=${statLabel} ${baseStat}${isBlocking ? ` + Shield ${shieldBonus} = ${effectiveDefense}` : ""}}} ` +
+  `{{DamageTaken=[[{${incoming}-${effectiveDefense},0}kh1]]}}`;
 
     // Add a plain d20 check for BLOCK (NOT used in damage math)
     if (isBlocking) {
@@ -3920,3 +3929,4 @@ on("change:str_atk_base change:dex_atk_base change:spl_base sheet:opened", () =>
 
 </script>
  
+
