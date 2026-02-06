@@ -3408,3 +3408,162 @@ button.sheet-defense-btn[type="roll"]::before {
   content: "" !important;
   display: none !important;
 }
+
+/* === Collapsible repeating cards (Shields/Weapons) === */
+.sheet-collapsible{
+  position: relative;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fdfdfd;
+  margin: 6px 0;
+  overflow: hidden;
+}
+
+/* the little expand/collapse control */
+.sheet-collapsible .sheet-collapse{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #777;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+.sheet-collapsible .sheet-collapse::before{
+  content: "▸";
+  display: block;
+  text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+}
+.sheet-collapsible .sheet-collapse:checked::before{
+  content: "▾";
+}
+
+/* summary row */
+.sheet-collapsible-summary{
+  padding: 8px 10px 8px 36px; /* space for collapse control */
+  display: grid;
+  gap: 8px;
+  align-items: center;
+}
+
+/* shield summary layout */
+.sheet-shield-summary{
+  grid-template-columns: 46px 1fr 60px 60px 70px; /* was 70px for Active */
+}
+.sheet-shield-summary input[type="checkbox"][name="attr_shield_active"]{
+  width: 14px;
+  height: 14px;
+  margin: 0 auto;
+  display: block;
+}
+
+.sheet-shield-summary input[name="attr_shield_name"]{
+  min-width: 0;
+}
+
+/* weapon summary layout */
+.sheet-weapon-summary{
+  grid-template-columns: 1fr 70px 70px minmax(120px, 1fr);
+}
+
+.sheet-collapsible-summary,
+.sheet-collapsible-summary *{
+  box-sizing: border-box;
+}
+
+/* details panel */
+.sheet-collapsible-details{
+  border-top: 1px solid #e6e6e6;
+  padding: 10px;
+}
+
+.sheet-collapsible .sheet-collapse:not(:checked) ~ .sheet-collapsible-details{
+  display: none;
+}
+
+/* small helper label style (tight + clean) */
+.sheet-mini-label{
+  font-size: 9px;
+  opacity: 0.75;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+/* inner grids for details */
+.sheet-collapsible-grid2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+.sheet-collapsible-grid3{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+/* skill row layout */
+.sheet-collapsible-skillrow{
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 10px;
+  align-items: center;
+}
+
+/* textarea sizing inside details */
+.sheet-collapsible-textarea{
+  width: 100%;
+  height: 48px;
+}
+
+/* little spacing helpers */
+.sheet-margin-top-sm{ margin-top: 8px; }
+
+/* Wider 2-col grid for Shields/Weapons block */
+.sheet-combat-grid--wide {
+  margin-top: 12px;
+  align-items: flex-start; /* don’t force matching height if one side grows */
+}
+
+.sheet-weapon-summary .sheet-attack-btn{
+  width: 100%;
+  max-width: 100%;
+}
+
+/* remove the Roll20 dice icon for this button too */
+button.sheet-attack-btn[type="roll"]::before{
+  content: "" !important;
+  display: none !important;
+}
+
+/* Put custom ACC + custom Scaling fields side-by-side */
+.sheet-weapon-custom-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+.sheet-weapon-custom-row > div{
+  min-width: 0;
+}
+
+/* Crit/fail highlights inside your 5eDefault rolltemplate */
+.sheet-rolltemplate-5eDefault .inlinerollresult.fullcrit{
+  border: 2px solid #3FB315;
+  background: #BEE5B0;
+  color: #000;
+}
+
+.sheet-rolltemplate-5eDefault .inlinerollresult.fullfail{
+  border: 2px solid #B31515;
+  background: #E5B0B0;
+  color: #000;
+}
