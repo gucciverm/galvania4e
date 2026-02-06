@@ -946,7 +946,7 @@ on("sheet:opened", function () {
     <div class="sheet-stat-num"><input type="number" name="attr_vitality_mod" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_vitality_bonus" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_vitality" value="0" readonly class="sheet-underlined sheet-center"></div>
-    <div class="sheet-stat-roll"><button type="roll" name="roll_vit" value="&{template:default} {{name=Vitality Check}} {{Result=[[d20 + @{vitality}]]}}"></button></div>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_vit" value="&{template:5edefault} {{name=Vitality Check}} {{Result=[[d20 + @{vitality}]]}}"></button></div>
 </div>
         <!-- Finesse -->
         <div class="sheet-stat-row">
@@ -985,7 +985,7 @@ on("sheet:opened", function () {
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_mod" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_bonus" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex" value="0" readonly class="sheet-underlined sheet-center"></div>
-    <div class="sheet-stat-roll"><button type="roll" name="roll_reflex" value="&{template:default} {{name=Reflex Check}} {{Result=[[d20 + @{reflex}]]}}"></button>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_reflex" value="&{template:5edefault} {{name=Reflex Check}} {{Result=[[d20 + @{reflex}]]}}"></button>
     </div>
 </div>
  </div>
@@ -1257,33 +1257,19 @@ on("sheet:opened", function () {
 
       <!-- BURN -->
       <button type="roll" class="sheet-skill-btn" name="roll_status_burning"
-        value="&{template:default}
-        {{name=Burning}}
-        {{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}
-        {{Damage=[[10 + @{status_scaling}]] vs @{status_defense_target}}}
-        {{Duration=[[1d2+1]]}}
-        {{Effect=On apply + start of target’s turns. Drops by 1 when target is hit or their turn comes up.}}">
+        value="&{template:5eDefault}{{character_name=@{character_name}}}{{title=Burning}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Damage=[[10 + @{status_scaling}]] vs @{status_defense_target}}}{{Duration=[[1d2+1]]}}{{Effect=On apply + start of target’s turns. Drops by 1 when target is hit or their turn comes up.}}">
         BURN
       </button>
 
       <!-- POISON -->
       <button type="roll" class="sheet-skill-btn" name="roll_status_poison"
-        value="&{template:default}
-        {{name=Poison}}
-        {{Scaling=Uses @{status_scaling_source}}}
-        {{Damage=[[5 + @{status_scaling}]] true damage per turn}}
-        {{Duration=[[1d2+3]] turns}}
-        {{Effect=Deals true damage at the start of each affected turn.}}">
+        value="&{template:default}{{name=Poison}}{{Scaling=Uses @{status_scaling_source}}}{{Damage=[[5 + @{status_scaling}]] true damage per turn}}{{Duration=[[1d2+3]] turns}}{{Effect=Deals true damage at the start of each affected turn.}}">
         POISON
       </button>
 
       <!-- BLEED -->
       <button type="roll" class="sheet-skill-btn" name="roll_status_bleed"
-        value="&{template:default}
-        {{name=Bleed}}
-        {{Damage=[[2d4]] HP loss per turn}}
-        {{Duration=[[1d4]] turns}}
-        {{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">
+        value="&{template:default}{{name=Bleed}}{{Damage=[[2d4]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">
         BLEED
       </button>
       
@@ -1311,284 +1297,323 @@ on("sheet:opened", function () {
 
 </div> <!-- /sheet-combat-grid -->
 
-<!-- BLOCK 2: SHIELDS -->
-<div class="sheet-header-bar sheet-margin-top">Shields</div>
+<div class="sheet-combat-grid sheet-combat-grid--wide">
 
-<!-- These are the "active shield" globals your BLOCK/TAKE DMG code already uses -->
-<input type="hidden" name="attr_shield_name" value="">
-<input type="hidden" name="attr_shield_res_bonus" value="0">
-<input type="hidden" name="attr_shield_con_bonus" value="0">
+  <!-- LEFT: SHIELDS -->
+  <div class="sheet-combat-column">
+    <div class="sheet-header-bar">Shields</div>
 
-<fieldset class="repeating_shields">
+    <!-- globals (renamed to avoid collisions) -->
+    <input type="hidden" name="attr_active_shield_name" value="">
+    <input type="hidden" name="attr_active_shield_res_bonus" value="0">
+    <input type="hidden" name="attr_active_shield_con_bonus" value="0">
 
-  <!-- Row 1: Core Shield Info -->
-  <div class="sheet-row sheet-weapon-top-row">
+    <fieldset class="repeating_shields">
 
-    <!-- Active toggle -->
-    <div class="sheet-col-1-12 sheet-small-label sheet-center">
-      <input type="checkbox" name="attr_shield_active" value="1">
-      <br/>Active
+  <div class="sheet-collapsible sheet-collapsible--shield">
+    <!-- toggle (controls details visibility) -->
+    <input type="checkbox" class="sheet-collapse" name="attr_shield_open" value="1" title="Expand/collapse">
+
+    <!-- SUMMARY (always visible) -->
+    <div class="sheet-collapsible-summary sheet-shield-summary">
+      <!-- Active -->
+      <div class="sheet-center sheet-small-label">
+        <input type="checkbox" name="attr_shield_active" value="1">
+        <div class="sheet-mini-label">Active</div>
+      </div>
+
+      <!-- Name -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined" type="text" name="attr_shield_name" placeholder="Shield Name">
+        <div class="sheet-mini-label">Name</div>
+      </div>
+
+      <!-- RES / CON -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined sheet-center" type="number" name="attr_shield_res_bonus" value="0">
+        <div class="sheet-mini-label">RES</div>
+      </div>
+
+      <div class="sheet-small-label">
+        <input class="sheet-underlined sheet-center" type="number" name="attr_shield_con_bonus" value="0">
+        <div class="sheet-mini-label">CON</div>
+      </div>
+
+      <!-- Rank -->
+      <div class="sheet-small-label">
+        <select name="attr_shield_rank">
+          <option value="1">R1</option><option value="2">R2</option><option value="3">R3</option>
+          <option value="4">R4</option><option value="5">R5</option>
+        </select>
+        <div class="sheet-mini-label">Rank</div>
+      </div>
     </div>
 
-    <!-- Name -->
-    <div class="sheet-col-1-4 sheet-small-label">
-      <input class="sheet-underlined" type="text" name="attr_shield_name" placeholder="Shield Name">
-      <br/>Name
-    </div>
+    <!-- DETAILS (expandable) -->
+    <div class="sheet-collapsible-details">
 
-    <!-- RES / CON -->
-    <div class="sheet-col-1-12 sheet-small-label">
-      <input class="sheet-underlined sheet-center" type="number" name="attr_shield_res_bonus" value="0">
-      <br/>RES
-    </div>
-
-    <div class="sheet-col-1-12 sheet-small-label">
-      <input class="sheet-underlined sheet-center" type="number" name="attr_shield_con_bonus" value="0">
-      <br/>CON
-    </div>
-
-    <!-- Weight -->
-    <div class="sheet-col-1-12 sheet-small-label">
-      <input class="sheet-underlined sheet-center" type="number" name="attr_shield_weight" value="0" step="0.1">
-      <br/>Weight
-    </div>
-
-    <!-- Preset -->
-    <div class="sheet-col-1-4 sheet-small-label">
-      <select name="attr_shield_preset">
-        <option value="custom" selected>Custom</option>
-        <option value="buckler">Buckler</option>
-        <option value="kite_shield">Kite Shield</option>
-        <option value="tower_shield">Tower Shield</option>
-      </select>
-      <br/>Preset
-    </div>
-
-    <!-- Rank -->
-    <div class="sheet-col-1-6 sheet-small-label">
-      <select name="attr_shield_rank">
-        <option value="1">Rank 1</option>
-        <option value="2">Rank 2</option>
-        <option value="3">Rank 3</option>
-        <option value="4">Rank 4</option>
-        <option value="5">Rank 5</option>
-      </select>
-      <br/>Rank
-    </div>
-
-    <!-- Requirements display -->
-    <div class="sheet-col-1-4 sheet-small-label">
-      <input class="sheet-underlined sheet-center" type="text" name="attr_shield_req_text" value="" readonly>
-      <br/>Req
-    </div>
-
+      <div class="sheet-collapsible-grid3">
+  <!-- Preset -->
+  <div class="sheet-small-label">
+    <select name="attr_shield_preset">
+      <option value="custom" selected>Custom</option>
+      <option value="buckler">Buckler</option>
+      <option value="kite_shield">Kite Shield</option>
+      <option value="tower_shield">Tower Shield</option>
+    </select>
+    <div class="sheet-mini-label">Preset</div>
   </div>
 
-  <!-- Row 2: Effects -->
-  <div class="sheet-row sheet-weapon-bottom-row">
-    <div class="sheet-col-1-1 sheet-small-label">
-      <textarea name="attr_shield_effect" placeholder="Shield Special Effects." style="height: 40px;"></textarea>
-    </div>
+  <!-- Weight (moved here) -->
+  <div class="sheet-small-label">
+    <input class="sheet-underlined sheet-center"
+           type="number"
+           name="attr_shield_weight"
+           value="0"
+           step="0.1">
+    <div class="sheet-mini-label">Weight</div>
   </div>
 
-  <!-- Row 3: Shield Skill Post -->
-  <div class="sheet-row sheet-weapon-bottom-row">
-    <div class="sheet-col-3-4 sheet-small-label">
-      <textarea name="attr_shield_skill_desc" placeholder="Shield Skill." style="height: 35px;"></textarea>
-      <br/>Unique Skill
-    </div>
-    <div class="sheet-col-1-4 sheet-center">
-      <button type="roll" class="sheet-skill-btn" name="roll_shield_skill"
-        value="&{template:default} {{name=@{shield_name}: Skill Use}} {{Effect=@{shield_skill_desc}}}">
-        USE SKILL
-      </button>
+  <!-- Req (display-only) -->
+  <div class="sheet-small-label">
+    <input class="sheet-underlined sheet-center"
+           type="text"
+           name="attr_shield_req_text"
+           value=""
+           readonly>
+    <div class="sheet-mini-label">Req</div>
+  </div>
+</div>
+
+      <!-- Effects -->
+      <div class="sheet-small-label sheet-margin-top-sm">
+        <textarea name="attr_shield_effect" placeholder="Shield Special Effects." class="sheet-collapsible-textarea"></textarea>
+        <div class="sheet-mini-label">Effects</div>
+      </div>
+
+      <!-- Skill -->
+      <div class="sheet-collapsible-skillrow sheet-margin-top-sm">
+        <div class="sheet-small-label">
+          <textarea name="attr_shield_skill_desc" placeholder="Shield Skill." class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Unique Skill</div>
+        </div>
+
+        <div class="sheet-center">
+          <button type="roll" class="sheet-skill-btn" name="roll_shield_skill"
+            value="&{template:default} {{name=@{shield_name}: Skill Use}} {{Effect=@{shield_skill_desc}}}">
+            USE SKILL
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
 </fieldset>
-
-<hr/>
+ </div>
 
     
-    <div class="sheet-header-bar sheet-margin-top">Weapons</div>
+     <!-- RIGHT: WEAPONS -->
+  <div class="sheet-combat-column">
+    <div class="sheet-header-bar">Weapons</div>
 
-<fieldset class="repeating_weapons">
-    <div class="sheet-row sheet-weapon-top-row">
-        <!-- 1. Weapon Name -->
-        <div class="sheet-col-1-4 sheet-small-label">
-            <input class="sheet-underlined" type="text" name="attr_weapon_name" placeholder="Name">
-            <br/>Weapon Name
+    <fieldset class="repeating_weapons">
+
+  <div class="sheet-collapsible sheet-collapsible--weapon">
+    <!-- toggle -->
+    <input type="checkbox" class="sheet-collapse" name="attr_weapon_open" value="1" title="Expand/collapse">
+
+    <!-- SUMMARY (compact like Cyberpunk list rows) -->
+    <div class="sheet-collapsible-summary sheet-weapon-summary">
+
+      <!-- Name -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined" type="text" name="attr_weapon_name" placeholder="Name">
+        <div class="sheet-mini-label">Weapon</div>
+      </div>
+
+      <!-- Damage -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_base_dmg" value="0">
+        <div class="sheet-mini-label">DMG</div>
+      </div>
+
+      <!-- Rank -->
+      <div class="sheet-small-label">
+        <select name="attr_weapon_rank">
+          <option value="1">R1</option><option value="2">R2</option><option value="3">R3</option>
+          <option value="4">R4</option><option value="5">R5</option>
+        </select>
+        <div class="sheet-mini-label">Rank</div>
+      </div>
+
+      <!-- Attack -->
+      <div class="sheet-center">
+        <button type="roll" name="roll_attack" class="sheet-attack-btn sheet-take-btn"
+  value="&{template:default} {{name=@{character_name} — ATTACK}} {{Weapon=@{weapon_name} (Rank @{weapon_rank})}} {{Type=@{weapon_type}}} {{Hit=[[1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}]]}} {{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}} {{Effects=@{weapon_effects_base}}} {{Alt=@{weapon_effects_alt}}}">
+  ATTACK
+  <span class="sheet-defense-sub">1d20 + To-Hit</span>
+</button>
+      </div>
+
+      <!-- keep these hidden workers exactly as you already use them -->
+      <input type="hidden" name="attr_weapon_scaling_expr" value="0">
+      <input type="hidden" name="attr_weapon_tohit_expr" value="@{acc}">
+      <input type="hidden" name="attr_weapon_attack_bonus_expr" value="@{acc}">
+      <input type="hidden" name="attr_weapon_attack_bonus_flat" value="0">
+    </div>
+
+    <!-- DETAILS -->
+    <div class="sheet-collapsible-details">
+
+      <div class="sheet-collapsible-grid3">
+        <!-- Type -->
+        <div class="sheet-small-label">
+          <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_type" placeholder="Type">
+          <div class="sheet-mini-label">Type</div>
         </div>
-        
-<!-- Accuracy Type -->
-<div class="sheet-col-1-4 sheet-small-label">
-  <select class="sheet-underlined" name="attr_weapon_accuracy_type">
-    <option value="auto" selected>Auto</option>
-    <option value="acc">ACC</option>
-    <option value="macc">Mag Acc</option>
-    <option value="custom">Custom</option>
-  </select>
-  <br/>Accuracy Type
-</div>
 
-<!-- Hidden toggle written by worker -->
-<input type="hidden"
-       class="sheet-accuracy-toggle"
-       name="attr_weapon_accuracy_toggle"
-       value="auto">
+        <!-- Weight -->
+        <div class="sheet-small-label">
+          <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0">
+          <div class="sheet-mini-label">Weight</div>
+        </div>
 
-<!-- Custom Accuracy (compact, scaling-style) -->
-<div class="sheet-col-1-4 sheet-small-label sheet-custom-accuracy-wrap">
-  <input class="sheet-underlined sheet-center"
-         type="text"
-         name="attr_weapon_accuracy_custom_formula"
-         placeholder="Custom ACC (e.g. @{cha}/2)">
-</div>
+        <!-- Req -->
+        <div class="sheet-small-label">
+          <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_req_text" value="" readonly>
+          <div class="sheet-mini-label">Reqs</div>
+        </div>
+      </div>
 
-        <!-- 2. Scaling Dropdown -->
-<div class="sheet-col-1-8 sheet-small-label">
-    <select name="attr_weapon_scaling_type">
-        <option value="str">STR</option>
-        <option value="dex">DEX</option>
-        <option value="spl">SPL</option>
-        <option value="custom">Custom</option>
-        <option value="none" selected>N/A</option>
-    </select>
-    <br/>Scaling
-    <input type="hidden" name="attr_weapon_scaling_expr" value="0">
-<input type="hidden" name="attr_weapon_tohit_expr" value="@{acc}">
-</div>
+      <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+        <!-- Preset -->
+        <div class="sheet-small-label">
+          <select name="attr_weapon_preset">
+            <option value="custom">Custom</option>
+            <!-- keep your optgroups/options exactly as you had them -->
+            <optgroup label="STR Weapons">
+              <option value="greatsword">Greatsword</option>
+              <option value="greataxe">Greataxe</option>
+              <option value="greathammer">Greathammer</option>
+              <option value="gauntlet">Gauntlet</option>
+              <option value="mace">Mace</option>
+            </optgroup>
+            <optgroup label="DEX Weapons">
+              <option value="sword">Sword</option>
+              <option value="hand_axe">Hand-Axe</option>
+              <option value="dagger">Dagger</option>
+              <option value="whip">Whip</option>
+              <option value="polearm">Polearm</option>
+            </optgroup>
+            <optgroup label="INT Weapons">
+              <option value="focus_1h">Focus (1H)</option>
+              <option value="staff_2h">Staff (2H)</option>
+              <option value="prayer_beads_1h">Prayer Beads (1H)</option>
+              <option value="spellbook_varies">Spellbook</option>
+              <option value="consumable_scroll">Consumable Scroll</option>
+            </optgroup>
+            <optgroup label="Ranged Weapons">
+              <option value="shortbow">Shortbow</option>
+              <option value="longbow">Longbow</option>
+              <option value="crossbow">Crossbow</option>
+              <option value="throwing_daggers">Throwing Daggers</option>
+              <option value="chakrams">Chakrams</option>
+              <option value="throwing_axe">Throwing Axe</option>
+            </optgroup>
+            <optgroup label="Guns">
+              <option value="handgun">Handgun</option>
+              <option value="shotgun">Shotgun</option>
+              <option value="submachine_gun">Submachine Gun</option>
+              <option value="rifle">Rifle</option>
+            </optgroup>
+          </select>
+          <div class="sheet-mini-label">Preset</div>
+        </div>
 
-<!-- Hidden input to track the dropdown state -->
-<input type="hidden" class="sheet-scaling-toggle" name="attr_weapon_scaling_toggle" value="none">
+        <!-- Accuracy Type -->
+        <div class="sheet-small-label">
+          <select class="sheet-underlined" name="attr_weapon_accuracy_type">
+            <option value="auto" selected>Auto</option>
+            <option value="acc">ACC</option>
+            <option value="macc">Mag Acc</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div class="sheet-mini-label">Accuracy</div>
+        </div>
 
-<!-- 3. Custom Formula (stays in its own column) -->
-<div class="sheet-col-1-8 sheet-small-label">
-  <input type="hidden"
-         class="sheet-scaling-toggle"
-         name="attr_weapon_scaling_toggle"
-         value="none">
+        <!-- Scaling -->
+        <div class="sheet-small-label">
+          <select name="attr_weapon_scaling_type">
+            <option value="str">STR</option>
+            <option value="dex">DEX</option>
+            <option value="spl">SPL</option>
+            <option value="custom">Custom</option>
+            <option value="none" selected>N/A</option>
+          </select>
+          <div class="sheet-mini-label">Scaling</div>
+        </div>
+      </div>
 
-  <div class="sheet-custom-formula-wrap">
-    <input class="sheet-underlined" type="text"
+<div class="sheet-weapon-custom-row">
+
+  <!-- Hidden ACC toggle (must be DIRECTLY before the wrapper) -->
+  <input type="hidden" class="sheet-accuracy-toggle" name="attr_weapon_accuracy_toggle">
+
+  <!-- Custom ACC -->
+  <div class="sheet-custom-accuracy-wrap sheet-small-label">
+    <input class="sheet-underlined sheet-center"
+           type="text"
+           name="attr_weapon_accuracy_custom_formula"
+           placeholder="@{cha}/2)">
+    <div class="sheet-mini-label">Custom ACC</div>
+  </div>
+
+  <!-- Hidden Scaling toggle (must be DIRECTLY before the wrapper) -->
+  <input type="hidden" class="sheet-scaling-toggle" name="attr_weapon_scaling_toggle">
+
+  <!-- Custom Scaling/Bonus -->
+  <div class="sheet-custom-formula-wrap sheet-small-label">
+    <input class="sheet-underlined"
+           type="text"
            name="attr_weapon_custom_formula"
            placeholder="@{mov}/2">
-    <br/>Custom/Bonus
+    <div class="sheet-mini-label">Custom Scaling</div>
   </div>
+
 </div>
 
-        <!-- 4. Base Damage -->
-        <div class="sheet-col-1-8 sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_base_dmg" value="0">
-            <br/>Damage
+      <div class="sheet-collapsible-grid2 sheet-margin-top-sm">
+        <div class="sheet-small-label">
+          <textarea name="attr_weapon_effects_base" class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Effects</div>
+        </div>
+        <div class="sheet-small-label">
+          <textarea name="attr_weapon_effects_alt" class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Alt</div>
+        </div>
+      </div>
+
+      <div class="sheet-collapsible-skillrow sheet-margin-top-sm">
+        <div class="sheet-small-label">
+          <textarea name="attr_weapon_skill_desc" placeholder="Weapon Skill" class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Weapon Skill</div>
         </div>
 
-        <!-- 5. Weapon Type -->
-        <div class="sheet-col-1-8 sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_type" placeholder="Type">
-            <br/>Type
+        <div class="sheet-center">
+          <button type="roll" class="sheet-skill-btn" name="roll_weapon_skill"
+            value="&{template:default} {{name=@{weapon_name}: Skill Use}} {{Effect=@{weapon_skill_desc}}}">
+            USE SKILL
+          </button>
         </div>
+      </div>
 
-        <!-- 6. Weight -->
-        <div class="sheet-col-1-8 sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0">
-            <br/>Weight
-        </div>
-        
-        <!-- Preset -->
-<div class="sheet-col-1-6 sheet-small-label">
-  <select name="attr_weapon_preset">
-    <option value="custom">Custom</option>
-
-<optgroup label="STR Weapons">
-  <option value="greatsword">Greatsword</option>
-  <option value="greataxe">Greataxe</option>
-  <option value="greathammer">Greathammer</option>
-  <option value="gauntlet">Gauntlet</option>
-  <option value="mace">Mace</option>
-</optgroup>
-
-<optgroup label="DEX Weapons">
-  <option value="sword">Sword</option>
-  <option value="hand_axe">Hand-Axe</option>
-  <option value="dagger">Dagger</option>
-  <option value="whip">Whip</option>
-  <option value="polearm">Polearm</option>
-</optgroup>
-
-<optgroup label="INT Weapons">
-  <option value="focus_1h">Focus (1H)</option>
-  <option value="staff_2h">Staff (2H)</option>
-  <option value="prayer_beads_1h">Prayer Beads (1H)</option>
-  <option value="spellbook_varies">Spellbook</option>
-  <option value="consumable_scroll">Consumable Scroll</option>
-</optgroup>
-
-<optgroup label="Ranged Weapons">
-  <option value="shortbow">Shortbow</option>
-  <option value="longbow">Longbow</option>
-  <option value="crossbow">Crossbow</option>
-  <option value="throwing_daggers">Throwing Daggers</option>
-  <option value="chakrams">Chakrams</option>
-  <option value="throwing_axe">Throwing Axe</option>
-</optgroup>
-
-<optgroup label="Guns">
-  <option value="handgun">Handgun</option>
-  <option value="shotgun">Shotgun</option>
-  <option value="submachine_gun">Submachine Gun</option>
-  <option value="rifle">Rifle</option>
-</optgroup>
-  </select>
-  <br>Preset
-</div>
-
-<!-- Rank -->
-<div class="sheet-col-1-12 sheet-small-label">
-  <select name="attr_weapon_rank">
-    <option value="1">Rank 1</option>
-    <option value="2">Rank 2</option>
-    <option value="3">Rank 3</option>
-    <option value="4">Rank 4</option>
-    <option value="5">Rank 5</option>
-  </select>
-  <br>Rank
-</div>
-
-<div class="sheet-col-1-4 sheet-small-label sheet-weapon-req">
-  <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_req_text" value="" readonly>
-  <br/>Reqs
-</div>
-
-<!-- Flat hit bonus (e.g. +ACC) -->
-<input type="hidden" name="attr_weapon_attack_bonus_flat" value="0">
-
-<!-- Effects fields (your choice: show these as textareas or keep hidden + show on sheet) -->
-<textarea name="attr_weapon_effects_base" class="sheet-small-textarea"></textarea>
-<textarea name="attr_weapon_effects_alt"  class="sheet-small-textarea"></textarea>
-
-        <!-- 7. Attack Button -->
-        <div class="sheet-col-1-8 sheet-center">
-           <button type="roll" name="roll_attack"
-value="&{template:default} {{name=@{character_name} — ATTACK}} {{Weapon=@{weapon_name} (Rank @{weapon_rank})}} {{Type=@{weapon_type}}} {{Hit=[[1d20+@{weapon_attack_bonus_expr}+@{weapon_attack_bonus_flat}]]}} {{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}} {{Effects=@{weapon_effects_base}}} {{Alt=@{weapon_effects_alt}}}">
-ATTACK</button>
-</button><input type="hidden" name="attr_weapon_scaling_expr" value="0">
-            <input type="hidden" name="attr_weapon_attack_bonus_expr" value="@{acc}">
-        </div>
     </div>
+  </div>
 
-    <!-- Row 2: Unique Skill & Effects -->
-    <div class="sheet-row sheet-weapon-bottom-row">
-        <div class="sheet-col-3-4 sheet-small-label">
-            <textarea name="attr_weapon_skill_desc" placeholder="Weapon Skill" style="height: 35px;"></textarea>
-        </div>
-        <div class="sheet-col-1-4 sheet-center">
-            <button type="roll" class="sheet-skill-btn" name="roll_weapon_skill" value="&{template:default} {{name=@{weapon_name}: Skill Use}} {{Effect=@{weapon_skill_desc}}}">
-                USE SKILL
-            </button>
-        </div>
-    </div>
-</fieldset>
+</div>
+
+</div>
 
 </div>
 
