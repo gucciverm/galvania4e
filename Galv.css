@@ -3468,9 +3468,17 @@ button.sheet-defense-btn[type="roll"]::before {
   min-width: 0;
 }
 
-/* weapon summary layout */
+/* weapon summary layout (add Active column like shields) */
 .sheet-weapon-summary{
-  grid-template-columns: 1fr 70px 70px minmax(120px, 1fr);
+  grid-template-columns: 46px 1fr 70px 70px minmax(120px, 1fr);
+}
+
+/* match shield checkbox sizing */
+.sheet-weapon-summary input[type="checkbox"][name="attr_weapon_active"]{
+  width: 14px;
+  height: 14px;
+  margin: 0 auto;
+  display: block;
 }
 
 .sheet-collapsible-summary,
@@ -3566,4 +3574,30 @@ button.sheet-attack-btn[type="roll"]::before{
   border: 2px solid #B31515;
   background: #E5B0B0;
   color: #000;
+}
+
+/* ===== Skills: show/hide optional panels ===== */
+
+/* hide attack/damage blocks by default */
+.sheet-skill-attack-wrap { display: none; }
+.sheet-skill-damage-wrap { display: none; }
+
+/* show when toggle attr is 1 */
+.sheet-skill-attack-toggle[value="1"] + .sheet-skill-attack-wrap { display: block; }
+.sheet-skill-damage-toggle[value="1"] + .sheet-skill-damage-wrap { display: block; }
+
+/* custom ACC only when Accuracy Type = custom */
+.sheet-skill-custom-accuracy-wrap { display: none; }
+.sheet-skill-accuracy-toggle[value="custom"] + .sheet-skill-custom-accuracy-wrap {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* ===== Skills: Custom Damage Stat show/hide (hard override) ===== */
+.charsheet .sheet-skill-custom-stat-wrap { 
+  display: none !important; 
+}
+
+.charsheet input.sheet-skill-stat-toggle[value="custom"] + .sheet-skill-custom-stat-wrap { 
+  display: block !important; 
 }
