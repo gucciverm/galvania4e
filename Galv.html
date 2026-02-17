@@ -859,7 +859,7 @@ on("sheet:opened", function () {
  
     <!-- LEFT COLUMN -->
     <div class="sheet-stat-column">
-        <h4 class="sheet-center">Core Attributes</h4>
+        <div class="sheet-sub-header">Core Attributes</div>
         <div class="sheet-stat-row sheet-small-label">
             <div class="sheet-stat-name">Stat</div>
             <div class="sheet-stat-num sheet-center">Base</div>
@@ -938,7 +938,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_constitution" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"><button type="roll" name="roll_con" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Constitution}} {{roll=[[1d20 + @{constitution}]]}}"></button></div>
         </div>
- <div style="height: 2px;"></div>
+
         <div class="sheet-sub-header">Derivative Stats</div>
  
         <!-- Vitality -->
@@ -994,7 +994,6 @@ on("sheet:opened", function () {
  
     <!-- RIGHT COLUMN -->
     <div class="sheet-stat-column">
-        <div style="height: 5px;"></div>
         <div class="sheet-sub-header">Combat Stats</div>
         <div class="sheet-stat-row sheet-small-label">
             <div class="sheet-stat-name">Stat</div>
@@ -1074,7 +1073,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_mov" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
- 
+ <div style="height: 5px;"></div>
         <div class="sheet-sub-header">Logistics & Accuracy</div>
  
         <!-- Phys ACC -->
@@ -1180,23 +1179,7 @@ on("sheet:opened", function () {
 </fieldset>
         </div>
     </div> <!-- Closes sheet-main-stats-container -->
-    <div class="sheet-row"><br/></div>
-<div class="sheet-sub-header">Unlocked Titles</div>
- 
-<fieldset class="repeating_titles">
-    <div class="sheet-row">
-        <!-- The Selection Checkbox -->
-        <div class="sheet-col-1-8 sheet-center">
-            <input type="checkbox" name="attr_title_active" value="1">
-        </div>
-        <div class="sheet-col-1-4">
-            <input class="sheet-underlined" type="text" name="attr_library_title_name">
-        </div>
-        <div class="sheet-col-5-8">
-            <textarea name="attr_library_title_effect" style="height: 30px;"></textarea>
-        </div>
-    </div>
-</fieldset>
+
 </div> <!-- Closes sheet-section-class -->
  
  
@@ -1246,16 +1229,16 @@ on("sheet:opened", function () {
   </div> <!-- /LEFT column -->
 
   <!-- RIGHT: STATUS EFFECTS -->
-  <div class="sheet-combat-column">
+<div class="sheet-combat-column">
 
-    <input type="hidden" name="attr_status_scaling" value="0">
-    <input type="hidden" name="attr_status_scaling_source" value="STR ATK (Base)">
-    <input type="hidden" name="attr_status_defense_target" value="RES">
+  <input type="hidden" name="attr_status_scaling" value="0">
+  <input type="hidden" name="attr_status_scaling_source" value="STR ATK (Base)">
+  <input type="hidden" name="attr_status_defense_target" value="RES">
 
-    <div class="sheet-header-bar">Status Effects</div>
+  <div class="sheet-header-bar">Status Effects</div>
 
-    <div class="sheet-defense-card sheet-status-card">
-   <div class="sheet-row sheet-weapon-bottom-row sheet-center">
+  <div class="sheet-defense-card sheet-status-card">
+    <div class="sheet-row sheet-weapon-bottom-row sheet-center sheet-status-toprow">
 
       <!-- BURN -->
       <button type="roll" class="sheet-skill-btn" name="roll_status_burning"
@@ -1275,30 +1258,41 @@ on("sheet:opened", function () {
         BLEED
       </button>
       
+       <!-- MP REGEN (WIS/2) -->
+  <button type="roll" class="sheet-skill-btn sheet-mp-regen-btn" name="roll_mp_regen"
+    value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — MP Regen}} {{roll=[[floor(@{wisdom}/2)]]}}">
+    REGEN
+  </button>
+
+
       <!-- Big convenience buttons (match BLOCK / TAKE DMG sizing) -->
-<div class="sheet-defense-row sheet-defense-actions sheet-margin-top">
+      <div class="sheet-defense-row sheet-defense-actions sheet-margin-top">
+          
+           <!-- CRT tracker (no functionality) -->
+  <div class="sheet-status-crt-wrap">
+    <input type="number" name="attr_crt" value="0" class="sheet-status-crt">
+    <div class="sheet-mini-label">CRT</div>
+  </div>
 
-  <!-- INIT (1d100, adds to tracker) -->
-  <button type="roll" name="roll_init" class="sheet-block-btn sheet-defense-btn"
-    value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Initiative}} {{roll=[[1d100 &{tracker}]]}}">
-    INIT
-    <span class="sheet-defense-sub">1d100 + Tracker</span>
-  </button>
+        <!-- INIT (1d100, adds to tracker) -->
+        <button type="roll" name="roll_init" class="sheet-block-btn sheet-defense-btn"
+          value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Initiative}} {{roll=[[1d100 &{tracker}]]}}">
+          INIT
+          <span class="sheet-defense-sub">D100+Tracker</span>
+        </button>
 
-  <!-- DODGE (same as EVA roll on Stats tab) -->
-  <button type="roll" name="roll_dodge" class="sheet-take-btn sheet-defense-btn"
-    value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Dodge}} {{roll=[[1d20 + @{eva}]]}}">
-    DODGE
-    <span class="sheet-defense-sub">D20 + EVA</span>
-  </button>
-</div>
-</div>
+        <!-- DODGE (same as EVA roll on Stats tab) -->
+        <button type="roll" name="roll_dodge" class="sheet-take-btn sheet-defense-btn"
+          value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Dodge}} {{roll=[[1d20 + @{eva}]]}}">
+          DODGE
+          <span class="sheet-defense-sub">D20 + EVA</span>
+        </button>
+      </div>
 
     </div>
-  </div> <!-- /RIGHT column -->
-
+  </div>
 </div> <!-- /sheet-combat-grid -->
-
+</div>
 <div class="sheet-combat-grid sheet-combat-grid--wide">
 
   <!-- LEFT: SHIELDS -->
@@ -1632,312 +1626,620 @@ on("sheet:opened", function () {
 <div class="sheet-section-spellbook">
   <div class="sheet-sub-header">Skills</div>
 
-  <fieldset class="repeating_skills">
-    <div class="sheet-collapsible sheet-collapsible--skill">
+  <!-- SKILL CATEGORY FILTER BAR (ONCE, NOT REPEATED) -->
+  <div class="sheet-skill-filterbar">
+    <button type="action" name="act_skills_showall">Show All</button>
 
-      <!-- collapse toggle -->
-      <input type="checkbox" class="sheet-collapse" name="attr_skill_open" value="1" title="Expand/collapse">
+    <select name="attr_skills_filter_mode" class="sheet-underlined">
+      <option value="all" selected>All</option>
+      <option value="by">Filter</option>
+    </select>
 
-      <!-- SUMMARY ROW -->
-      <div class="sheet-collapsible-summary sheet-collapsible-skillrow">
-        <input class="sheet-underlined" type="text" name="attr_skill_name" placeholder="Skill Name">
+    <input type="text" class="sheet-underlined"
+           name="attr_skills_filter_text"
+           placeholder="Category name (e.g. Race, Job: Warden, Gear)">
+  </div>
 
-        <div class="sheet-collapsible-grid2">
-          <div class="sheet-small-label">
-            <select name="attr_skill_kind" class="sheet-underlined">
-              <option value="Passive">Passive</option>
-              <option value="Attack">Attack</option>
-              <option value="Debuff">Debuff</option>
-              <option value="Heal/Barrier">Heal/Barrier</option>
-              <option value="Stance">Stance</option>
-              <option value="Utility">Utility</option>
-              <option value="Other" selected>Other</option>
-            </select>
-            <div class="sheet-mini-label">Type</div>
-          </div>
+  <!-- CATEGORY LIST (ONCE) -->
+  <div class="sheet-skill-categories">
+    <div class="sheet-small-label sheet-margin-top-sm">Categories (add/remove/rename freely)</div>
 
-          <div class="sheet-small-label">
-            <select name="attr_skill_action" class="sheet-underlined">
-              <option value="Passive">Passive</option>
-              <option value="Action" selected>Action</option>
-              <option value="Minor">Minor</option>
-              <option value="Reaction">Reaction</option>
-              <option value="Stance">Stance</option>
-              <option value="Free">Free</option>
-            </select>
-            <div class="sheet-mini-label">Use</div>
-          </div>
-        </div>
+    <fieldset class="repeating_skillcats">
+      <div class="sheet-skillcat-row">
+        <input type="text" class="sheet-underlined"
+               name="attr_cat_name"
+               placeholder="Category Name (e.g. Race, Job: Warden, Gear: Blackblade)">
+
+        <button type="action" name="act_filter">Filter</button>
       </div>
+    </fieldset>
+  </div>
+  
+  <hr class="sheet-skills-divider">
 
-      <!-- DETAILS PANEL -->
-      <div class="sheet-collapsible-details">
+  <!-- SKILLS LIST -->
+  <fieldset class="repeating_skills">
 
-        <div class="sheet-collapsible-grid2">
-          <div class="sheet-small-label">
-            <textarea class="sheet-collapsible-textarea" name="attr_skill_description" placeholder="Description"></textarea>
-            <div class="sheet-mini-label">Description</div>
-          </div>
+    <!-- Visibility flag MUST be directly before the wrapper you hide -->
+    <input type="hidden" class="sheet-skill-visible" name="attr_skill_visible" value="1">
+<input type="hidden" name="attr_skill_row_type" value="skill" class="sheet-row-type">
 
-          <div class="sheet-small-label">
-            <textarea class="sheet-collapsible-textarea" name="attr_skill_effect" placeholder="Effect / Mechanics"></textarea>
-            <div class="sheet-mini-label">Effect</div>
-          </div>
-        </div>
+<div class="sheet-skill-rowwrap">
 
-        <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
-          <div class="sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="text" name="attr_skill_cooldown" placeholder="e.g. 2 Turns">
-            <div class="sheet-mini-label">Cooldown</div>
-          </div>
+  <!-- DIVIDER DISPLAY (only visible when row type = divider) -->
+  <div class="sheet-divider-row">
+    <input type="text"
+           name="attr_skill_divider_label"
+           class="sheet-divider-label"
+           placeholder="Divider Label (e.g. Job Skills)">
+  </div>
 
-          <div class="sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="text" name="attr_skill_cost" placeholder="e.g. 20 MP / 20%">
-            <div class="sheet-mini-label">Cost</div>
-          </div>
+      <div class="sheet-collapsible sheet-collapsible--skill">
 
-          <div class="sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="text" name="attr_skill_tags" placeholder="e.g. Bleed, Cleave, AoE">
-            <div class="sheet-mini-label">Tags</div>
-          </div>
-        </div>
+        <!-- collapse toggle -->
+        <input type="checkbox" class="sheet-collapse" name="attr_skill_open" value="1" title="Expand/collapse">
 
-        <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
-          <div class="sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="text" name="attr_skill_range" placeholder="e.g. Melee / 30ft">
-            <div class="sheet-mini-label">Range</div>
-          </div>
+        <!-- SUMMARY ROW -->
+<div class="sheet-collapsible-summary sheet-skill-header">
 
-          <div class="sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="text" name="attr_skill_target" placeholder="e.g. 1 target / 3x3 AoE">
-            <div class="sheet-mini-label">Target/AoE</div>
-          </div>
+  <!-- Left: collapse + name -->
+  <div class="sheet-skill-header-left">
+    <input type="checkbox" class="sheet-collapse" name="attr_skill_open" value="1" title="Expand/collapse">
+    <input class="sheet-skill-name" type="text" name="attr_skill_name" placeholder="Skill Name">
+  </div>
 
-          <div class="sheet-small-label">
-            <input class="sheet-underlined sheet-center" type="text" name="attr_skill_notes" placeholder="Any short note">
-            <div class="sheet-mini-label">Notes</div>
-          </div>
-        </div>
+  <!-- Right: pills -->
+  <div class="sheet-skill-header-right">
 
-        <!-- AUTOMATION TOGGLES -->
-        <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
-          <div class="sheet-small-label sheet-center">
-            <input type="checkbox" name="attr_skill_has_attack" value="1">
-            <div class="sheet-mini-label">Attack Roll</div>
-          </div>
+    <!-- Row Type -->
+    <select name="attr_skill_row_type" class="sheet-row-type-select">
+      <option value="skill" selected>Skill</option>
+      <option value="divider">Divider</option>
+    </select>
 
-          <div class="sheet-small-label sheet-center">
-            <input type="checkbox" name="attr_skill_has_damage" value="1">
-            <div class="sheet-mini-label">Damage</div>
-          </div>
+    <!-- Category -->
+    <input type="text"
+           name="attr_skill_category"
+           class="sheet-skill-pill"
+           placeholder="Category">
 
-          <div class="sheet-small-label sheet-center">
-            <input type="checkbox" name="attr_skill_uses_weapon" value="1">
-            <div class="sheet-mini-label">Add Active Weapon</div>
-          </div>
-        </div>
+    <!-- Rank -->
+    <select name="attr_skill_rank_selected" class="sheet-skill-pill sheet-skill-rank">
+      <option value="1" selected>R1</option>
+      <option value="2">R2</option>
+      <option value="3">R3</option>
+    </select>
 
-        <!-- ATTACK SETTINGS -->
-        <input type="hidden" class="sheet-skill-attack-toggle" name="attr_skill_has_attack_toggle" value="0">
-        <div class="sheet-skill-attack-wrap sheet-margin-top-sm">
-          <div class="sheet-collapsible-grid3">
-            <div class="sheet-small-label">
-              <select name="attr_skill_acc_type" class="sheet-underlined">
-                <option value="none" selected>None</option>
-                <option value="acc">ACC</option>
-                <option value="macc">MACC</option>
-                <option value="custom">Custom</option>
-              </select>
-              <div class="sheet-mini-label">Accuracy</div>
-            </div>
+    <!-- Type -->
+    <select name="attr_skill_kind" class="sheet-skill-pill">
+      <option value="Passive">Passive</option>
+      <option value="Attack">Attack</option>
+      <option value="Debuff">Debuff</option>
+      <option value="Heal/Barrier">Heal/Barrier</option>
+      <option value="Stance">Stance</option>
+      <option value="Utility">Utility</option>
+      <option value="Other" selected>Other</option>
+    </select>
 
-            <input type="hidden" class="sheet-skill-accuracy-toggle" name="attr_skill_acc_type">
+    <!-- Use -->
+    <select name="attr_skill_action" class="sheet-skill-pill">
+      <option value="Passive">Passive</option>
+      <option value="Action" selected>Action</option>
+      <option value="Minor">Minor</option>
+      <option value="Reaction">Reaction</option>
+      <option value="Stance">Stance</option>
+      <option value="Free">Free</option>
+    </select>
 
-            <div class="sheet-skill-custom-accuracy-wrap sheet-small-label">
-              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_acc_custom" placeholder="Custom ACC number">
-              <div class="sheet-mini-label">Custom ACC</div>
-            </div>
-
-            <div class="sheet-small-label">
-              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_attack_notes" placeholder="(optional)">
-              <div class="sheet-mini-label">Atk Notes</div>
-            </div>
-          </div>
-
-          <input type="hidden" name="attr_skill_acc_val" value="0">
-        </div>
-
-        <!-- DAMAGE SETTINGS -->
-        <input type="hidden" class="sheet-skill-damage-toggle" name="attr_skill_has_damage_toggle" value="0">
-        <div class="sheet-skill-damage-wrap sheet-margin-top-sm">
-          <div class="sheet-collapsible-grid3">
-            <div class="sheet-small-label">
-              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_base_dmg" value="0" placeholder="Base Skill DMG (e.g. 10 or 2d6+3)">
-              <div class="sheet-mini-label">Base Skill DMG</div>
-            </div>
-
-            <div class="sheet-small-label">
-              <select name="attr_skill_stat_add" class="sheet-underlined">
-                <option value="0" selected>None</option>
-                <option value="@{str_atk}">STR ATK</option>
-                <option value="@{dex_atk}">DEX ATK</option>
-                <option value="@{spl}">SPL</option>
-                <option value="custom">Custom</option>
-              </select>
-              <div class="sheet-mini-label">Damage Stat</div>
-            </div>
-
-            <div class="sheet-small-label">
-              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_damage_notes" placeholder="(optional)">
-              <div class="sheet-mini-label">Dmg Notes</div>
-            </div>
-            
-            <div class="sheet-small-label">
-  <input class="sheet-underlined sheet-center" type="number" name="attr_skill_crit_mult" value="2" step="0.5">
-  <div class="sheet-mini-label">Crit Mult</div>
-</div>
-            
-          </div>
-
-          <input type="hidden" class="sheet-skill-stat-toggle" name="attr_skill_stat_toggle" value="0">
-
-          <div class="sheet-skill-custom-stat-wrap sheet-row sheet-margin-top-sm">
-            <div class="sheet-col-1-2 sheet-small-label">
-              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_stat_custom" placeholder="Custom stat number">
-              <div class="sheet-mini-label">Custom Damage Stat</div>
-            </div>
-          </div>
-
-          <input type="hidden" name="attr_skill_weapon_add" value="0">
-          <input type="hidden" name="attr_skill_stat_val" value="0">
-        </div>
-
-        <!-- ROLL BUTTON: simplest possible -->
-<div class="sheet-row sheet-margin-top-sm">
-  <button type="roll" class="sheet-skill-btn" name="roll_skill_post" value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_action} • @{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">USE</button>
-
-  <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
-    value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ (@{skill_base_dmg})* @{skill_crit_mult} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">
-    CRIT
-  </button>
+  </div>
 </div>
 
-      </div> <!-- /sheet-collapsible-details -->
-    </div> <!-- /sheet-collapsible -->
+
+        <!-- DETAILS PANEL -->
+        <div class="sheet-collapsible-details">
+
+          <div class="sheet-collapsible-grid2">
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_skill_description" placeholder="Description"></textarea>
+              <div class="sheet-mini-label">Description</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_skill_effect" placeholder="Effect / Mechanics"></textarea>
+              <div class="sheet-mini-label">Effect</div>
+            </div>
+          </div>
+
+          <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_cooldown" placeholder="e.g. 2 Turns">
+              <div class="sheet-mini-label">Cooldown</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_cost" placeholder="e.g. 20 MP / 20%">
+              <div class="sheet-mini-label">Cost</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_tags" placeholder="e.g. Bleed, Cleave, AoE">
+              <div class="sheet-mini-label">Tags</div>
+            </div>
+          </div>
+
+          <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_range" placeholder="e.g. Melee / 30ft">
+              <div class="sheet-mini-label">Range</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_target" placeholder="e.g. 1 target / 3x3 AoE">
+              <div class="sheet-mini-label">Target/AoE</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_notes" placeholder="Any short note">
+              <div class="sheet-mini-label">Notes</div>
+            </div>
+          </div>
+
+          <!-- AUTOMATION TOGGLES -->
+          <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+            <div class="sheet-small-label sheet-center">
+              <input type="checkbox" name="attr_skill_has_attack" value="1">
+              <div class="sheet-mini-label">Attack Roll</div>
+            </div>
+
+            <div class="sheet-small-label sheet-center">
+              <input type="checkbox" name="attr_skill_has_damage" value="1">
+              <div class="sheet-mini-label">Damage</div>
+            </div>
+
+            <div class="sheet-small-label sheet-center">
+              <input type="checkbox" name="attr_skill_uses_weapon" value="1">
+              <div class="sheet-mini-label">Add Active Weapon</div>
+            </div>
+          </div>
+
+          <!-- ATTACK SETTINGS -->
+          <input type="hidden" class="sheet-skill-attack-toggle" name="attr_skill_has_attack_toggle" value="0">
+          <div class="sheet-skill-attack-wrap sheet-margin-top-sm">
+            <div class="sheet-collapsible-grid3">
+              <div class="sheet-small-label">
+                <select name="attr_skill_acc_type" class="sheet-underlined">
+                  <option value="none" selected>None</option>
+                  <option value="acc">ACC</option>
+                  <option value="macc">MACC</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <div class="sheet-mini-label">Accuracy</div>
+              </div>
+
+              <input type="hidden" class="sheet-skill-accuracy-toggle" name="attr_skill_acc_type">
+
+              <div class="sheet-skill-custom-accuracy-wrap sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_acc_custom" placeholder="Custom ACC number">
+                <div class="sheet-mini-label">Custom ACC</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_attack_notes" placeholder="(optional)">
+                <div class="sheet-mini-label">Atk Notes</div>
+              </div>
+            </div>
+
+            <input type="hidden" name="attr_skill_acc_val" value="0">
+          </div>
+
+          <!-- DAMAGE SETTINGS -->
+          <input type="hidden" class="sheet-skill-damage-toggle" name="attr_skill_has_damage_toggle" value="0">
+          <div class="sheet-skill-damage-wrap sheet-margin-top-sm">
+            <div class="sheet-collapsible-grid3">
+              <div class="sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_base_dmg" value="0" placeholder="Base Skill DMG (e.g. 10 or 2d6+3)">
+                <div class="sheet-mini-label">Base Skill DMG</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <select name="attr_skill_stat_add" class="sheet-underlined">
+                  <option value="0" selected>None</option>
+                  <option value="@{str_atk}">STR ATK</option>
+                  <option value="@{dex_atk}">DEX ATK</option>
+                  <option value="@{spl}">SPL</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <div class="sheet-mini-label">Damage Stat</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_damage_notes" placeholder="(optional)">
+                <div class="sheet-mini-label">Dmg Notes</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="number" name="attr_skill_crit_mult" value="2" step="0.5">
+                <div class="sheet-mini-label">Crit Mult</div>
+              </div>
+            </div>
+
+            <input type="hidden" class="sheet-skill-stat-toggle" name="attr_skill_stat_toggle" value="0">
+
+            <div class="sheet-skill-custom-stat-wrap sheet-row sheet-margin-top-sm">
+              <div class="sheet-col-1-2 sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_stat_custom" placeholder="Custom stat number">
+                <div class="sheet-mini-label">Custom Damage Stat</div>
+              </div>
+            </div>
+
+            <input type="hidden" name="attr_skill_weapon_add" value="0">
+            <input type="hidden" name="attr_skill_stat_val" value="0">
+          </div>
+
+          <!-- ROLL BUTTONS -->
+          <div class="sheet-row sheet-margin-top-sm">
+            <button type="roll" class="sheet-skill-btn" name="roll_skill_post"
+              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_action} • @{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">USE</button>
+
+            <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
+              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ (@{skill_base_dmg})* @{skill_crit_mult} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">CRIT</button>
+          </div>
+
+        </div> <!-- /sheet-collapsible-details -->
+      </div> <!-- /sheet-collapsible -->
+    </div> <!-- /sheet-skill-rowwrap -->
+
   </fieldset>
 </div>
 
+
  
-	<!--Inventory -->
-	<div class="sheet-section-inventory">
-		<div class="sheet-row ">
-			<!-- Loot-->
-			<div class="sheet-col-1-2 sheet-padr">
-				<h4 class="sheet-center">Coin Carried </h4>
-				<div class="sheet-row sheet-sub-header sheet-center">
-					<div class="sheet-col-1-4 sheet-center sheet-small-label">CP</div>
-					<div class="sheet-col-1-4 sheet-center sheet-small-label">SP</div>
-					<div class="sheet-col-1-4 sheet-center sheet-small-label">GP</div>
-					<div class="sheet-col-1-4 sheet-center sheet-small-label">Total Value(GP)</div>
-				</div>
-				<div class="sheet-row sheet-center">
-					<div class="sheet-col-1-4" title="Copper Pieces"><input type="number" name="attr_cp" value="0" min="0" step="1"></div>
-					<div class="sheet-col-1-4" title="Silver Pieces"><input type="number" name="attr_sp" value="0" min="0" step="1"></div>
-					<div class="sheet-col-1-4" title="Gold Pieces"><input type="number" name="attr_gp" value="0" min="0" step="1"></div>
-					<div class="sheet-col-1-4" title="Total (in Gold Pieces)"><input type="number" name="attr_money_total_gp" value="(@{cp} / 100) + (@{sp} / 10) +  @{gp} " disabled="disabled"></div>
-				</div>
-				<h4 class="sheet-center">Weight</h4>
-				<div class="sheet-row sheet-sub-header sheet-center">
-					<div class="sheet-col-1-4 sheet-center sheet-small-label">Equipment</div>
-					<div class="sheet-col-1-4 sheet-center sheet-small-label">Coin</div>
-					<div class="sheet-col-1-4 sheet-center sheet-small-label">Other</div>
-				</div>
-				<div class="sheet-row sheet-center">
-					<div class="sheet-col-1-4 sheet-center"><input style="display: none;" type="text" name="attr_tempweight" value="0"><input type="number" name="attr_inventory_weight" title="Total of your equipment Worn and Carried" value="@{tempweight}" disabled="disabled"></div>
-					<div class="sheet-col-1-4 sheet-center"><input type="number" name="attr_coin_weight" title="This entry rounds to the nearest whole value" value="round(((@{CP} + @{SP} + @{GP})/10))" disabled="disabled"></div>
-					<div class="sheet-col-1-4 sheet-center"><input type="number" name="attr_other_weight" value="0" min="0"></div>
-					</div>
-				<h4 class="sheet-center">Carry Capacity</h4>
-				<div class="sheet-row sheet-sub-header sheet-center">
-					<div class="sheet-col-1-4 sheet-center sheet-small-label sheet-padr">Current Load</div>	
-					<div class="sheet-col-1-4 sheet-left sheet-small-label">Light Load Limit</div>
-				    <div class="sheet-col-1-4 sheet-right sheet-small-label">Heavy Load Limit</div>
-				</div>
-				<div class="sheet-row sheet-center">
-					<div class="sheet-col-1-4 sheet-left" title="Current Load"><input type="number" name="attr_total_weight" value="@{inventory_weight} + @{coin_weight} + @{other_weight}" disabled="disabled"></div>
-					<div class="sheet-col-1-4 sheet-right"  title="Light Load"><input type="number" name="attr_lightload" value="0" min="0" step="1"></div>
-					<div class="sheet-col-1-4 sheet-right" title="Heavy Load"><input type="number" name="attr_heavyload" value="0" min="0" step="1"></div>
-					</div>
-			</div>
-			<!-- Inventory tab -->
-            <div class="sheet-col-1-2">
-                <h4 class="sheet-center">Treasure Notes </h4>
-				<textarea name="attr_lootnotes"></textarea>
-			</div>
-		</div>
-		<h4 class="sheet-center">Equipment </h4>
-			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab1" value="1" title="Page 1" checked="checked" />
-			<span class="sheet-inventorytab sheet-inventorytab1">On Person</span>
-			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab3" value="3" title="Page 3" />
-			<span class="sheet-inventorytab sheet-inventorytab3">Transportation</span>
-			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab4" value="4" title="Page 4" />
-			<span class="sheet-inventorytab sheet-inventorytab4">Elsewhere</span>
-			<input type="radio" name="attr_inventorytab" class="sheet-inventorytab sheet-inventorytab99" value="99" title="Show All" />
-			<span class="sheet-inventorytab sheet-inventorytab99">Show All</span>
-			<span class="sheet-spacer"></span>
- 
-			<!-- Inventory Page 1-->
-			<div class="sheet-inventory-page1">
-				<input type="text" class="sheet-center sheet-sub-header" name="attr_tabinvtitle1" value="What is being worn or carried on person " disabled="disabled">
-				<div class="sheet-row sheet-sub-header">
-					<div class="sheet-col-1-4 sheet-center sheet-small-label sheet-padl">Name</div>
-					<div class="sheet-col-1-12 sheet-center sheet-small-label">Qty</div>
-					<div class="sheet-col-1-12 sheet-center sheet-small-label">Weight</div>
-					<div class="sheet-col-1-2 sheet-center sheet-small-label sheet-padl">Notes</div>
-				</div>
-				<fieldset class="repeating_inventtab1">
-					<div class="sheet-row">
-						<div class="sheet-col-1-4 sheet-small-label sheet-left"><input type="text" name="attr_itemname"></div>
-						<div class="sheet-col-1-12 sheet-padl sheet-center"><input type="number" name="attr_itemquantity"></div>
-						<div class="sheet-col-1-12 sheet-padl sheet-center"><input type="number" name="attr_itemwornenc"></div>
-						<div class="sheet-col-1-2 sheet-padl sheet-small-label sheet-left"><input type="text" name="attr_itemdesc"></div>
-					</div>
-				</fieldset>
-			</div>
-			<!-- Inventory Page 3-->
-			<div class="sheet-inventory-page3">
-				<input type="text" class="sheet-center sheet-sub-header" name="attr_tabinvtitle3" value="What is carried by your horse or wagon" disabled="disabled">
-				<div class="sheet-row sheet-sub-header">
-					<div class="sheet-col-1-4 sheet-center sheet-small-label sheet-padl">Name</div>
-					<div class="sheet-col-1-12 sheet-center sheet-small-label">Qty</div>
-					<div class="sheet-col-1-12 sheet-center sheet-small-label">Weight</div>
-					<div class="sheet-col-1-2 sheet-center sheet-small-label sheet-padl">Notes</div>
-				</div>
-				<fieldset class="repeating_inventtab3">
-					<div class="sheet-row">
-						<div class="sheet-col-1-4 sheet-small-label sheet-left"><input type="text" name="attr_itemname"></div>
-						<div class="sheet-col-1-12 sheet-padl sheet-center"><input type="number" name="attr_itemquantity"></div>
-						<div class="sheet-col-1-12 sheet-padl sheet-center"><input type="number" name="attr_itemtransportationenc"></div>
-						<div class="sheet-col-1-2 sheet-padl sheet-small-label sheet-left"><input type="text" name="attr_itemdesc"></div>
-					</div>
-				</fieldset>
-			</div>
-			<!-- Inventory Page 4-->
-			<div class="sheet-inventory-page4">
-				<input type="text" class="sheet-center sheet-sub-header" name="attr_tabinvtitle4" value="What is stored elsewhere such as in a vault or stronghold" disabled="disabled">
-				<div class="sheet-row sheet-sub-header">
-					<div class="sheet-col-1-4 sheet-center sheet-small-label sheet-padl">Name</div>
-					<div class="sheet-col-1-12 sheet-center sheet-small-label">Qty</div>
-					<div class="sheet-col-1-2 sheet-center sheet-small-label sheet-padl">Notes</div>
-				</div>
-				<fieldset class="repeating_inventtab4">
-					<div class="sheet-row">
-						<div class="sheet-col-1-4 sheet-small-label sheet-left"><input type="text" name="attr_itemname"></div>
-						<div class="sheet-col-1-12 sheet-padl sheet-center"><input type="number" name="attr_itemquantity"></div>
-						<div class="sheet-col-1-2 sheet-padl sheet-small-label sheet-left"><input type="text" name="attr_itemdesc"></div>
-					</div>
-				</fieldset>
-			</div>
+<!-- EQUIPMENT / INVENTORY -->
+<div class="sheet-section-inventory">
+
+  <div class="sheet-equip-grid">
+
+    <!-- LEFT: EQUIPMENT -->
+    <div class="sheet-equip-col">
+      <div class="sheet-sub-header">Equipment</div>
+
+      <!-- EQUIPPED SLOTS (freeform list: add/remove rows to match campaign slot count) -->
+      <fieldset class="repeating_equipped">
+        <div class="sheet-collapsible sheet-collapsible--item">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_item_open" value="1" title="Expand/collapse">
+
+          <!-- SUMMARY ROW -->
+          <div class="sheet-collapsible-summary sheet-item-summary">
+
+            <!-- Slot -->
+            <div class="sheet-small-label">
+              <select name="attr_item_slot" class="sheet-underlined">
+                <option value="Helm">Helm</option>
+                <option value="Armor">Armor</option>
+                <option value="Necklace">Necklace</option>
+                <option value="Ring">Ring</option>
+                <option value="Trinket">Trinket</option>
+                <option value="Other" selected>Other</option>
+              </select>
+              <div class="sheet-mini-label">Slot</div>
+            </div>
+
+            <!-- Custom Slot -->
+            <div class="sheet-small-label sheet-item-slot-custom">
+              <input class="sheet-underlined" type="text" name="attr_item_slot_custom" placeholder="Custom Slot">
+              <div class="sheet-mini-label">Slot Name</div>
+            </div>
+
+            <!-- Name -->
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_item_name" placeholder="Item Name">
+              <div class="sheet-mini-label">Name</div>
+            </div>
+
+           <!-- Rank select -->
+<div class="sheet-small-label">
+  <select name="attr_item_rank_mode" class="sheet-underlined">
+    <option value="R1">R1</option>
+    <option value="R2">R2</option>
+    <option value="R3">R3</option>
+    <option value="R4">R4</option>
+    <option value="R5">R5</option>
+    <option value="Custom" selected>Custom</option>
+  </select>
+  <div class="sheet-mini-label">Rank</div>
+</div>
+
+<!-- MUST be directly before the wrapper you hide/show -->
+<input type="hidden" class="sheet-item-rank-toggle" name="attr_item_rank_mode">
+
+<!-- Rank custom -->
+<div class="sheet-small-label sheet-item-rank-custom">
+  <input class="sheet-underlined sheet-center" type="text" name="attr_item_rank_custom" placeholder="X">
+  <div class="sheet-mini-label">Rank Text</div>
+</div>
+
+            <!-- Post -->
+            <div class="sheet-center">
+              <button type="roll" class="sheet-skill-btn" name="roll_equipped_post"
+                value="&{template:5eDefault}{{title=@{character_name} — @{item_name}}}{{outputall=1}}{{Type=Equipped • @{item_slot}}}{{Rank=@{item_rank_display}}}{{Stats=@{item_stats}}}{{desc=@{item_desc}}}{{skill=@{item_skill_name}}}{{cost=@{item_skill_cost}}}{{cooldown=@{item_skill_cd}}}{{Effect=@{item_skill_effect}}}">
+                POST
+              </button>
+            </div>
+
+          </div>
+
+          <!-- DETAILS -->
+          <div class="sheet-collapsible-details">
+
+            <div class="sheet-collapsible-grid2">
+              <div class="sheet-small-label">
+                <textarea class="sheet-collapsible-textarea" name="attr_item_desc" placeholder="Description"></textarea>
+                <div class="sheet-mini-label">Description</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <textarea class="sheet-collapsible-textarea" name="attr_item_stats" placeholder="+1 CON | +30 MP | etc."></textarea>
+                <div class="sheet-mini-label">Stats</div>
+              </div>
+            </div>
+
+<div class="sheet-row sheet-margin-top-sm sheet-has-skill-row">
+  <label class="sheet-has-skill">
+    <input type="checkbox" name="attr_item_has_skill" value="1">
+    <span class="sheet-has-skill-text">Has Skill</span>
+  </label>
+</div>
+
+            <input type="hidden" name="attr_item_has_skill_toggle" class="sheet-item-skill-toggle" value="0">
+
+            <div class="sheet-item-skill-wrap sheet-margin-top-sm">
+              <div class="sheet-collapsible-grid3">
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined" type="text" name="attr_item_skill_name" placeholder="Skill Name">
+                  <div class="sheet-mini-label">Skill</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_item_skill_cost" placeholder="e.g. 30 MP">
+                  <div class="sheet-mini-label">Cost</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_item_skill_cd" placeholder="e.g. 2 Turns">
+                  <div class="sheet-mini-label">Cooldown</div>
+                </div>
+              </div>
+
+              <div class="sheet-small-label sheet-margin-top-sm">
+                <textarea class="sheet-collapsible-textarea" name="attr_item_skill_effect" placeholder="Skill effect text"></textarea>
+                <div class="sheet-mini-label">Skill Effect</div>
+              </div>
+
+              <div class="sheet-row sheet-margin-top-sm sheet-center">
+                <button type="roll" class="sheet-skill-btn" name="roll_item_skill_use"
+                  value="&{template:5eDefault}{{title=@{character_name} — @{item_skill_name}}}{{outputall=1}}{{From=@{item_name}}}{{Rank=@{item_rank_display}}}{{Cost=@{item_skill_cost}}}{{Cooldown=@{item_skill_cd}}}{{Effect=@{item_skill_effect}}}">
+                  USE SKILL
+                </button>
+              </div>
+            </div>
+
+            <!-- computed display -->
+            <input type="hidden" name="attr_item_rank_display" value="">
+
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- RIGHT: INVENTORY -->
+    <div class="sheet-equip-col">
+      <div class="sheet-sub-header">Inventory</div>
+
+      <!-- CURRENCIES (sits above inventory list) -->
+      <div class="sheet-small-label sheet-margin-top-sm">Currencies</div>
+ <fieldset class="repeating_currency">
+  <div class="sheet-currency-row">
+    <input class="sheet-underlined" type="text" name="attr_cur_name" placeholder="Currency (e.g. Gold, Credits, Shards)">
+    <input class="sheet-underlined sheet-center" type="number" name="attr_cur_amt" value="0">
+  </div>
+</fieldset>
+
+      <hr class="sheet-skills-divider">
+
+      <!-- INVENTORY ITEMS -->
+      <fieldset class="repeating_inventory">
+        <div class="sheet-collapsible sheet-collapsible--item">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_inv_open" value="1" title="Expand/collapse">
+
+          <div class="sheet-collapsible-summary sheet-item-summary">
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_inv_name" placeholder="Item Name">
+              <div class="sheet-mini-label">Item</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <select name="attr_inv_type" class="sheet-underlined">
+                <option value="Consumable">Consumable</option>
+                <option value="Ingredient">Ingredient</option>
+                <option value="Material">Material</option>
+                <option value="Gear">Gear</option>
+                <option value="Other" selected>Other</option>
+              </select>
+              <div class="sheet-mini-label">Type</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="number" name="attr_inv_qty" value="1" min="0">
+              <div class="sheet-mini-label">Qty</div>
+            </div>
+
+            <div class="sheet-center">
+              <button type="roll" class="sheet-skill-btn" name="roll_inv_post"
+                value="&{template:5eDefault}{{title=@{character_name} — @{inv_name}}}{{outputall=1}}{{Type=Inventory • @{inv_type}}}{{Qty=@{inv_qty}}}{{desc=@{inv_desc}}}{{skill=@{inv_skill_name}}}{{cost=@{inv_skill_cost}}}{{cooldown=@{inv_skill_cd}}}{{Effect=@{inv_skill_effect}}}">
+                POST
+              </button>
+            </div>
+
+          </div>
+
+          <div class="sheet-collapsible-details">
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_inv_desc" placeholder="Description / notes"></textarea>
+              <div class="sheet-mini-label">Notes</div>
+            </div>
+
+<div class="sheet-row sheet-margin-top-sm sheet-has-skill-row">
+  <label class="sheet-has-skill">
+    <input type="checkbox" name="attr_inv_has_skill" value="1">
+    <span class="sheet-has-skill-text">Has Skill</span>
+  </label>
+</div>
+
+            <input type="hidden" name="attr_inv_has_skill_toggle" class="sheet-inv-skill-toggle" value="0">
+
+            <div class="sheet-inv-skill-wrap sheet-margin-top-sm">
+              <div class="sheet-collapsible-grid3">
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined" type="text" name="attr_inv_skill_name" placeholder="Skill Name">
+                  <div class="sheet-mini-label">Skill</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_inv_skill_cost" placeholder="e.g. 30 MP">
+                  <div class="sheet-mini-label">Cost</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_inv_skill_cd" placeholder="e.g. 2 Turns">
+                  <div class="sheet-mini-label">Cooldown</div>
+                </div>
+              </div>
+
+              <div class="sheet-small-label sheet-margin-top-sm">
+                <textarea class="sheet-collapsible-textarea" name="attr_inv_skill_effect" placeholder="Skill effect text"></textarea>
+                <div class="sheet-mini-label">Skill Effect</div>
+              </div>
+
+              <div class="sheet-row sheet-margin-top-sm sheet-center">
+                <button type="roll" class="sheet-skill-btn" name="roll_inv_skill_use"
+                  value="&{template:5eDefault}{{title=@{character_name} — @{inv_skill_name}}}{{outputall=1}}{{From=@{inv_name}}}{{Cost=@{inv_skill_cost}}}{{Cooldown=@{inv_skill_cd}}}{{Effect=@{inv_skill_effect}}}">
+                  USE SKILL
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </fieldset>
+
+    </div>
+
+  </div> <!-- /sheet-equip-grid -->
+</div>
+
+
+<!-- TRAITS -->
+<div class="sheet-section-traits">
+
+  <div class="sheet-traits-grid">
+
+    <!-- LEFT COLUMN: TRAITS -->
+    <div class="sheet-traits-col">
+      <div class="sheet-sub-header">Traits</div>
+
+      <fieldset class="repeating_traits">
+
+        <div class="sheet-collapsible sheet-collapsible--trait">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_trait_open" value="1" title="Expand/collapse">
+
+          <!-- SUMMARY -->
+          <div class="sheet-collapsible-summary sheet-trait-summary">
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_trait_name" placeholder="Trait Name (e.g. Fearless)">
+              <div class="sheet-mini-label">Name</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_trait_type" placeholder="Trait Type (e.g. Major Positive)">
+              <div class="sheet-mini-label">Type</div>
+            </div>
+
+            <div class="sheet-center">
+              <button type="roll" class="sheet-skill-btn" name="roll_trait_post"
+                value="&{template:5eDefault}{{title=@{character_name} — @{trait_name}}}{{outputall=1}}{{Type=@{trait_type}}}{{Effect=@{trait_effect}}}">
+                POST
+              </button>
+            </div>
+
+          </div>
+
+          <!-- DETAILS -->
+          <div class="sheet-collapsible-details">
+
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_trait_effect" placeholder="Trait Effect (e.g. Immune to Fear)"></textarea>
+              <div class="sheet-mini-label">Effect</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </fieldset>
+
+    </div>
+
+
+    <!-- RIGHT COLUMN: TITLES -->
+    <div class="sheet-traits-col">
+      <div class="sheet-sub-header">Titles</div>
+
+      <!-- Just move your entire repeating_titles fieldset here -->
+      <fieldset class="repeating_titles">
+
+        <div class="sheet-collapsible sheet-collapsible--title">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_title_open" value="1" title="Expand/collapse">
+
+          <div class="sheet-collapsible-summary">
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_library_title_name" placeholder="Title Name">
+              <div class="sheet-mini-label">Title</div>
+            </div>
+
+            <div class="sheet-center sheet-small-label">
+              <input type="checkbox" name="attr_title_active" value="1">
+              <div class="sheet-mini-label">Active</div>
+            </div>
+
+          </div>
+
+          <div class="sheet-collapsible-details">
+
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_library_title_effect" placeholder="Title Effect"></textarea>
+              <div class="sheet-mini-label">Effect</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </fieldset>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
 			
 			<div class="sheet-section-settings">
   <h3 class="sheet-center">Settings</h3>
@@ -3528,6 +3830,251 @@ on(
   function() { syncSkillAccVals(); }
 );
 
+// ===== Skills: Rank 1–3 storage + active sync into base fields =====
+(function () {
+  const FIELDS = [
+    "skill_action",
+    "skill_kind",
+    "skill_cost",
+    "skill_cooldown",
+    "skill_tags",
+    "skill_range",
+    "skill_target",
+    "skill_description",
+    "skill_effect"
+  ];
+
+  function rowBaseFromEvt(evt) {
+    const src = (evt && evt.sourceAttribute) || "";
+    const m = src.match(/^(repeating_skills_[^_]+)_/);
+    return m ? m[1] : "";
+  }
+
+  function syncRowRankToBase(rowBase) {
+    const rankAttr = `${rowBase}_skill_rank_selected`;
+    const gets = [rankAttr];
+
+    FIELDS.forEach(f => {
+      gets.push(`${rowBase}_${f}`);          // base
+      gets.push(`${rowBase}_${f}_r1`);       // rank stores
+      gets.push(`${rowBase}_${f}_r2`);
+      gets.push(`${rowBase}_${f}_r3`);
+    });
+
+    getAttrs(gets, v => {
+      const rank = (v[rankAttr] || "1").trim();
+      const update = {};
+
+      // If selected rank store is blank, initialize it from current base
+      FIELDS.forEach(f => {
+        const baseKey = `${rowBase}_${f}`;
+        const storeKey = `${rowBase}_${f}_r${rank}`;
+        const storeVal = (v[storeKey] ?? "").toString();
+
+        if (storeVal === "") {
+          update[storeKey] = (v[baseKey] ?? "");
+        }
+      });
+
+      // Copy selected rank store -> base (what your roll buttons reference)
+      FIELDS.forEach(f => {
+        const baseKey = `${rowBase}_${f}`;
+        const storeKey = `${rowBase}_${f}_r${rank}`;
+        const desired = (update.hasOwnProperty(storeKey) ? update[storeKey] : (v[storeKey] ?? ""));
+        if ((v[baseKey] ?? "") !== desired) update[baseKey] = desired;
+      });
+
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  }
+
+  function syncBaseToSelectedRankStore(rowBase) {
+    const rankAttr = `${rowBase}_skill_rank_selected`;
+    const gets = [rankAttr];
+    FIELDS.forEach(f => {
+      gets.push(`${rowBase}_${f}`);
+      gets.push(`${rowBase}_${f}_r1`);
+      gets.push(`${rowBase}_${f}_r2`);
+      gets.push(`${rowBase}_${f}_r3`);
+    });
+
+    getAttrs(gets, v => {
+      const rank = (v[rankAttr] || "1").trim();
+      const update = {};
+
+      FIELDS.forEach(f => {
+        const baseKey = `${rowBase}_${f}`;
+        const storeKey = `${rowBase}_${f}_r${rank}`;
+        const baseVal = (v[baseKey] ?? "");
+        const storeVal = (v[storeKey] ?? "");
+
+        // Keep the selected rank store updated with edits made to the base fields
+        if (storeVal !== baseVal) update[storeKey] = baseVal;
+      });
+
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  }
+
+  // When rank changes, load that rank into the base fields
+  on("change:repeating_skills:skill_rank_selected", function (evt) {
+    const rowBase = rowBaseFromEvt(evt);
+    if (rowBase) syncRowRankToBase(rowBase);
+  });
+
+  // When any base field changes (user editing), save it back into the selected rank store
+  on(
+    "change:repeating_skills:skill_action " +
+    "change:repeating_skills:skill_kind " +
+    "change:repeating_skills:skill_cost " +
+    "change:repeating_skills:skill_cooldown " +
+    "change:repeating_skills:skill_tags " +
+    "change:repeating_skills:skill_range " +
+    "change:repeating_skills:skill_target " +
+    "change:repeating_skills:skill_description " +
+    "change:repeating_skills:skill_effect",
+    function (evt) {
+      const rowBase = rowBaseFromEvt(evt);
+      if (rowBase) syncBaseToSelectedRankStore(rowBase);
+    }
+  );
+
+  // On open, ensure base fields match selected rank for every row
+  on("sheet:opened", function () {
+    getSectionIDs("repeating_skills", function (ids) {
+      (ids || []).forEach(id => syncRowRankToBase(`repeating_skills_${id}`));
+    });
+  });
+})();
+
+const norm = (s) => (s || "").toString().trim().toLowerCase();
+
+function refreshSkillVisibility() {
+  getAttrs(["skills_filter_mode", "skills_filter_text"], (v) => {
+    const mode = v.skills_filter_mode || "all";
+    const filter = norm(v.skills_filter_text);
+
+    getSectionIDs("repeating_skills", (ids) => {
+      if (!ids || !ids.length) return;
+
+      const fields = [];
+      ids.forEach(id => {
+        fields.push(
+  `repeating_skills_${id}_skill_category`,
+  `repeating_skills_${id}_skill_row_type`
+);
+      });
+
+      getAttrs(fields, (sv) => {
+        const setObj = {};
+        ids.forEach(id => {
+const cat = norm(sv[`repeating_skills_${id}_skill_category`]);
+const rowType = sv[`repeating_skills_${id}_skill_row_type`] || "skill";
+
+let visible = 1;
+
+// Dividers always visible
+if (rowType !== "divider") {
+  if (mode === "by" && filter) {
+    visible = cat.includes(filter) ? 1 : 0;
+  }
+}
+
+          setObj[`repeating_skills_${id}_skill_visible`] = visible;
+        });
+
+        setAttrs(setObj);
+      });
+    });
+  });
+}
+
+/* Recalc whenever the filter changes or skills/categories change */
+on("change:skills_filter_mode change:skills_filter_text change:repeating_skills:skill_category remove:repeating_skills sheet:opened", () => {
+  refreshSkillVisibility();
+});
+
+/* Show All button */
+on("clicked:skills_showall", () => {
+  setAttrs({ skills_filter_mode: "all", skills_filter_text: "" }, refreshSkillVisibility);
+});
+
+/* Clicking a category row's Filter button copies its name into the filter */
+on("clicked:repeating_skillcats:filter", (info) => {
+  // Roll20 action buttons come through as repeating_<sec>_<rowid>_act_<actionname>
+  const m = (info.sourceAttribute || "").match(/^repeating_skillcats_([^_]+)_act_filter$/);
+  if (!m) return;
+  const rowId = m[1];
+
+  getAttrs([`repeating_skillcats_${rowId}_cat_name`], (v) => {
+    const name = (v[`repeating_skillcats_${rowId}_cat_name`] || "").trim();
+    setAttrs(
+      { skills_filter_mode: "by", skills_filter_text: name },
+      refreshSkillVisibility
+    );
+  });
+});
+
+// ===== Equipment / Inventory item toggles + rank display =====
+function syncEquippedTogglesAndRank() {
+  getSectionIDs("repeating_equipped", (ids) => {
+    const fields = [];
+    ids.forEach(id => {
+      fields.push(
+        `repeating_equipped_${id}_item_has_skill`,
+        `repeating_equipped_${id}_item_has_skill_toggle`,
+        `repeating_equipped_${id}_item_rank_mode`,
+        `repeating_equipped_${id}_item_rank_custom`,
+        `repeating_equipped_${id}_item_rank_display`
+      );
+    });
+
+    getAttrs(fields, (v) => {
+      const update = {};
+      ids.forEach(id => {
+        const base = `repeating_equipped_${id}_`;
+        const has = String(v[base + "item_has_skill"] || "") === "1" ? "1" : "0";
+        update[base + "item_has_skill_toggle"] = has;
+
+        const mode = (v[base + "item_rank_mode"] || "Custom").trim();
+        const custom = (v[base + "item_rank_custom"] || "").trim();
+        const disp = (mode === "Custom") ? (custom || "Custom") : mode;
+        update[base + "item_rank_display"] = disp;
+      });
+      setAttrs(update);
+    });
+  });
+}
+
+function syncInventoryToggles() {
+  getSectionIDs("repeating_inventory", (ids) => {
+    const fields = [];
+    ids.forEach(id => {
+      fields.push(
+        `repeating_inventory_${id}_inv_has_skill`,
+        `repeating_inventory_${id}_inv_has_skill_toggle`
+      );
+    });
+
+    getAttrs(fields, (v) => {
+      const update = {};
+      ids.forEach(id => {
+        const base = `repeating_inventory_${id}_`;
+        const has = String(v[base + "inv_has_skill"] || "") === "1" ? "1" : "0";
+        update[base + "inv_has_skill_toggle"] = has;
+      });
+      setAttrs(update);
+    });
+  });
+}
+
+on("change:repeating_equipped:item_has_skill change:repeating_equipped:item_rank_mode change:repeating_equipped:item_rank_custom remove:repeating_equipped sheet:opened", () => {
+  syncEquippedTogglesAndRank();
+});
+
+on("change:repeating_inventory:inv_has_skill remove:repeating_inventory sheet:opened", () => {
+  syncInventoryToggles();
+});
 
 </script>
  
