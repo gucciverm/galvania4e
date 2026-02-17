@@ -206,16 +206,7 @@
 	max-width: 832px;
 }
  
-/* Tweak repeating section buttons so they have a bottom margin and dont overflow when in edit mode. */
- div[class^="repcontrol"] {
-	margin-bottom: 5px;
-}
- 
- div[class="repcontainer editmode"] ~ div[class^="repcontrol"] button[class="btn repcontrol_add"] {
-	display: inline-block!important;
-	visibility: hidden;
-}
- 
+
 /* NPC button Settings */
  
  div.sheet-npcinfo {
@@ -274,7 +265,7 @@ input.sheet-tab2:checked ~ div.sheet-section-class,
 input.sheet-tab3:checked ~ div.sheet-section-combat,
 input.sheet-tab4:checked ~ div.sheet-section-spellbook,
 input.sheet-tab5:checked ~ div.sheet-section-inventory,
-input.sheet-tab6:checked ~ div.sheet-section-skills,
+input.sheet-tab6:checked ~ div.sheet-section-traits,
 input.sheet-tab7:checked ~ div.sheet-section-settings {
   display: block;
 }
@@ -839,14 +830,6 @@ div[class^="sheet-classaction-row"] {
  
  .sheet-grey-row {
 	background-color: #eee;
-}
- 
- 
- .sheet-sub-header {
-	background-color: #cecece;
-	vertical-align: bottom;
-	border-radius: 12px;
-	margin-bottom: 3px;
 }
  
  .sheet-footer {
@@ -3600,4 +3583,523 @@ button.sheet-attack-btn[type="roll"]::before{
 
 .charsheet input.sheet-skill-stat-toggle[value="custom"] + .sheet-skill-custom-stat-wrap { 
   display: block !important; 
+}
+
+/* Hide a skill row when skill_visible is 0 */
+.sheet-skill-visible[value="0"] + .sheet-skill-rowwrap {
+  display: none !important;
+}
+
+/* Optional: filter bar layout */
+.sheet-skill-filterbar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.sheet-skillcat-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 4px 0;
+}
+
+/* ========== SKILL HEADER CLEANUP ========== */
+
+.sheet-skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  gap: 8px;
+}
+
+.sheet-skill-header-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.sheet-skill-name {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #555;
+  font-weight: bold;
+  width: 100%;
+}
+
+.sheet-skill-header-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.sheet-skill-pill,
+.sheet-row-type-select,
+.sheet-skill-rank {
+  height: 22px;
+  font-size: 11px;
+  padding: 0 6px;
+}
+
+/* ========== DIVIDER STYLE ========== */
+
+.sheet-divider-row {
+  display: none;
+  padding: 6px 0;
+  margin: 8px 0;
+  border-bottom: 2px solid #444;
+}
+
+.sheet-divider-label {
+  width: 100%;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+}
+
+/* Hide skill UI when divider */
+.sheet-row-type[value="divider"] ~ .sheet-skill-rowwrap .sheet-collapsible {
+  display: none;
+}
+
+/* Show divider when divider */
+.sheet-row-type[value="divider"] ~ .sheet-skill-rowwrap .sheet-divider-row {
+  display: block;
+}
+
+/* Keep divider visible even when collapsed */
+.sheet-row-type[value="divider"] ~ .sheet-skill-rowwrap .sheet-divider-row {
+  display: block !important;
+}
+
+/* Collapse arrow spacing fix */
+.sheet-skill-header-left .sheet-collapse {
+  width: 18px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+/* Make name respect arrow width */
+.sheet-skill-name {
+  flex: 1;
+  padding-left: 5px;
+}
+
+.sheet-skills-divider {
+  border: none;
+  border-top: 2px solid #444;
+  margin: 12px 0 8px 0;
+}
+
+/* Hide the real checkbox, keep template arrow */
+.sheet-skill-header-left .sheet-collapse {
+  opacity: 0;
+  width: 18px;
+  margin-right: 6px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Status Effects top row layout */
+.sheet-status-toprow{
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+/* Make combat columns equal height */
+.sheet-combat-grid {
+  display: flex;
+  gap: 12px;
+}
+
+.sheet-combat-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sheet-defense-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Status top row: controlled flex without global input stretching */
+.sheet-status-toprow{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Kill any template rule that makes inputs full-width in rows */
+.sheet-status-toprow input,
+.sheet-status-toprow select{
+  width: auto !important;
+}
+
+/* ===== Combat grid equal-height columns ===== */
+.sheet-combat-grid{
+  display:flex;
+  gap:16px;
+  align-items:stretch;
+}
+
+.sheet-combat-grid > .sheet-combat-column{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.sheet-combat-grid > .sheet-combat-column > .sheet-defense-card{
+  flex:1;
+}
+
+/* ===== Status card: prevent row rules from stretching CRT ===== */
+.sheet-status-card .sheet-status-extras{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+}
+
+/* Stop template "row input width:100%" rules from affecting CRT */
+.sheet-status-card .sheet-status-extras input{
+  width:auto !important;
+}
+
+/* CRT box */
+.sheet-status-crt-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-width:60px;
+}
+
+.sheet-status-crt{
+  width:52px !important;
+  height:24px;
+  text-align:center;
+}
+
+/* CRT label: don't squish */
+.sheet-status-crt-wrap .sheet-mini-label{
+  font-size:11px;
+  margin-top:3px;
+  white-space:nowrap;
+}
+
+/* MP button spacing */
+.sheet-mp-regen-btn{
+  padding:5px;
+}
+
+/* ===== Combat (top grid) equal-height columns ===== */
+.sheet-section-combat .sheet-combat-grid{
+  align-items: stretch;
+}
+
+.sheet-section-combat .sheet-combat-grid > .sheet-combat-column{
+  display: flex;
+  flex-direction: column;
+}
+
+.sheet-section-combat .sheet-combat-grid > .sheet-combat-column > .sheet-defense-card{
+  flex: 1;                 /* this is the key */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ===== Status Effects: CRT sizing + label readability ===== */
+.sheet-status-crt-wrap{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  flex: 0 0 auto;
+}
+
+.sheet-status-crt-wrap .sheet-mini-label{
+  display: block;
+  font-size: 11px;
+  line-height: 11px;      /* prevents squish */
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.sheet-status-crt{
+  width: 52px !important; /* overrides any global 100% width */
+  height: 24px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+/* ===== Status Effects: force modern layout on that row (overrides old .sheet-row grid hack) ===== */
+.sheet-status-card .sheet-status-toprow{
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  /* kills the old inline-block/letter-spacing row system */
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+  text-rendering: auto !important;
+}
+
+/* stop global input[type=number]{width:100%} from blowing up CRT */
+.sheet-status-card input.sheet-status-crt{
+  width: 52px !important;
+  max-width: 52px !important;
+  min-width: 52px !important;
+  height: 24px;
+  text-align: center;
+  display: inline-block;
+}
+
+/* CRT wrapper stays compact */
+.sheet-status-card .sheet-status-crt-wrap{
+  min-width: 60px;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CRT text not squished */
+.sheet-status-card .sheet-status-crt-wrap .sheet-mini-label{
+  font-size: 11px;
+  line-height: 12px;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+/* Equalize the TOP combat grid columns (Defense vs Status) */
+.sheet-section-combat .sheet-combat-grid:not(.sheet-combat-grid--wide){
+  align-items: stretch !important;
+}
+
+.sheet-section-combat .sheet-combat-grid:not(.sheet-combat-grid--wide) > .sheet-combat-column{
+  display: flex;
+  flex-direction: column;
+}
+
+.sheet-section-combat .sheet-combat-grid:not(.sheet-combat-grid--wide) > .sheet-combat-column > .sheet-defense-card{
+  flex: 1;
+}
+
+/* show custom slot name only when slot = Custom */
+.sheet-item-slot-custom { display: none; }
+select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { display: block; }
+
+/* Show custom rank text only when Rank = Custom */
+.sheet-item-rank-toggle:not([value="Custom"]) + .sheet-item-rank-custom { display:none; }
+.sheet-item-rank-toggle[value="Custom"] + .sheet-item-rank-custom { display:block; }
+
+/* Equipped item skill toggle */
+.sheet-item-skill-wrap { display: none; }
+.sheet-item-skill-toggle[value="1"] + .sheet-item-skill-wrap { display: block; }
+
+/* Inventory item skill toggle */
+.sheet-inv-skill-wrap { display: none; }
+.sheet-inv-skill-toggle[value="1"] + .sheet-inv-skill-wrap { display: block; }
+
+/* ===== Equipment tab two-column layout ===== */
+.sheet-equip-grid{
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.sheet-equip-col{
+  flex: 1;
+  min-width: 0;
+}
+
+/* optional: make left slightly narrower / right slightly wider */
+.sheet-equip-col:first-child{ flex: 0.95; }
+.sheet-equip-col:last-child{ flex: 1.05; }
+
+/* Make item summary rows stay on one line */
+.sheet-item-summary{
+  display:flex;
+  gap:8px;
+  align-items:flex-end;
+  flex-wrap:wrap; /* wraps nicely on smaller screens */
+}
+
+/* Make the name field take most of the row */
+.sheet-item-summary > .sheet-small-label:nth-child(1),
+.sheet-item-summary > .sheet-small-label:nth-child(2),
+.sheet-item-summary > .sheet-small-label:nth-child(3){
+  min-width: 0;
+}
+
+
+/* ===== Currency row: stop the name box from stretching to infinity ===== */
+.sheet-section-inventory .sheet-currency-row{
+  display:flex !important;
+  gap:8px !important;
+  align-items:flex-end !important;
+}
+
+.sheet-section-inventory .sheet-currency-row input[name="attr_cur_name"]{
+  width:200px !important;
+  flex:0 0 200px !important;
+}
+
+.sheet-section-inventory .sheet-currency-row input[name="attr_cur_amt"]{
+  width:80px !important;
+  flex:0 0 80px !important;
+}
+
+/* ===== Fix "Has Skill" label squish (bulletproof) ===== */
+.sheet-section-inventory .sheet-has-skill{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 2px 0 !important;
+}
+
+.sheet-section-inventory .sheet-has-skill input[type="checkbox"]{
+  margin: 0 !important;
+}
+
+.sheet-section-inventory .sheet-has-skill-text{
+  font-size: 11px !important;
+  line-height: 12px !important;
+  white-space: nowrap !important;
+}
+
+/* Traits two-column layout */
+.sheet-traits-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+.sheet-traits-col{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Make the two stat columns equal height */
+.sheet-main-stats-container{
+  display: flex;
+  align-items: stretch;   /* key: equal height columns */
+  gap: 20px;              /* optional spacing */
+}
+
+/* Each column takes half and stacks normally */
+.sheet-main-stats-container > .sheet-stat-column{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Optional: keep headers consistent if one uses <h4> and the other uses .sheet-sub-header */
+.sheet-main-stats-container > .sheet-stat-column > h4.sheet-center{
+  margin: 0 0 6px 0;
+}
+
+/* Make h4 headers match .sheet-sub-header styling (Stats tab alignment fix) */
+.sheet-section-main .sheet-main-stats-container h4{
+  background-color: black;
+  color: white;
+  text-align: center;
+  margin: 10px 0 5px 0;
+  padding: 2px;
+  font-weight: bold;
+
+  /* remove the h4-only bits that cause mismatch */
+  border-radius: 12px; /* keep if you want */
+  padding-left: 0;     /* h4 had left padding that shifts things */
+  font-size: 12px;
+}
+
+/* =========================================================
+   GLOBAL R20 EDIT-MODE FIX (ALL repeating sections)
+   Goal: move/delete are always visible + draggable
+   and never block the Done button.
+   ========================================================= */
+
+/* Create a guaranteed top strip for the row controls in Modify mode */
+.charsheet .repcontainer.editmode .repitem{
+  position: relative !important;
+  overflow: visible !important;
+  padding-top: 26px !important;   /* reserved strip */
+}
+
+/* Put Roll20’s move/delete controls inside that strip */
+.charsheet .repcontainer.editmode .repitem > .repitemcontrol{
+  position: absolute !important;
+  top: 2px !important;
+  left: 2px !important;
+
+  /* DO NOT stretch across the row (this is what makes Done unclickable) */
+  right: auto !important;
+  width: auto !important;
+  height: auto !important;
+
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure your row UI can’t paint over the control strip */
+.charsheet .repcontainer.editmode .repitem > :not(.repitemcontrol){
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+/* In edit mode, prevent card-style wrappers from clipping anything */
+.charsheet .repcontainer.editmode .repitem .sheet-collapsible{
+  overflow: visible !important;
+}
+
+/* ===== Nuclear option: unsquish Has Skill text everywhere ===== */
+.sheet-has-skill-text{
+  display: inline-block !important;
+  transform: none !important;
+  letter-spacing: normal !important;
+  font-stretch: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+
+  font-size: 11px !important;
+  line-height: 13px !important;
+  white-space: nowrap !important;
+
+  width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+/* Also ensure the label itself isn't being collapsed */
+.sheet-section-inventory label.sheet-has-skill{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-height: 16px !important;
+  overflow: visible !important;
+}
+
+/* If some "center" class is doing flex+tiny width, override it */
+.sheet-section-inventory .sheet-row .sheet-has-skill{
+  justify-content: flex-start !important;
 }
