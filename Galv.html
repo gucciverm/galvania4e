@@ -1,741 +1,5 @@
 <!--inventory sheetworkers-->
  
-<script type="text/worker">
-/* ---- BEGIN: TheAaronSheet.js ---- */
-// Github:   https://github.com/shdwjk/TheAaronSheet/blob/master/TheAaronSheet.js
-// By:       The Aaron, Arcane Scriptomancer
-// Contact:  https://app.roll20.net/users/104025/the-aaron
- 
-var TAS = TAS || (function(){
-    'use strict';
- 
-    var version = '0.2.4',
-        lastUpdate = 1457098091,
- 
-        loggingSettings = {
-            debug: {
-                key:     'debug',
-                title:   'DEBUG',
-                color: {
-                    bgLabel: '#7732A2',
-                    label:   '#F2EF40',
-                    bgText:  '#FFFEB7',
-                    text:    '#7732A2'
-                }
-            },
-            error: {
-                key:     'error',
-                title:   'Error',
-                color: {
-                    bgLabel: '#C11713',
-                    label:   'white',
-                    bgText:  '#C11713',
-                    text:    'white'
-                }
-            },
-            warn: {
-                key:     'warn',
-                title:   'Warning',
-                color: {
-                    bgLabel: '#F29140',
-                    label:   'white',
-                    bgText:  '#FFD8B7',
-                    text:    'black'
-                }
-            },
-            info: {
-                key:     'info',
-                title:   'Info',
-                color: {
-                    bgLabel: '#413FA9',
-                    label:   'white',
-                    bgText:  '#B3B2EB',
-                    text:    'black'
-                }
-            },
-            notice: {
-                key:     'notice',
-                title:   'Notice',
-                color: {
-                    bgLabel: '#33C133',
-                    label:   'white',
-                    bgText:  '#ADF1AD',
-                    text:    'black'
-                }
-            },
-            log: {
-                key:     'log',
-                title:   'Log',
-                color: {
-                    bgLabel: '#f2f240',
-                    label:   'black',
-                    bgText:  '#ffff90',
-                    text:    'black'
-                }
-            },
-            callstack: {
-                key:     'TAS',
-                title:   'function',
-                color: {
-                    bgLabel: '#413FA9',
-                    label:   'white',
-                    bgText:  '#B3B2EB',
-                    text:    'black'
-                }
-            },
-            callstack_async: {
-                key:     'TAS',
-                title:   'ASYNC CALL',
-                color: {
-                    bgLabel: '#413FA9',
-                    label:   'white',
-                    bgText:  '#413FA9',
-                    text:    'white'
-                }
-            },
-            TAS: {
-                key:     'TAS',
-                title:   'TAS',
-                color: {
-                    bgLabel: 'grey',
-                    label:   'black;background:linear-gradient(#304352,#d7d2cc,#d7d2cc,#d7d2cc,#304352)',
-                    bgText:  'grey',
-                    text:    'black;background:linear-gradient(#304352,#d7d2cc,#d7d2cc,#d7d2cc,#304352)'
-                }
-            }
-        },
- 
- 
-        config = {
-            debugMode: false,
-            logging: {
-                log: true,
-                notice: true,
-                info: true,
-                warn: true,
-                error: true,
-                debug: false
-            }
-        },
- 
-        callstackRegistry = [],
-		queuedUpdates = {}, //< Used for delaying saves till the last momment.
- 
-    complexType = function(o){
-        switch(typeof o){
-            case 'string':
-                return 'string';
-            case 'boolean':
-                return 'boolean';
-            case 'number':
-                return (_.isNaN(o) ? 'NaN' : (o.toString().match(/\./) ? 'decimal' : 'integer'));
-            case 'function':
-                return 'function: '+(o.name ? o.name+'()' : '(anonymous)');
-            case 'object':
-                return (_.isArray(o) ? 'array' : (_.isArguments(o) ? 'arguments' : ( _.isNull(o) ? 'null' : 'object')));
-            default:
-                return typeof o;
-        }
-    },
- 
-	dataLogger = function(primaryLogger,secondaryLogger,data){
-        _.each(data,function(m){
-            var type = complexType(m);
-            switch(type){
-                case 'string':
-                    primaryLogger(m);
-                    break;
-                case 'undefined':
-                case 'null':
-                case 'NaN':
-                    primaryLogger('['+type+']');
-                    break;
-                case 'number':
-                case 'not a number':
-                case 'integer':
-                case 'decimal':
-                case 'boolean':
-                    primaryLogger('['+type+']: '+m);
-                    break;
-                default:
-                    primaryLogger('['+type+']:=========================================');
-                    secondaryLogger(m);
-                    primaryLogger('=========================================================');
-                    break;
-            }
-        });
-	},
- 
- 
-    colorLog = function(options){
-        var coloredLoggerFunction,
-            key = options.key,
-            label = options.title || 'TAS',
-            lBGColor = (options.color && options.color.bgLabel) || 'blue',
-            lTxtColor = (options.color && options.color.label) || 'white',
-            mBGColor = (options.color && options.color.bgText) || 'blue',
-            mTxtColor = (options.color && options.color.text) || 'white';
- 
-        coloredLoggerFunction = function(message){
-            console.log(
-                '%c '+label+': %c '+message + ' ',
-                'background-color: '+lBGColor+';color: '+lTxtColor+'; font-weight:bold;',
-                'background-color: '+mBGColor+';color: '+mTxtColor+';'
-            ); 
-        };
-        return function(){
-            if('TAS'===key || config.logging[key]){
-               dataLogger(coloredLoggerFunction,function(m){console.log(m);},_.toArray(arguments)); 
-            }
-        };
-    },
- 
-    logDebug  = colorLog(loggingSettings.debug),
-    logError  = colorLog(loggingSettings.error),
-    logWarn   = colorLog(loggingSettings.warn),
-    logInfo   = colorLog(loggingSettings.info),
-    logNotice = colorLog(loggingSettings.notice),
-    logLog    = colorLog(loggingSettings.log),
-    log       = colorLog(loggingSettings.TAS),
-    logCS     = colorLog(loggingSettings.callstack),
-    logCSA    = colorLog(loggingSettings.callstack_async),
- 
-    registerCallstack = function(callstack,label){
-        var idx=_.findIndex(callstackRegistry,function(o){
-            return (_.difference(o.stack,callstack).length === _.difference(callstack,o.stack).length) &&
-                _.difference(o.stack,callstack).length === 0 &&
-                o.label === label;
-        });
-        if(-1 === idx){
-            idx=callstackRegistry.length;
-            callstackRegistry.push({
-                stack: callstack,
-                label: label
-            });
-        }
-        return idx;
-    },
- 
-    setConfigOption = function(options){
-        var newconf =_.defaults(options,config);
-        newconf.logging=_.defaults(
-            (options && options.logging)||{},
-            config.logging
-        );
-        config=newconf;
-    },
- 
-    debugMode = function(){
-        config.logging.debug=true;
-        config.debugMode = true;
-    },
- 
-    getCallstack = function(){
-        var e = new Error('dummy'),
-            stack = _.map(_.rest(e.stack.replace(/^[^\(]+?[\n$]/gm, '')
-            .replace(/^\s+at\s+/gm, '')
-            .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
-            .split('\n')),function(l){
-                return l.replace(/\s+.*$/,'');
-            });
-        return stack;
-    },
-    logCallstackSub = function(cs){
-        var matches, csa;
-        _.find(cs,function(line){
-            matches = line.match(/TAS_CALLSTACK_(\d+)/);
-            if(matches){
-               csa=callstackRegistry[matches[1]];
-               logCSA( '===================='+(csa.label ? '> '+csa.label+' <' : '')+'====================');
-               logCallstackSub(csa.stack);
-               return true;
-            } 
-            logCS(line);
-            return false;
-        });
-    },
-    logCallstack = function(){
-        var cs;
-        if(config.debugMode){
-            cs = getCallstack();
-            cs.shift();
-            log('==============================> CALLSTACK <==============================');
-            logCallstackSub(cs);
-            log('=========================================================================');
-        }
-    },
- 
- 
-    wrapCallback = function (label, callback, context){
-        var callstack;
-        if('function' === typeof label){
-            context=callback;
-            callback=label;
-            label=undefined;
-        }
-        if(!config.debugMode){
-            return (function(cb,ctx){
-                return function(){
-                    cb.apply(ctx||{},arguments);
-                };
-            }(callback,context));
-        }
- 
-        callstack = getCallstack();
-        callstack.shift();
- 
-        return (function(cb,ctx,cs,lbl){
-            var ctxref=registerCallstack(cs,lbl);
- 
-            /*jshint -W054 */
-            return new Function('cb','ctx','TASlog',
-                "return function TAS_CALLSTACK_"+ctxref+"(){"+
-                    "TASlog('Entering: '+(cb.name||'(anonymous function)'));"+
-                    "cb.apply(ctx||{},arguments);"+
-                    "TASlog('Exiting: '+(cb.name||'(anonymous function)'));"+
-                "};")(cb,ctx,log);
-            /*jshint +W054 */
-        }(callback,context,callstack,label));
-    },
- 
- 
-    prepareUpdate = function( attribute, value ){
-        queuedUpdates[attribute]=value;
-    },
- 
-    applyQueuedUpdates = function() {
-      setAttrs(queuedUpdates);
-      queuedUpdates = {};
-    },
- 
-	namesFromArgs = function(args,base){
-        return _.chain(args)
-            .reduce(function(memo,attr){
-                if('string' === typeof attr) {
-                    memo.push(attr);
-                } else if(_.isArray(args) || _.isArguments(args)){
-                    memo = namesFromArgs(attr,memo);
-                }
-                return memo;
-            },(_.isArray(base) && base) || [])
-            .uniq()
-            .value();
-	},
- 
-	addId = function(obj,value){
-		Object.defineProperty(obj,'id',{
-			value: value,
-			writeable: false,
-			enumerable: false
-		});
-	},
- 
-	addProp = function(obj,prop,value,fullname){
-		(function(){
-            var pname=(_.contains(['S','F','I','D'],prop) ? '_'+prop : prop),
-			    full_pname = fullname || prop,
-                pvalue=value;
- 
-            _.each(['S','I','F'],function(p){
-                if( !_.has(obj,p)){
-                    Object.defineProperty(obj, p, {
-                        value: {},
-                        enumerable: false,
-                        readonly: true
-                    });
-                }
-            });
-            if( !_.has(obj,'D')){
-                Object.defineProperty(obj, 'D', {
-                    value: _.reduce(_.range(10),function(m,d){
-                            Object.defineProperty(m, d, {
-                                value: {},
-                                enumerable: true,
-                                readonly: true
-                            });
-                            return m;
-                        },{}),
-                    enumerable: false,
-                    readonly: true
-                });
-            }
- 
- 
-            // Raw value
-			Object.defineProperty(obj, pname, {
-                enumerable: true,
-				set: function(v){
-                    if(v!==pvalue) {
-                        pvalue=v;
-                        prepareUpdate(full_pname,v);
-                    }
-				},
-				get: function(){
-					return pvalue;
-				}
-			});
- 
-            // string value
-			Object.defineProperty(obj.S, pname, {
-                enumerable: true,
-				set: function(v){
-                    var val=v.toString();
-                    if(val !== pvalue) {
-                        pvalue=val;
-                        prepareUpdate(full_pname,val);
-                    }
-				},
-				get: function(){
-					return pvalue.toString();
-				}
-			});
- 
-            // int value
-			Object.defineProperty(obj.I, pname, {
-                enumerable: true,
-				set: function(v){
-                    var val=parseInt(v,10) || 0;
-                    if(val !== pvalue){
-                        pvalue=val;
-                        prepareUpdate(full_pname,val);
-                    }
-				},
-				get: function(){
-					return parseInt(pvalue,10) || 0;
-				}
-			});
- 
-            // float value
-			Object.defineProperty(obj.F, pname, {
-                enumerable: true,
-				set: function(v){
-                    var val=parseFloat(v) || 0;
-                    if(val !== pvalue) {
-                        pvalue=val;
-                        prepareUpdate(full_pname,val);
-                    }
-				},
-				get: function(){
-					return parseFloat(pvalue) || 0;
-				}
-			});
-            _.each(_.range(10),function(d){
-                Object.defineProperty(obj.D[d], pname, {
-                    enumerable: true,
-                    set: function(v){
-                        var val=(parseFloat(v) || 0).toFixed(d);
-                        if(val !== pvalue){
-                            pvalue=val;
-                            prepareUpdate(full_pname,val);
-                        }
-                    },
-                    get: function(){
-                        return (parseFloat(pvalue) || 0).toFixed(d);
-                    }
-                });
-            });
- 
-		}());
-	},
- 
-	repeating = function( section ) {
-		return (function(s){
-			var sectionName = s,
-				attrNames = [],
-				fieldNames = [],
-				operations = [],
-                after = [],
- 
-			repAttrs = function TAS_Repeating_Attrs(){
-				attrNames = namesFromArgs(arguments,attrNames);
-				return this;
-			},
-			repFields = function TAS_Repeating_Fields(){
-				fieldNames = namesFromArgs(arguments,fieldNames);
-				return this;
-			},
-			repReduce = function TAS_Repeating_Reduce(func, initial, final, context) { 
-				operations.push({
-                    type: 'reduce',
-                    func: (func && _.isFunction(func) && func) || _.noop,
-                    memo: (_.isUndefined(initial) && 0) || initial,
-                    final: (final && _.isFunction(final) && final) || _.noop,
-                    context: context || {}
-                });
-				return this;
-			},
-			repMap = function TAS_Repeating_Map(func, final, context) {
-				operations.push({
-                    type: 'map',
-                    func: (func && _.isFunction(func) && func) || _.noop,
-                    final: (final && _.isFunction(final) && final) || _.noop,
-                    context: context || {}
-                });
-				return this;
-			},
-            repEach = function TAS_Repeating_Each(func, final, context) {
-				operations.push({
-                    type: 'each',
-                    func: (func && _.isFunction(func) && func) || _.noop,
-                    final: (final && _.isFunction(final) && final) || _.noop,
-                    context: context || {}
-                });
-				return this;
-            },
-            repTap = function TAS_Repeating_Tap(final, context) {
-				operations.push({
-                    type: 'tap',
-                    final: (final && _.isFunction(final) && final) || _.noop,
-                    context: context || {}
-                });
-				return this;
-            },
-            repAfter = function TAS_Repeating_After(callback,context) {
-				after.push({
-                    callback: (callback && _.isFunction(callback) && callback) || _.noop,
-                    context: context || {}
-                });
-				return this;
-            },
-			repExecute = function TAS_Repeating_Execute(callback,context){
-				var rowSet = {},
-					attrSet = {},
-					fieldIds = [],
-					fullFieldNames = [];
- 
-                repAfter(callback,context);
- 
-				// call each operation per row.
-				// call each operation's final
-				getSectionIDs("repeating_"+sectionName,function(ids){
-					fieldIds = ids;
-					fullFieldNames = _.reduce(fieldIds,function(memo,id){
-						return memo.concat(_.map(fieldNames,function(name){
-							return 'repeating_'+sectionName+'_'+id+'_'+name;  
-						}));
-					},[]);
-					getAttrs( _.uniq(attrNames.concat(fullFieldNames)), function(values){
-						_.each(attrNames,function(aname){
-							if(values.hasOwnProperty(aname)){
-								addProp(attrSet,aname,values[aname]);
-							}
-						});
- 
-						rowSet = _.reduce(fieldIds,function(memo,id){
-							var r={};
-							addId(r,id);
-							_.each(fieldNames,function(name){
-								var fn = 'repeating_'+sectionName+'_'+id+'_'+name;  
-								addProp(r,name,values[fn],fn);
-							});
- 
-							memo[id]=r;
- 
-							return memo;
-						},{});
- 
-                        _.each(operations,function(op){
-                            var res;
-                            switch(op.type){
-                                case 'tap':
-                                    _.bind(op.final,op.context,rowSet,attrSet)();
-                                    break;
- 
-                                case 'each':
-                                    _.each(rowSet,function(r){
-                                        _.bind(op.func,op.context,r,attrSet,r.id,rowSet)();
-                                    });
-                                    _.bind(op.final,op.context,rowSet,attrSet)();
-                                    break;
- 
-                                case 'map':
-                                    res = _.map(rowSet,function(r){
-                                        return _.bind(op.func,op.context,r,attrSet,r.id,rowSet)();
-                                    });
-                                    _.bind(op.final,op.context,res,rowSet,attrSet)();
-                                    break;
- 
-                                case 'reduce':
-                                    res = op.memo;
-                                    _.each(rowSet,function(r){
-                                        res = _.bind(op.func,op.context,res,r,attrSet,r.id,rowSet)();
-                                    });
-                                    _.bind(op.final,op.context,res,rowSet,attrSet)();
-                                    break;
-                            }
-                        });
- 
-                        // finalize attrs
-                        applyQueuedUpdates();
-                        _.each(after,function(op){
-                            _.bind(op.callback,op.context)();
-                        });
-					});
-				});
-			};
- 
-			return {
-				attrs: repAttrs,
-				attr: repAttrs,
- 
-				column: repFields,
-				columns: repFields,
-				field: repFields,
-				fields: repFields,
- 
-				reduce: repReduce,
-				inject: repReduce,
-				foldl: repReduce,
- 
-				map: repMap,
-				collect: repMap,
- 
-				each: repEach,
-                forEach: repEach,
- 
-                tap: repTap,
-                'do': repTap,
- 
-				after: repAfter,
-				last: repAfter,
-				done: repAfter,
- 
-				execute: repExecute,
-				go: repExecute,
-				run: repExecute
-			};
-		}(section));
-	},
- 
- 
-    repeatingSimpleSum = function(section, field, destination){
-        repeating(section)
-            .attr(destination)
-            .field(field)
-            .reduce(function(m,r){
-                return m + (r.F[field]);
-            },0,function(t,r,a){
-                a.S[destination]=t;
-            })
-            .execute();
-    };
- 
-	console.log('%c•.¸¸.•*´¨`*•.¸¸.•*´¨`*•.¸  The Aaron Sheet  v'+version+'  ¸.•*´¨`*•.¸¸.•*´¨`*•.¸¸.•','background: linear-gradient(to right,green,white,white,green); color:black;text-shadow: 0 0 8px white;');
-	console.log('%c•.¸¸.•*´¨`*•.¸¸.•*´¨`*•.¸  Last update: '+(new Date(lastUpdate*1000))+'  ¸.•*´¨`*•.¸¸.•*´¨`*•.¸¸.•','background: linear-gradient(to right,green,white,white,green); color:black;text-shadow: 0 0 8px white;');
- 
- 
-    return {
-        /* Repeating Sections */
-        repeatingSimpleSum: repeatingSimpleSum,
-		repeating: repeating,
- 
-        /* Configuration */
-        config: setConfigOption,
- 
-        /* Debugging */
-        callback: wrapCallback,
-        callstack: logCallstack,
-        debugMode: debugMode,
-        _fn: wrapCallback,
- 
-        /* Logging */
-        debug: logDebug,
-        error: logError,
-        warn: logWarn,
-        info: logInfo,
-        notice: logNotice,
-        log: logLog
-    };
-}());
- 
-/* ---- END: TheAaronSheet.js ---- */
- 
-<!--inventory weight calculation-->
-// Equipment Carried Section
-// https://app.roll20.net/users/877778/sfx helped me with the following two sheet workers
-on('change:repeating_inventtab1', function(){
-    TAS.repeating('inventtab1')
-    .attrs('tempweight')
-    .fields('itemwornenc', 'itemquantity')
-    .reduce(function(m,r){
-        m.itemwornenc+=(r.F.itemwornenc*r.I.itemquantity);
-        r.D[0].tempweight=(r.F.itemwornenc*r.I.itemquantity);
-        return m;
-    },{itemwornenc:0,itemquantity:0, desc: []}, function (m,r,a){
-    a.tempweight=m.itemwornenc;
-    })
-    .execute();
-})
-on('sheet:opened', function(){
-    TAS.repeating('inventtab1')
-    .attrs('tempweight')
-    .fields('itemwornenc', 'itemquantity')
-    .reduce(function(m,r){
-        m.itemwornenc+=(r.F.itemwornenc*r.I.itemquantity);
-        r.D[0].tempweight=(r.F.itemwornenc*r.I.itemquantity);
-        return m;
-    },{itemwornenc:0,itemquantity:0, desc: []}, function (m,r,a){
-    a.tempweight=m.itemwornenc;
-    })
-    .execute();
-})
- 
-  // Transitioning from old sheet to new sheet. 
-  // https://app.roll20.net/users/726129/jakob helped me with this sheetworker
-var fillRepeatingSectionFromData = (sectionName, dataList) => {
-  const createdIDs = [];
-  const setting = dataList.map(o => {
-      let rowID;
-      while (!rowID) {
-        let newID = generateRowID();
-        if (!createdIDs.includes(newID)) {
-          rowID = newID;
-          createdIDs.push(rowID);
-        }
-      }
-      const newAttrs = {};
-      return Object.keys(o).reduce((m, key) => {
-        m[`repeating_${sectionName}_${rowID}_${key}`] = o[key];
-        return m;
-      }, newAttrs);
-    })
-    .reduce((m, o) => Object.assign(m, o), {});
-  setAttrs(setting);
-};
- 
-on("sheet:opened", function () {
-  // Make sure to add the attr 'already_transitioned' to the list
-  getAttrs(['already_transitioned'], function (attrs) {
-    if (attrs.already_transitioned !== '1') {
-      getSectionIDs('repeating_inventtab2', idArray => {
-        // All the attributes in a repeating row that we care about
-        const attrsInSection = ['itemname', 'itemquantity', 'itemcarriedenc', 'itemdesc'],
-          // Get an array containing all attribute names for all rows in repeating_inventtab2
-          allAttrs = idArray.reduce((m, id) => {
-            return m.concat(attrsInSection.map(attr => `repeating_inventtab2_${id}_${attr}`));
-          }, []);
-        getAttrs(allAttrs, v => {
-          let data = [];
-          // Construct data from existing attributes
-          idArray.forEach(id => {
-            data.push({
-              itemname: v[`repeating_inventtab2_${id}_itemname`] || '',
-              itemquantity: v[`repeating_inventtab2_${id}_itemquantity`] || '',
-              itemwornenc: v[`repeating_inventtab2_${id}_itemcarriedenc`] || '',
-              itemdesc: v[`repeating_inventtab2_${id}_itemdesc`] || ''
-            });
-          });
-          fillRepeatingSectionFromData('inventtab1', data);
-          setAttrs({
-            already_transitioned: '1'
-          });
-        });
-      });
-    }
-  });
-});
-</script>
- 
  
 <!-- Sheet code -->
  
@@ -872,7 +136,7 @@ on("sheet:opened", function () {
         <!-- Strength -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Strength</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_strength_base" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_strength_base" value="1" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_strength_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_strength_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_strength" value="0" readonly class="sheet-underlined sheet-center"></div>
@@ -882,7 +146,7 @@ on("sheet:opened", function () {
         <!-- Dexterity -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Dexterity</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_dexterity_base" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dexterity_base" value="1" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_dexterity" value="0" readonly class="sheet-underlined sheet-center"></div>
@@ -892,7 +156,7 @@ on("sheet:opened", function () {
         <!-- Intelligence -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Intelligence</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_intelligence_base" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_intelligence_base" value="1" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_intelligence" value="0" readonly class="sheet-underlined sheet-center"></div>
@@ -902,7 +166,7 @@ on("sheet:opened", function () {
         <!-- Charisma -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Charisma</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_charisma_base" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_charisma_base" value="1" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_charisma_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_charisma_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_charisma" value="0" readonly class="sheet-underlined sheet-center"></div>
@@ -912,7 +176,7 @@ on("sheet:opened", function () {
         <!-- Agility -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Agility</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_agility_base" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_agility_base" value="1" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_agility_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_agility_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_agility" value="0" readonly class="sheet-underlined sheet-center"></div>
@@ -922,7 +186,7 @@ on("sheet:opened", function () {
         <!-- Resistance -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Resistance</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_resistance_base" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_resistance_base" value="1" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_resistance_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_resistance_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_resistance" value="0" readonly class="sheet-underlined sheet-center"></div>
@@ -932,7 +196,7 @@ on("sheet:opened", function () {
         <!-- Constitution -->
         <div class="sheet-stat-row">
             <div class="sheet-stat-name">Constitution</div>
-            <div class="sheet-stat-num"><input type="number" name="attr_constitution_base" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_constitution_base" value="1" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_constitution_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_constitution_bonus" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_constitution" value="0" readonly class="sheet-underlined sheet-center"></div>
@@ -1102,7 +366,7 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_icw_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_icw_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_icw_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_icw" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_icw_remaining" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
  
@@ -1112,9 +376,10 @@ on("sheet:opened", function () {
             <div class="sheet-stat-num"><input type="number" name="attr_ecw_base" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_ecw_mod" value="0" class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-num"><input type="number" name="attr_ecw_bonus" value="0" class="sheet-underlined sheet-center"></div>
-            <div class="sheet-stat-num"><input type="number" name="attr_ecw" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_ecw_remaining" value="0" readonly class="sheet-underlined sheet-center"></div>
             <div class="sheet-stat-roll"></div>
         </div>
+        
     </div>
 </div>
 </div>
@@ -1240,23 +505,15 @@ on("sheet:opened", function () {
   <div class="sheet-defense-card sheet-status-card">
     <div class="sheet-row sheet-weapon-bottom-row sheet-center sheet-status-toprow">
 
-      <!-- BURN -->
-      <button type="roll" class="sheet-skill-btn" name="roll_status_burning"
-        value="&{template:5eDefault}{{title=@{character_name} — Burning}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Damage=[[10 + @{status_scaling}]] vs @{status_defense_target}}}{{Duration=[[1d2+1]]}}{{Effect=On apply + start of target’s turns. Drops by 1 when target is hit or their turn comes up.}}">
-        BURN
-      </button>
+<!-- BURN -->
+<button type="roll" class="sheet-skill-btn" name="roll_status_burning" value="&{template:5eDefault}{{title=@{character_name} — Burning}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Duration=[[ ?{Duration|R1 (1d5),1d5|R2 (1d4+1),1d4+1|R3 (1d3+2),1d3+2|R4 (1d2+3),1d2+3|R5 (5),5} ]] turns}}{{Burn Tick (per trigger)=[[ floor((6 + (0.40*@{status_scaling}) + (0.70*@{level})) * (0.75 + 0.25*?{Rank|1|2|3|4|5})) ]]}} {{vs=@{status_defense_target}}}{{Effect=Deals damage on-hit and at the start of target's turn.}}">BURN</button>
 
-      <!-- POISON -->
-      <button type="roll" class="sheet-skill-btn" name="roll_status_poison"
-        value="&{template:5eDefault}{{title=@{character_name} — Poison}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source}}}{{Damage=[[5 + @{status_scaling}]] true damage per turn}}{{Duration=[[1d2+3]] turns}}{{Effect=Deals true damage at the start of each affected turn.}}">
-        POISON
-      </button>
+<!-- POISON -->
+<button type="roll" class="sheet-skill-btn" name="roll_status_poison" value="&{template:5eDefault}{{title=@{character_name} — Poison}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Scaling=Uses @{status_scaling_source} (true damage)}}{{Duration=[[ ?{Duration|R1 (1d5),1d5|R2 (1d4+1),1d4+1|R3 (1d3+2),1d3+2|R4 (1d2+3),1d2+3|R5 (5),5} ]] turns}}{{Poison Tick=[[ floor((6 + (0.30*@{status_scaling}) + (0.50*@{level})) * (0.75 + 0.25*?{Rank|1|2|3|4|5})) ]]}}{{HP%=[[ {0,(?{Rank|1|2|3|4|5}-3)}kh1 * 2 ]]% of target Max HP}}{{Effect=At start of each affected turn: deal true damage.}}">POISON</button>
 
-      <!-- BLEED -->
-      <button type="roll" class="sheet-skill-btn" name="roll_status_bleed"
-        value="&{template:5eDefault}{{title=@{character_name} — Bleed}}{{outputall=1}}{{Damage=[[2d4]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">
-        BLEED
-      </button>
+<!-- BLEED -->
+<button type="roll" class="sheet-skill-btn" name="roll_status_bleed"
+  value="&{template:5eDefault}{{title=@{character_name} — Bleed}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Damage=[[ (2d4) * ?{Rank|1|2|3|4|5} ]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">BLEED</button>
       
        <!-- MP REGEN (WIS/2) -->
   <button type="roll" class="sheet-skill-btn sheet-mp-regen-btn" name="roll_mp_regen"
@@ -1376,10 +633,8 @@ on("sheet:opened", function () {
            type="text"
            name="attr_shield_req_text"
            value=""
-           readonly>
     <div class="sheet-mini-label">Req</div>
   </div>
-</div>
 
       <!-- Effects -->
       <div class="sheet-small-label sheet-margin-top-sm">
@@ -1399,7 +654,10 @@ on("sheet:opened", function () {
   value="&{template:5eDefault}{{title=@{character_name} — @{shield_name} Skill}}{{outputall=1}}{{Effect=@{shield_skill_desc}}}">
   USE SKILL
 </button>
-
+<button type="roll" class="sheet-skill-btn" name="roll_shield_post"
+  value="&{template:5eDefault}{{title=@{character_name} — @{shield_name}}}{{outputall=1}}{{Rank=R@{shield_rank}}}{{Weight=@{shield_weight}}}{{Req=@{shield_req_text}}}{{RES Bonus=@{shield_res_bonus}}}{{CON Bonus=@{shield_con_bonus}}}{{Effects=@{shield_effect}}}{{Skill=@{shield_skill_desc}}}">
+  POST SHIELD
+</button>
 
         </div>
       </div>
@@ -1458,6 +716,11 @@ on("sheet:opened", function () {
   ATTACK
   <span class="sheet-defense-sub">1d20 + To-Hit</span>
 </button>
+<button type="roll" name="roll_weapon_crit" class="sheet-attack-btn sheet-block-btn"
+    value="&{template:5eDefault}{{title=@{character_name} — CRIT}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{CritMult=?{Crit Scaling|2}}}{{CritDamage=[[ ( @{weapon_base_dmg} * ?{Crit Scaling|2} ) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
+    CRIT
+    <span class="sheet-defense-sub">(DMG×Crit)+Stat</span>
+  </button>
       </div>
 
       <!-- keep these hidden workers exactly as you already use them -->
@@ -1479,13 +742,13 @@ on("sheet:opened", function () {
 
         <!-- Weight -->
         <div class="sheet-small-label">
-          <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0">
+          <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0" step="0.1">
           <div class="sheet-mini-label">Weight</div>
         </div>
 
         <!-- Req -->
         <div class="sheet-small-label">
-          <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_req_text" value="" readonly>
+          <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_req_text" value="">
           <div class="sheet-mini-label">Reqs</div>
         </div>
       </div>
@@ -1609,6 +872,10 @@ on("sheet:opened", function () {
   value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name} Skill}}{{outputall=1}}{{Effect=@{weapon_skill_desc}}}">
   USE SKILL
 </button>
+<button type="roll" class="sheet-skill-btn" name="roll_weapon_post"
+  value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name}}}{{outputall=1}}{{Rank=R@{weapon_rank}}}{{Type=@{weapon_type}}}{{Weight=@{weapon_weight}}}{{Req=@{weapon_req_text}}}{{To-Hit=1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}}}{{Damage=@{weapon_base_dmg} + ( @{weapon_scaling_expr} )}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}{{Skill=@{weapon_skill_desc}}}">
+  POST WEAPON
+</button>
         </div>
       </div>
 
@@ -1625,37 +892,6 @@ on("sheet:opened", function () {
 	<!-- SKILLS -->
 <div class="sheet-section-spellbook">
   <div class="sheet-sub-header">Skills</div>
-
-  <!-- SKILL CATEGORY FILTER BAR (ONCE, NOT REPEATED) -->
-  <div class="sheet-skill-filterbar">
-    <button type="action" name="act_skills_showall">Show All</button>
-
-    <select name="attr_skills_filter_mode" class="sheet-underlined">
-      <option value="all" selected>All</option>
-      <option value="by">Filter</option>
-    </select>
-
-    <input type="text" class="sheet-underlined"
-           name="attr_skills_filter_text"
-           placeholder="Category name (e.g. Race, Job: Warden, Gear)">
-  </div>
-
-  <!-- CATEGORY LIST (ONCE) -->
-  <div class="sheet-skill-categories">
-    <div class="sheet-small-label sheet-margin-top-sm">Categories (add/remove/rename freely)</div>
-
-    <fieldset class="repeating_skillcats">
-      <div class="sheet-skillcat-row">
-        <input type="text" class="sheet-underlined"
-               name="attr_cat_name"
-               placeholder="Category Name (e.g. Race, Job: Warden, Gear: Blackblade)">
-
-        <button type="action" name="act_filter">Filter</button>
-      </div>
-    </fieldset>
-  </div>
-  
-  <hr class="sheet-skills-divider">
 
   <!-- SKILLS LIST -->
   <fieldset class="repeating_skills">
@@ -1857,12 +1093,6 @@ on("sheet:opened", function () {
                 <div class="sheet-mini-label">Dmg Notes</div>
               </div>
 
-              <div class="sheet-small-label">
-                <input class="sheet-underlined sheet-center" type="number" name="attr_skill_crit_mult" value="2" step="0.5">
-                <div class="sheet-mini-label">Crit Mult</div>
-              </div>
-            </div>
-
             <input type="hidden" class="sheet-skill-stat-toggle" name="attr_skill_stat_toggle" value="0">
 
             <div class="sheet-skill-custom-stat-wrap sheet-row sheet-margin-top-sm">
@@ -1882,7 +1112,9 @@ on("sheet:opened", function () {
               value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_action} • @{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">USE</button>
 
             <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
-              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ (@{skill_base_dmg})* @{skill_crit_mult} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">CRIT</button>
+  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">
+  CRIT
+</button>
           </div>
 
         </div> <!-- /sheet-collapsible-details -->
@@ -1924,6 +1156,8 @@ on("sheet:opened", function () {
               </select>
               <div class="sheet-mini-label">Slot</div>
             </div>
+            
+            <input type="hidden" class="sheet-item-slot-toggle" name="attr_item_slot_toggle" value="Custom">
 
             <!-- Custom Slot -->
             <div class="sheet-small-label sheet-item-slot-custom">
@@ -1950,6 +1184,19 @@ on("sheet:opened", function () {
   <div class="sheet-mini-label">Rank</div>
 </div>
 
+<!-- Armor Preset (shows only when Slot = Armor) -->
+<div class="sheet-small-label sheet-item-armor-preset">
+  <select name="attr_item_armor_preset" class="sheet-underlined">
+    <option value="custom" selected>Custom</option>
+    <option value="clothing">Clothing</option>
+    <option value="gambeson">Gambeson</option>
+    <option value="chainmail">Chainmail</option>
+    <option value="half-plate">Half-Plate</option>
+    <option value="full-plate">Full-Plate</option>
+  </select>
+  <div class="sheet-mini-label">Armor</div>
+</div>
+
 <!-- MUST be directly before the wrapper you hide/show -->
 <input type="hidden" class="sheet-item-rank-toggle" name="attr_item_rank_mode">
 
@@ -1959,6 +1206,18 @@ on("sheet:opened", function () {
   <div class="sheet-mini-label">Rank Text</div>
 </div>
 
+            
+            <!-- Weight -->
+<div class="sheet-small-label">
+  <input class="sheet-underlined sheet-center"
+         type="number"
+         name="attr_item_weight"
+         value="0"
+         step="0.1"
+         min="0">
+  <div class="sheet-mini-label">Wgt</div>
+</div>
+            
             <!-- Post -->
             <div class="sheet-center">
               <button type="roll" class="sheet-skill-btn" name="roll_equipped_post"
@@ -2073,6 +1332,18 @@ on("sheet:opened", function () {
               <input class="sheet-underlined sheet-center" type="number" name="attr_inv_qty" value="1" min="0">
               <div class="sheet-mini-label">Qty</div>
             </div>
+
+<!-- Weight (per item) -->
+<div class="sheet-small-label">
+  <input class="sheet-underlined sheet-center"
+         type="number"
+         name="attr_inv_weight"
+         value="0"
+         step="0.1"
+         min="0">
+  <div class="sheet-mini-label">Wgt</div>
+</div>
+
 
             <div class="sheet-center">
               <button type="roll" class="sheet-skill-btn" name="roll_inv_post"
@@ -2215,6 +1486,16 @@ on("sheet:opened", function () {
               <div class="sheet-mini-label">Active</div>
             </div>
 
+  <!-- POST TITLE -->
+  <div class="sheet-center">
+    <button type="roll"
+            class="sheet-skill-btn"
+            name="roll_title_post"
+            value="&{template:5eDefault}{{title=@{character_name} — @{library_title_name}}}{{outputall=1}}{{Effect=@{library_title_effect}}}">
+      POST
+    </button>
+  </div>
+
           </div>
 
           <div class="sheet-collapsible-details">
@@ -2243,6 +1524,11 @@ on("sheet:opened", function () {
 			
 			<div class="sheet-section-settings">
   <h3 class="sheet-center">Settings</h3>
+  
+  <label class="sheet-checkbox-row">
+  <input type="checkbox" name="attr_uncap_stats" value="1">
+  <span>Uncap Stats</span>
+</label>
 
   <!-- Weapon library JSON goes here later -->
   <div class="sheet-row">
@@ -2639,7 +1925,8 @@ on("sheet:opened", function () {
 }</textarea>
     </div>
   </div>
-  
+ 
+ 
   <div class="sheet-row sheet-margin-top">
   <div class="sheet-col-1">
     <div class="sheet-sub-header">Shield Library (JSON)</div>
@@ -2703,6 +1990,80 @@ on("sheet:opened", function () {
     </textarea>
   </div>
 </div>
+
+<div class="sheet-row">
+  <div class="sheet-col-1">
+    <div class="sheet-sub-header">Armor Library (JSON)</div>
+    <textarea name="attr_armor_library_json" style="height: 220px;">
+{
+  "version": 1,
+  "armors": {
+    "clothing": {
+      "name": "Clothing",
+      "class": "Light",
+      "baseWeight": 0,
+      "ranks": {
+        "1": { "effects": "1 RES | +1 EVA | +1 MOV" },
+        "2": { "effects": "2 RES | +2 EVA | +2 MOV" },
+        "3": { "effects": "4 RES | 2 CON | +3 EVA | +3 MOV" },
+        "4": { "effects": "6 RES | 4 CON | +4 EVA | +4 MOV" },
+        "5": { "effects": "8 RES | 6 CON | +50% (Base) EVA or +5 | +5 MOV" }
+      }
+    },
+    "gambeson": {
+      "name": "Gambeson",
+      "class": "Light",
+      "baseWeight": 1,
+      "ranks": {
+        "1": { "effects": "4 RES | +1 MOV" },
+        "2": { "effects": "6 RES | +1 MOV" },
+        "3": { "effects": "8 RES | 4 CON | +2 MOV | +2 EVA" },
+        "4": { "effects": "10 RES | 6 CON | +2 MOV | +2 EVA" },
+        "5": { "effects": "12 RES | 8 CON | +3 MOV | +3 EVA" }
+      }
+    },
+    "chainmail": {
+      "name": "Chainmail",
+      "class": "Medium",
+      "baseWeight": 6,
+      "ranks": {
+        "1": { "effects": "5 RES" },
+        "2": { "effects": "7 RES | 5 CON" },
+        "3": { "effects": "10 RES | 7 CON" },
+        "4": { "effects": "12 RES | 10 CON" },
+        "5": { "effects": "14 RES | 12 CON" }
+      }
+    },
+    "half-plate": {
+      "name": "Half-Plate",
+      "class": "Medium",
+      "baseWeight": 9.5,
+      "ranks": {
+        "1": { "effects": "7 RES | -2 EVA" },
+        "2": { "effects": "9 RES | 7 CON | -2 EVA" },
+        "3": { "effects": "12 RES | 9 CON | -1 EVA" },
+        "4": { "effects": "14 RES | 12 CON | -1 EVA" },
+        "5": { "effects": "16 RES | 14 CON" }
+      }
+    },
+    "full-plate": {
+      "name": "Full-Plate",
+      "class": "Heavy",
+      "baseWeight": 10,
+      "ranks": {
+        "1": { "effects": "9 RES | -4 EVA" },
+        "2": { "effects": "11 RES | 9 CON | -4 EVA" },
+        "3": { "effects": "14 RES | 11 CON | -3 EVA" },
+        "4": { "effects": "16 RES | 14 CON | -3 EVA" },
+        "5": { "effects": "18 RES | 16 CON | -2 EVA" }
+      }
+    }
+  }
+}
+    </textarea>
+  </div>
+</div>
+
 </div>
 
 	</div>
@@ -2879,172 +2240,231 @@ on("sheet:opened", function () {
  
 <script type="text/worker">
 
-on("change:level change:height_class change:race_rank change:is_human change:repeating_jobs:job_rank remove:repeating_jobs " +
-   "change:strength_base change:dexterity_base change:intelligence_base change:charisma_base change:agility_base change:resistance_base change:constitution_base " +
-   "change:strength_mod change:dexterity_mod change:intelligence_mod change:charisma_mod change:agility_mod change:resistance_mod change:constitution_mod " +
-   "change:strength_bonus change:dexterity_bonus change:intelligence_bonus change:charisma_bonus change:agility_bonus change:resistance_bonus change:constitution_bonus " +
-   "change:vitality_mod change:wisdom_mod change:finesse_mod change:willpower_mod change:reflex_mod " +
-   "change:vitality_bonus change:wisdom_bonus change:finesse_bonus change:willpower_bonus change:reflex_bonus " +
-   "change:str_atk_mod change:str_atk_bonus " +
-   "change:dex_atk_mod change:dex_atk_bonus " +
-   "change:spl_mod change:spl_bonus " +
-   "change:icw_mod change:icw_bonus " +
-   "change:ecw_mod change:ecw_bonus " +
-   "change:hp_mod change:hp_bonus change:mp_mod change:mp_bonus change:acc_mod change:acc_bonus change:macc_mod change:macc_bonus change:eva_mod change:eva_bonus change:mov_mod change:mov_bonus",
-function() {
+on(
+  "sheet:opened " +
+  "change:level change:height_class change:race_rank change:is_human " +
+  "change:repeating_jobs:job_rank remove:repeating_jobs " +
 
-    const coreNames = ["strength", "dexterity", "intelligence", "charisma", "agility", "resistance", "constitution"];
-    const derivativeNames = ["vitality", "wisdom", "finesse", "willpower", "reflex"];
+  "change:strength_base change:dexterity_base change:intelligence_base change:charisma_base change:agility_base change:resistance_base change:constitution_base " +
+  "change:strength_mod change:dexterity_mod change:intelligence_mod change:charisma_mod change:agility_mod change:resistance_mod change:constitution_mod " +
+  "change:strength_bonus change:dexterity_bonus change:intelligence_bonus change:charisma_bonus change:agility_bonus change:resistance_bonus change:constitution_bonus " +
 
-    let attrList = [
-      "level", "height_class", "race_rank", "is_human",
-      "hp_mod", "hp_bonus", "mp_mod", "mp_bonus",
-      "acc_mod", "acc_bonus", "macc_mod", "macc_bonus",
-      "eva_mod", "eva_bonus", "mov_mod", "mov_bonus",
-      "str_atk_mod", "str_atk_bonus",
-      "dex_atk_mod", "dex_atk_bonus",
-      "spl_mod", "spl_bonus",
-      "icw_mod", "icw_bonus",
-      "ecw_mod", "ecw_bonus",
+  "change:vitality_mod change:wisdom_mod change:finesse_mod change:willpower_mod change:reflex_mod " +
+  "change:vitality_bonus change:wisdom_bonus change:finesse_bonus change:willpower_bonus change:reflex_bonus " +
 
-      // ✅ Added for Brace auto/default logic
-      "bracing_dmg", "bracing_auto", "bracing_last_height"
-    ];
+  "change:str_atk_mod change:str_atk_bonus " +
+  "change:dex_atk_mod change:dex_atk_bonus " +
+  "change:spl_mod change:spl_bonus " +
 
-    [...coreNames, ...derivativeNames].forEach(s => {
-        attrList.push(s + "_base", s + "_mod", s + "_bonus");
-    });
+  "change:weapon_total_weight change:equipped_total_weight change:inventory_total_weight change:shield_total_weight " +
+  "change:icw_mod change:icw_bonus change:ecw_mod change:ecw_bonus " +
 
-    getAttrs(attrList, function(v) {
-        const level = parseInt(v.level) || 1;
-        const height = v.height_class || "Medium";
-        const cap = level + 10;
+  "change:hp_mod change:hp_bonus change:mp_mod change:mp_bonus " +
+  "change:acc_mod change:acc_bonus change:macc_mod change:macc_bonus " +
+  "change:eva_mod change:eva_bonus change:mov_mod change:mov_bonus",
+function () {
 
-        let finalAttrs = {};
-        finalAttrs["stat_cap"] = cap;
+  var coreNames = ["strength", "dexterity", "intelligence", "charisma", "agility", "resistance", "constitution"];
+  var derivativeNames = ["vitality", "wisdom", "finesse", "willpower", "reflex"];
 
-        let spentSP = 0;
+  var attrList = [
+    "level", "height_class", "race_rank", "is_human",
+    "uncap_stats",
 
-        // --- PASS 1: CORE STATS & SP CAPS ---
-        coreNames.forEach(s => {
-            let base = parseInt(v[s + "_base"]) || 0;
-            if (base > cap) { base = cap; }
-            finalAttrs[s + "_base"] = base; // ✅ always store base, capped or not
-            spentSP += Math.max(0, base - 1);
+    "hp_mod", "hp_bonus",
+    "mp_mod", "mp_bonus",
+    "acc_mod", "acc_bonus",
+    "macc_mod", "macc_bonus",
+    "eva_mod", "eva_bonus",
+    "mov_mod", "mov_bonus",
 
-            let hMod = (s === "resistance" || s === "constitution")
-              ? (height === "Short" ? -1 : height === "Tall" ? 1 : height === "Giant" ? 2 : 0)
-              : 0;
+    "str_atk_mod", "str_atk_bonus",
+    "dex_atk_mod", "dex_atk_bonus",
+    "spl_mod", "spl_bonus",
 
-            finalAttrs[s + "_total"] =
-              base + (parseInt(v[s + "_mod"]) || 0) + (parseInt(v[s + "_bonus"]) || 0) + hMod;
-        });
+    "icw_mod", "icw_bonus",
+    "ecw_mod", "ecw_bonus",
 
-        // --- PASS 2: DERIVATIVE BASES (Higher-Of Logic) ---
-        finalAttrs["vitality_base"]  = Math.floor(((finalAttrs.resistance_base + finalAttrs.constitution_base) / 2) + (finalAttrs.strength_total / 3));
-        finalAttrs["wisdom_base"]    = Math.floor((Math.max(finalAttrs.intelligence_total, finalAttrs.charisma_total) / 2) + (finalAttrs.dexterity_total / 3));
-        finalAttrs["finesse_base"]   = Math.floor((finalAttrs.dexterity_total / 2) + (Math.max(finalAttrs.agility_total, finalAttrs.intelligence_total) / 3));
-        finalAttrs["willpower_base"] = Math.floor((finalAttrs.charisma_total / 2) + (finalAttrs.strength_total / 3));
-        finalAttrs["reflex_base"]    = Math.floor((finalAttrs.agility_total / 2) + (Math.max(finalAttrs.dexterity_total, finalAttrs.intelligence_total) / 3));
+    // weights (needed for remaining calc)
+    "weapon_total_weight",
+    "shield_total_weight",
+    "equipped_total_weight",
+    "inventory_total_weight",
 
-        // --- PASS 3: DERIVATIVE TOTALS ---
-        derivativeNames.forEach(s => {
-            finalAttrs[s] = (finalAttrs[s + "_base"] || 0) + (parseInt(v[s + "_mod"]) || 0) + (parseInt(v[s + "_bonus"]) || 0);
-        });
+    // brace
+    "bracing_dmg", "bracing_auto", "bracing_last_height"
+  ];
 
-        // --- PASS 4: COMBAT & RESOURCE BASES (With Rounding) ---
-        finalAttrs["hp_base"] = (finalAttrs.vitality * 2) + (level * 2) + 40;
-        finalAttrs["hp_max"]  = finalAttrs.hp_base + (parseInt(v.hp_mod) || 0) + (parseInt(v.hp_bonus) || 0);
+  for (var i = 0; i < coreNames.length; i++) {
+    var s1 = coreNames[i];
+    attrList.push(s1 + "_base", s1 + "_mod", s1 + "_bonus");
+  }
+  for (var j = 0; j < derivativeNames.length; j++) {
+    var s2 = derivativeNames[j];
+    attrList.push(s2 + "_base", s2 + "_mod", s2 + "_bonus");
+  }
 
-        let rawMP = (finalAttrs.wisdom * 2) + (level * 2) + 5;
-        finalAttrs["mp_base"] = Math.round(rawMP / 10) * 10;
-        finalAttrs["mp_max"]  = finalAttrs.mp_base + (parseInt(v.mp_mod) || 0) + (parseInt(v.mp_bonus) || 0);
+  getAttrs(attrList, function (v) {
+    var level = parseInt(v.level, 10) || 1;
+    var height = v.height_class || "Medium";
+    var cap = level + 10;
 
-        finalAttrs["str_atk_base"] = Math.floor(finalAttrs.strength_total / 2);
-        finalAttrs["str_atk"]      = finalAttrs.str_atk_base + (parseInt(v.str_atk_mod) || 0) + (parseInt(v.str_atk_bonus) || 0);
+    var finalAttrs = {};
+    finalAttrs.stat_cap = cap;
+var uncap = (parseInt(v.uncap_stats, 10) || 0);
 
-        finalAttrs["dex_atk_base"] = Math.floor(finalAttrs.dexterity_total / 2.5);
-        finalAttrs["dex_atk"]      = finalAttrs.dex_atk_base + (parseInt(v.dex_atk_mod) || 0) + (parseInt(v.dex_atk_bonus) || 0);
+    var spentSP = 0;
 
-        finalAttrs["spl_base"]     = Math.floor(finalAttrs.intelligence_total / 2.5);
-        finalAttrs["spl"]          = finalAttrs.spl_base + (parseInt(v.spl_mod) || 0) + (parseInt(v.spl_bonus) || 0);
+    // PASS 1: core bases + totals
+    for (var k = 0; k < coreNames.length; k++) {
+      var s = coreNames[k];
 
-        finalAttrs["eva_base"] = Math.floor(((finalAttrs.agility_total / 2) + (finalAttrs.reflex / 2)) / 2);
-        finalAttrs["eva"]      = finalAttrs.eva_base + (parseInt(v.eva_mod) || 0) + (parseInt(v.eva_bonus) || 0);
+      var base = parseInt(v[s + "_base"], 10);
+      if (isNaN(base) || base < 1) base = 1;
+      var uncap = (parseInt(v.uncap_stats, 10) || 0);
+if (!uncap && base > cap) base = cap;
 
-        let rawMov = ((finalAttrs.finesse + finalAttrs.reflex) / 2) + 5;
-        finalAttrs["mov_base"] = Math.round(rawMov / 5) * 5;
-        finalAttrs["mov"]      = finalAttrs.mov_base + (parseInt(v.mov_mod) || 0) + (parseInt(v.mov_bonus) || 0);
+      finalAttrs[s + "_base"] = base;
+      spentSP += Math.max(0, base - 1);
 
-        finalAttrs["acc_base"]  = Math.floor(((finalAttrs.dexterity_total / 2) + (finalAttrs.finesse / 2)) / 2);
-        finalAttrs["acc"]       = finalAttrs.acc_base + (parseInt(v.acc_mod) || 0) + (parseInt(v.acc_bonus) || 0);
+      var hMod = 0;
+      if (s === "resistance" || s === "constitution") {
+        if (height === "Short") hMod = -1;
+        else if (height === "Tall") hMod = 1;
+        else if (height === "Giant") hMod = 2;
+      }
 
-        finalAttrs["macc_base"] = Math.floor(((finalAttrs.intelligence_total / 2) + (finalAttrs.wisdom / 2)) / 2);
-        finalAttrs["macc"]      = finalAttrs.macc_base + (parseInt(v.macc_mod) || 0) + (parseInt(v.macc_bonus) || 0);
+      finalAttrs[s + "_total"] =
+        base +
+        (parseInt(v[s + "_mod"], 10) || 0) +
+        (parseInt(v[s + "_bonus"], 10) || 0) +
+        hMod;
+    }
 
-        finalAttrs["icw_base"] = (finalAttrs.vitality * 3) + 5;
-        finalAttrs["icw"]      = finalAttrs.icw_base + (parseInt(v.icw_mod) || 0) + (parseInt(v.icw_bonus) || 0);
+    // PASS 2: derivative bases
+    finalAttrs.vitality_base  = Math.floor(((finalAttrs.resistance_base + finalAttrs.constitution_base) / 2) + (finalAttrs.strength_total / 3));
+    finalAttrs.wisdom_base    = Math.floor((Math.max(finalAttrs.intelligence_total, finalAttrs.charisma_total) / 2) + (finalAttrs.dexterity_total / 3));
+    finalAttrs.finesse_base   = Math.floor((finalAttrs.dexterity_total / 2) + (Math.max(finalAttrs.agility_total, finalAttrs.intelligence_total) / 3));
+    finalAttrs.willpower_base = Math.floor((finalAttrs.charisma_total / 2) + (finalAttrs.strength_total / 3));
+    finalAttrs.reflex_base    = Math.floor((finalAttrs.agility_total / 2) + (Math.max(finalAttrs.dexterity_total, finalAttrs.intelligence_total) / 3));
 
-        finalAttrs["ecw_base"] = (finalAttrs.vitality * 2) + 10;
-        finalAttrs["ecw"]      = finalAttrs.ecw_base + (parseInt(v.ecw_mod) || 0) + (parseInt(v.ecw_bonus) || 0);
+    // PASS 3: derivative totals
+    for (var m = 0; m < derivativeNames.length; m++) {
+      var d = derivativeNames[m];
+      finalAttrs[d] =
+        (finalAttrs[d + "_base"] || 0) +
+        (parseInt(v[d + "_mod"], 10) || 0) +
+        (parseInt(v[d + "_bonus"], 10) || 0);
+    }
 
-        // ✅ BRACE: auto-set from height ONLY when height changes AND auto mode is enabled.
-        // Short: 10, Medium: 20, Tall: 30, Giant: 40, Custom: don't overwrite
-        const braceByHeight = { Short: 10, Medium: 20, Tall: 30, Giant: 40 };
-        const braceAuto = (parseInt(v.bracing_auto) || 1);
-        const lastHeight = v.bracing_last_height || "";
+    // PASS 4: resources + combat + carry
+    finalAttrs.hp_base = (finalAttrs.vitality * 2) + (level * 2) + 40;
+    finalAttrs.hp_max  = finalAttrs.hp_base + (parseInt(v.hp_mod, 10) || 0) + (parseInt(v.hp_bonus, 10) || 0);
 
-        if (braceAuto === 1 && lastHeight !== height && height !== "Custom") {
-          finalAttrs["bracing_dmg"] = braceByHeight[height] ?? 20; // default to Medium if somehow unknown
-          finalAttrs["bracing_last_height"] = height;
+    var rawMP = (finalAttrs.wisdom * 2) + (level * 2) + 5;
+    finalAttrs.mp_base = Math.round(rawMP / 10) * 10;
+    finalAttrs.mp_max  = finalAttrs.mp_base + (parseInt(v.mp_mod, 10) || 0) + (parseInt(v.mp_bonus, 10) || 0);
+
+    finalAttrs.str_atk_base = Math.floor(finalAttrs.strength_total / 2);
+    finalAttrs.str_atk      = finalAttrs.str_atk_base + (parseInt(v.str_atk_mod, 10) || 0) + (parseInt(v.str_atk_bonus, 10) || 0);
+
+    finalAttrs.dex_atk_base = Math.floor(finalAttrs.dexterity_total / 2.5);
+    finalAttrs.dex_atk      = finalAttrs.dex_atk_base + (parseInt(v.dex_atk_mod, 10) || 0) + (parseInt(v.dex_atk_bonus, 10) || 0);
+
+    finalAttrs.spl_base = Math.floor(finalAttrs.intelligence_total / 2.5);
+    finalAttrs.spl      = finalAttrs.spl_base + (parseInt(v.spl_mod, 10) || 0) + (parseInt(v.spl_bonus, 10) || 0);
+
+    finalAttrs.eva_base = Math.floor(((finalAttrs.agility_total / 2) + (finalAttrs.reflex / 2)) / 2);
+    finalAttrs.eva      = finalAttrs.eva_base + (parseInt(v.eva_mod, 10) || 0) + (parseInt(v.eva_bonus, 10) || 0);
+
+    var rawMov = ((finalAttrs.finesse + finalAttrs.reflex) / 2) + 5;
+    finalAttrs.mov_base = Math.round(rawMov / 5) * 5;
+    finalAttrs.mov      = finalAttrs.mov_base + (parseInt(v.mov_mod, 10) || 0) + (parseInt(v.mov_bonus, 10) || 0);
+
+    finalAttrs.acc_base  = Math.floor(((finalAttrs.dexterity_total / 2) + (finalAttrs.finesse / 2)) / 2);
+    finalAttrs.acc       = finalAttrs.acc_base + (parseInt(v.acc_mod, 10) || 0) + (parseInt(v.acc_bonus, 10) || 0);
+
+    finalAttrs.macc_base = Math.floor(((finalAttrs.intelligence_total / 2) + (finalAttrs.wisdom / 2)) / 2);
+    finalAttrs.macc      = finalAttrs.macc_base + (parseInt(v.macc_mod, 10) || 0) + (parseInt(v.macc_bonus, 10) || 0);
+
+    finalAttrs.icw_base = (finalAttrs.vitality * 3) + 5;
+    finalAttrs.icw      = finalAttrs.icw_base + (parseInt(v.icw_mod, 10) || 0) + (parseInt(v.icw_bonus, 10) || 0);
+
+    finalAttrs.ecw_base = (finalAttrs.vitality * 2) + 10;
+    finalAttrs.ecw      = finalAttrs.ecw_base + (parseInt(v.ecw_mod, 10) || 0) + (parseInt(v.ecw_bonus, 10) || 0);
+
+    // ===== Carry remaining (single source of truth) =====
+var weaponW = parseFloat(v.weapon_total_weight) || 0;
+var shieldW = parseFloat(v.shield_total_weight) || 0;
+var equipW  = parseFloat(v.equipped_total_weight) || 0;
+
+finalAttrs.ecw_used = weaponW + shieldW + equipW;
+finalAttrs.ecw_remaining = (parseFloat(finalAttrs.ecw) || 0) - finalAttrs.ecw_used;
+
+var invW = parseFloat(v.inventory_total_weight) || 0;
+finalAttrs.icw_used = invW;
+finalAttrs.icw_remaining = (parseFloat(finalAttrs.icw) || 0) - finalAttrs.icw_used;
+
+    // Brace auto
+    var braceByHeight = { Short: 10, Medium: 20, Tall: 30, Giant: 40 };
+    var braceAuto = (parseInt(v.bracing_auto, 10) || 1);
+    var lastHeight = v.bracing_last_height || "";
+
+    if (braceAuto === 1 && lastHeight !== height && height !== "Custom") {
+      finalAttrs.bracing_dmg = (braceByHeight[height] != null) ? braceByHeight[height] : 20;
+      finalAttrs.bracing_last_height = height;
+    }
+
+    // PASS 5: budgets
+    getSectionIDs("repeating_jobs", function (idarray) {
+      var jobFields = [];
+      for (var n = 0; n < idarray.length; n++) jobFields.push("repeating_jobs_" + idarray[n] + "_job_rank");
+
+      getAttrs(jobFields, function (rows) {
+        var spFromRanks = 0;
+        var totalJPUsed = Math.max(0, parseInt(v.race_rank, 10) || 0);
+
+        function calcSP(rank) {
+          var earned = 0;
+          for (var r = 1; r <= rank; r++) {
+            if (r !== 1 && r !== 3 && (r <= 3 || r % 3 !== 0)) earned++;
+          }
+          return earned;
         }
 
-        // --- PASS 5: BUDGETS (SP/JP System) ---
-        getSectionIDs("repeating_jobs", function(idarray) {
-            const jobFields = idarray.map(id => `repeating_jobs_${id}_job_rank`);
-            getAttrs(jobFields, function(rows) {
-                let spFromRanks = 0;
-                let totalJPUsed = Math.max(0, parseInt(v.race_rank) || 0);
+        spFromRanks += calcSP(totalJPUsed);
 
-                const calcSP = (rank) => {
-                    let earned = 0;
-                    for (let i = 1; i <= rank; i++) {
-                      if (i !== 1 && i !== 3 && (i <= 3 || i % 3 !== 0)) earned++;
-                    }
-                    return earned;
-                };
+        for (var p = 0; p < idarray.length; p++) {
+          var id = idarray[p];
+          var rr = parseInt(rows["repeating_jobs_" + id + "_job_rank"], 10) || 0;
+          totalJPUsed += rr;
+          spFromRanks += calcSP(rr);
+        }
 
-                spFromRanks += calcSP(totalJPUsed);
+        var spTotalBudget = 10 + (level * 3) + spFromRanks;
+        finalAttrs.sp_total  = spTotalBudget;
+        finalAttrs.sp_spent  = spentSP;
+        finalAttrs.sp_status = (spentSP > spTotalBudget) ? 1 : 0;
 
-                idarray.forEach(id => {
-                    let r = parseInt(rows[`repeating_jobs_${id}_job_rank`]) || 0;
-                    totalJPUsed += r;
-                    spFromRanks += calcSP(r);
-                });
+        finalAttrs.jp_total  = Math.max(0, (level - 1) + (parseInt(v.is_human, 10) || 0));
+        finalAttrs.jp_spent  = Math.max(0, totalJPUsed - 2);
+        finalAttrs.jp_status = (finalAttrs.jp_spent > finalAttrs.jp_total) ? 1 : 0;
 
-                const spTotalBudget = 10 + (level * 3) + spFromRanks;
-                finalAttrs["sp_total"] = spTotalBudget;
-                finalAttrs["sp_spent"] = spentSP;
-                finalAttrs["sp_status"] = (spentSP > spTotalBudget) ? 1 : 0;
+        // map for HTML
+        finalAttrs.strength     = finalAttrs.strength_total;
+        finalAttrs.dexterity    = finalAttrs.dexterity_total;
+        finalAttrs.intelligence = finalAttrs.intelligence_total;
+        finalAttrs.charisma     = finalAttrs.charisma_total;
+        finalAttrs.agility      = finalAttrs.agility_total;
+        finalAttrs.resistance   = finalAttrs.resistance_total;
+        finalAttrs.constitution = finalAttrs.constitution_total;
 
-                finalAttrs["jp_total"] = Math.max(0, (level - 1) + (parseInt(v.is_human) || 0));
-                finalAttrs["jp_spent"] = Math.max(0, totalJPUsed - 2);
-                finalAttrs["jp_status"] = (finalAttrs.jp_spent > finalAttrs.jp_total) ? 1 : 0;
-
-                // Final data mapping to HTML
-                finalAttrs["strength"]     = finalAttrs.strength_total;
-                finalAttrs["dexterity"]    = finalAttrs.dexterity_total;
-                finalAttrs["intelligence"] = finalAttrs.intelligence_total;
-                finalAttrs["charisma"]     = finalAttrs.charisma_total;
-                finalAttrs["agility"]      = finalAttrs.agility_total;
-                finalAttrs["resistance"]   = finalAttrs.resistance_total;
-                finalAttrs["constitution"] = finalAttrs.constitution_total;
-
-                setAttrs(finalAttrs);
-            });
-        });
+        setAttrs(finalAttrs);
+      });
     });
+  });
 });
+
 
 // ✅ If the player edits Brace manually, stop auto-updating it from Height.
 on("change:bracing_dmg", () => {
@@ -3215,18 +2635,56 @@ on("change:repeating_weapons:weapon_weight remove:repeating_weapons sheet:opened
   });
 });
 
-// ECW remaining = capacity - equipped weapon weight
-on("change:ecw change:weapon_total_weight sheet:opened", () => {
-  getAttrs(["ecw", "weapon_total_weight"], (v) => {
-    const ecwCap  = parseFloat(v.ecw) || 0;
-    const ecwUsed = parseFloat(v.weapon_total_weight) || 0;
-
-    setAttrs({
-      ecw_used: ecwUsed,
-      ecw_remaining: ecwCap - ecwUsed,
+// ===== Equipped items total weight (ALL equipped rows) =====
+on("change:repeating_equipped:item_weight remove:repeating_equipped sheet:opened", () => {
+  getSectionIDs("repeating_equipped", (ids) => {
+    const fields = ids.map(id => `repeating_equipped_${id}_item_weight`);
+    getAttrs(fields, (v) => {
+      const total = ids.reduce((sum, id) => {
+        const w = parseFloat(v[`repeating_equipped_${id}_item_weight`]) || 0;
+        return sum + w;
+      }, 0);
+      setAttrs({ equipped_total_weight: total });
     });
   });
 });
+
+
+// ===== Inventory total weight (ALL inventory rows, weight * qty) =====
+on("sheet:opened change:repeating_inventory:inv_weight change:repeating_inventory:inv_qty remove:repeating_inventory", function() {
+  getSectionIDs("repeating_inventory", function(ids) {
+    var fields = [];
+    for (var i = 0; i < ids.length; i++) {
+      fields.push("repeating_inventory_" + ids[i] + "_inv_weight");
+      fields.push("repeating_inventory_" + ids[i] + "_inv_qty");
+    }
+    getAttrs(fields, function(v) {
+      var total = 0;
+      for (var j = 0; j < ids.length; j++) {
+        var w = parseFloat(v["repeating_inventory_" + ids[j] + "_inv_weight"]) || 0;
+        var q = parseFloat(v["repeating_inventory_" + ids[j] + "_inv_qty"]) || 0;
+        total += w * q;
+      }
+      setAttrs({ inventory_total_weight: total });
+    });
+  });
+});
+
+
+// ===== Shield total weight (ALL shields) =====
+on("change:repeating_shields:shield_weight remove:repeating_shields sheet:opened", () => {
+  getSectionIDs("repeating_shields", (ids) => {
+    const fields = ids.map(id => `repeating_shields_${id}_shield_weight`);
+    getAttrs(fields, (v) => {
+      const total = ids.reduce((sum, id) => {
+        const w = parseFloat(v[`repeating_shields_${id}_shield_weight`]) || 0;
+        return sum + w;
+      }, 0);
+      setAttrs({ shield_total_weight: total });
+    });
+  });
+});
+
 
 
 // Custom Weapon Scaling + Accuracy Override
@@ -3283,6 +2741,68 @@ on(
         setAttrs(out);
       });
     });
+  }
+);
+
+
+// Mirror Slot select into a hidden toggle so CSS can react
+on("change:repeating_equipped:item_slot sheet:opened", function (evt) {
+  if (!evt || !evt.sourceAttribute) return;
+  var m = evt.sourceAttribute.match(/repeating_equipped_([^_]+)_item_slot/);
+  if (!m) return;
+  var rowId = m[1];
+
+  getAttrs(["repeating_equipped_" + rowId + "_item_slot"], function (v) {
+    var slot = v["repeating_equipped_" + rowId + "_item_slot"] || "Custom";
+    var upd = {};
+    upd["repeating_equipped_" + rowId + "_item_slot_toggle"] = slot;
+    setAttrs(upd);
+  });
+});
+
+// ===== Armor Library (Equipped tab helper) =====
+on(
+  "change:repeating_equipped:item_armor_preset change:repeating_equipped:item_rank_mode change:repeating_equipped:item_slot sheet:opened",
+  (evt) => {
+    // Find the row prefix
+    if (!evt || !evt.sourceAttribute || !evt.sourceAttribute.startsWith("repeating_equipped_")) return;
+    const prefix = evt.sourceAttribute.replace(/_(item_armor_preset|item_rank_mode|item_slot)$/, "");
+
+    getAttrs(
+      [
+        "armor_library_json",
+        `${prefix}_item_slot`,
+        `${prefix}_item_armor_preset`,
+        `${prefix}_item_rank_mode`
+      ],
+      (v) => {
+        const slot = v[`${prefix}_item_slot`] || "Other";
+        if (slot !== "Armor") return; // only run for armor slot
+
+        const preset = (v[`${prefix}_item_armor_preset`] || "custom").toLowerCase();
+        const rankMode = v[`${prefix}_item_rank_mode`] || "R1";
+
+        if (preset === "custom") return;
+        if (rankMode === "Custom") return; // custom rank text: don't overwrite
+
+        // RankMode is "R1".."R5" -> "1".."5"
+        const rank = String(rankMode).replace(/^R/, "");
+
+        const lib = safeParseJSON(v.armor_library_json);
+        if (!lib || !lib.armors || !lib.armors[preset]) return;
+
+        const armor = lib.armors[preset];
+        const r = (armor.ranks && armor.ranks[rank]) ? armor.ranks[rank] : null;
+        if (!r) return;
+
+        const update = {};
+        update[`${prefix}_item_name`] = armor.name || preset;
+        update[`${prefix}_item_weight`] = (r.weight != null) ? r.weight : (armor.baseWeight != null ? armor.baseWeight : 0);
+        update[`${prefix}_item_stats`] = r.effects || "";
+
+        setAttrs(update);
+      }
+    );
   }
 );
 
@@ -3949,29 +3469,6 @@ on(
 
 const norm = (s) => (s || "").toString().trim().toLowerCase();
 
-function refreshSkillVisibility() {
-  getAttrs(["skills_filter_mode", "skills_filter_text"], (v) => {
-    const mode = v.skills_filter_mode || "all";
-    const filter = norm(v.skills_filter_text);
-
-    getSectionIDs("repeating_skills", (ids) => {
-      if (!ids || !ids.length) return;
-
-      const fields = [];
-      ids.forEach(id => {
-        fields.push(
-  `repeating_skills_${id}_skill_category`,
-  `repeating_skills_${id}_skill_row_type`
-);
-      });
-
-      getAttrs(fields, (sv) => {
-        const setObj = {};
-        ids.forEach(id => {
-const cat = norm(sv[`repeating_skills_${id}_skill_category`]);
-const rowType = sv[`repeating_skills_${id}_skill_row_type`] || "skill";
-
-let visible = 1;
 
 // Dividers always visible
 if (rowType !== "divider") {
@@ -3980,40 +3477,7 @@ if (rowType !== "divider") {
   }
 }
 
-          setObj[`repeating_skills_${id}_skill_visible`] = visible;
-        });
 
-        setAttrs(setObj);
-      });
-    });
-  });
-}
-
-/* Recalc whenever the filter changes or skills/categories change */
-on("change:skills_filter_mode change:skills_filter_text change:repeating_skills:skill_category remove:repeating_skills sheet:opened", () => {
-  refreshSkillVisibility();
-});
-
-/* Show All button */
-on("clicked:skills_showall", () => {
-  setAttrs({ skills_filter_mode: "all", skills_filter_text: "" }, refreshSkillVisibility);
-});
-
-/* Clicking a category row's Filter button copies its name into the filter */
-on("clicked:repeating_skillcats:filter", (info) => {
-  // Roll20 action buttons come through as repeating_<sec>_<rowid>_act_<actionname>
-  const m = (info.sourceAttribute || "").match(/^repeating_skillcats_([^_]+)_act_filter$/);
-  if (!m) return;
-  const rowId = m[1];
-
-  getAttrs([`repeating_skillcats_${rowId}_cat_name`], (v) => {
-    const name = (v[`repeating_skillcats_${rowId}_cat_name`] || "").trim();
-    setAttrs(
-      { skills_filter_mode: "by", skills_filter_text: name },
-      refreshSkillVisibility
-    );
-  });
-});
 
 // ===== Equipment / Inventory item toggles + rank display =====
 function syncEquippedTogglesAndRank() {
