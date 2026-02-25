@@ -1,0 +1,3553 @@
+<!--inventory sheetworkers-->
+ 
+ 
+<!-- Sheet code -->
+ 
+<div class="sheet-overall-wrapper">
+<div class="sheet-character">
+<div class="sheet-header-grid" style="position: relative;">
+    <!-- ABSOLUTE POSITIONED LOGO: This won't push the rows down -->
+    <div style="position: absolute; left: 0; top: 0; width: 25%; text-align: center;">
+        <img src="https://files.d20.io/images/474438152/BoQ62joyuxLvkesD7kO93A/original.png" alt="Logo" width="130">
+    </div>
+ 
+    <!-- Row 1 -->
+    <div class="sheet-row sheet-no-margin">
+        <div class="sheet-col-1-4"></div> <!-- Empty spacer for logo -->
+        <div class="sheet-col-1-4 sheet-small-label sheet-center"><input class="sheet-underlined sheet-center" type="text" name="attr_character_name"><br/>Character Name</div>
+        <div class="sheet-col-1-7 sheet-small-label sheet-center"><input class="sheet-underlined sheet-center" type="text" name="attr_race"><br/>Race</div>
+        <div class="sheet-col-1-7 sheet-small-label sheet-center"><input class="sheet-underlined sheet-center" type="text" name="attr_affinity"><br/>Affinity</div>
+        <div class="sheet-col-1-8 sheet-small-label sheet-center"><input class="sheet-underlined sheet-center" type="number" name="attr_level" value="1"><br/>Level</div>
+    </div>
+ 
+    <!-- Row 2 -->
+    <div class="sheet-row sheet-no-margin">
+        <div class="sheet-col-1-4"></div> <!-- Empty spacer for logo -->
+        <div class="sheet-col-1-4 sheet-small-label sheet-center">
+            <select name="attr_height_class" class="sheet-underlined sheet-center">
+                <option value="Short">Short</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Tall">Tall</option>
+                <option value="Giant">Giant</option>
+                <option value="Custom">Custom</option>
+            </select><br/>Height
+        </div>
+        <div class="sheet-col-1-7 sheet-small-label sheet-center"><input class="sheet-underlined sheet-center" type="number" name="attr_bracing_dmg"><br/>Brace</div>
+        <input type="hidden" name="attr_bracing_auto" value="1">
+<input type="hidden" name="attr_bracing_last_height" value="">
+        <div class="sheet-col-1-7 sheet-small-label sheet-center"><input class="sheet-underlined sheet-center" type="text" name="attr_alignment"><br/>Alignment</div>
+        <div class="sheet-col-1-8 sheet-small-label sheet-center"><input class="sheet-underlined sheet-center" type="number" name="attr_age"><br/>Age</div>
+    </div>
+ 
+<!-- Row 3: The Dual Title Header -->
+<div class="sheet-row sheet-no-margin">
+    <div class="sheet-col-1-4"></div> <!-- Spacer for logo -->
+ 
+<!-- Title 1 -->
+<div class="sheet-col-3-8 sheet-small-label sheet-center">
+    <input class="sheet-underlined sheet-center sheet-title-input" type="text" name="attr_title_1" placeholder="Primary Title" readonly>
+    
+    <!-- The hover container -->
+    <div class="sheet-tooltip-container">
+        <span class="sheet-title-info">ⓘ</span>
+        <!-- This span actually holds the text for the CSS to grab -->
+        <span class="sheet-tooltip-text" name="attr_title_1_effect"></span>
+    </div>
+    <br/>Primary Title
+</div>
+
+<!-- Title 2 -->
+<div class="sheet-col-3-8 sheet-small-label sheet-center">
+    <input class="sheet-underlined sheet-center sheet-title-input" type="text" name="attr_title_2" placeholder="Secondary Title" readonly>
+    
+    <div class="sheet-tooltip-container">
+        <span class="sheet-title-info">ⓘ</span>
+        <span class="sheet-tooltip-text" name="attr_title_2_effect"></span>
+    </div>
+    <br/>Secondary Title
+</div>
+ 
+<!-- Hidden inputs to store the effects (You can edit these in the 'Attributes' tab or we can add a 'Notes' section later) -->
+<input type="hidden" name="attr_title_1_effect" value="No effect described.">
+<input type="hidden" name="attr_title_2_effect" value="No effect described.">
+ 
+</div>
+ 
+	<!-- Tabs-->
+	       <input type="radio" name="attr_tab" class="sheet-tab sheet-tab1" value="1" title="Main" checked="checked" />
+	  	<span class="sheet-tab sheet-tab1">Stats</span> <!--line 32 -->
+          	<input type="radio" name="attr_tab" class="sheet-tab sheet-tab2" value="2" />
+		<span class="sheet-tab sheet-tab2">Job</span> <!--line-->
+            <input type="radio" name="attr_tab" class="sheet-tab sheet-tab3" value="3" />
+    	<span class="sheet-tab sheet-tab3">Combat</span> <!--line -->
+		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab4" value="4" />
+		<span class="sheet-tab sheet-tab4">Skills</span> <!--line -->
+		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab5" value="5" />
+		<span class="sheet-tab sheet-tab5">Equipment</span> <!--line -->
+		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab6" value="6" />
+		<span class="sheet-tab sheet-tab6">Traits</span> <!--line -->
+		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab99" value="99" />
+		<span class="sheet-tab sheet-tab99">Show All</span>
+		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab7" value="7" />
+        <span class="sheet-tab sheet-tab7">Settings</span>
+		<span class="sheet-spacer"></span>
+ 
+			<!--Ability section-->
+			    <!--The abiltity adjustment is fitted to a 3rd order polynomial that gives the correct value between 3 and 18-->
+<div class="sheet-section-main"> 
+<div class="sheet-sub-header">Stat Point (SP) Management</div>
+<div class="sheet-row sheet-center" style="margin-bottom: 10px;">
+    <!-- SP Earned (Total Budget) -->
+    <div class="sheet-col-1-3 sheet-small-label">
+        <input type="number" name="attr_sp_total" value="13" readonly class="sheet-underlined sheet-center" style="font-size: 1.2em; color: #2C5D28;">
+        <br/>Total SP Earned
+    </div>
+ 
+    <!-- SP Spent (Current Usage) -->
+    <div class="sheet-col-1-3 sheet-small-label">
+        <!-- The "Switch" (Hidden) -->
+        <input type="hidden" name="attr_sp_status" class="sheet-sp-status-switch" value="0">
+ 
+        <!-- The Actual Box -->
+        <input type="number" name="attr_sp_spent" value="0" readonly class="sheet-underlined sheet-center sheet-sp-usage-box">
+        <br/>Total SP Spent
+    </div>
+ 
+    <!-- Stat Cap (Level + 10) -->
+    <div class="sheet-col-1-3 sheet-small-label">
+        <input type="number" name="attr_stat_cap" readonly class="sheet-underlined sheet-center" style="font-size: 1.2em; color: #a00;">
+        <br/>Stat Cap
+    </div>
+</div>
+<div class="sheet-main-stats-container">
+ 
+    <!-- LEFT COLUMN -->
+    <div class="sheet-stat-column">
+        <div class="sheet-sub-header">Core Attributes</div>
+        <div class="sheet-stat-row sheet-small-label">
+            <div class="sheet-stat-name">Stat</div>
+            <div class="sheet-stat-num sheet-center">Base</div>
+            <div class="sheet-stat-num sheet-center">Mod</div>
+            <div class="sheet-stat-num sheet-center">Bonus</div>
+            <div class="sheet-stat-num sheet-center">Total</div>
+            <div class="sheet-stat-roll">Roll</div>
+        </div>
+ 
+        <!-- Strength -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Strength</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_strength_base" value="1" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_strength_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_strength_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_strength" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_str"value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Strength}} {{roll=[[1d20 + @{strength}]]}}"></button></div>
+        </div>
+ 
+        <!-- Dexterity -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Dexterity</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dexterity_base" value="1" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dexterity_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dexterity_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dexterity" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_dex" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Dexterity}} {{roll=[[1d20 + @{dexterity}]]}}"></button></div>
+        </div>
+ 
+        <!-- Intelligence -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Intelligence</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_intelligence_base" value="1" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_intelligence_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_intelligence_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_intelligence" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_int" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Intelligence}} {{roll=[[1d20 + @{intelligence}]]}}"></button></div>
+        </div>
+ 
+        <!-- Charisma -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Charisma</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_charisma_base" value="1" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_charisma_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_charisma_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_charisma" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_cha" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Charisma}} {{roll=[[1d20 + @{charisma}]]}}"></button></div>
+        </div>
+ 
+        <!-- Agility -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Agility</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_agility_base" value="1" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_agility_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_agility_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_agility" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_agi" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Agility}} {{roll=[[1d20 + @{agility}]]}}"></button></div>
+        </div>
+ 
+        <!-- Resistance -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Resistance</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_resistance_base" value="1" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_resistance_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_resistance_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_resistance" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_res" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Resistance}} {{roll=[[1d20 + @{resistance}]]}}"></button></div>
+        </div>
+ 
+        <!-- Constitution -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Constitution</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_constitution_base" value="1" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_constitution_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_constitution_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_constitution" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_con" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Constitution}} {{roll=[[1d20 + @{constitution}]]}}"></button></div>
+        </div>
+
+        <div class="sheet-sub-header">Derivative Stats</div>
+ 
+        <!-- Vitality -->
+        <div class="sheet-stat-row">
+    <div class="sheet-stat-name">Vitality</div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality_mod" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality_bonus" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_vitality" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_fin" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Vitality}} {{roll=[[1d20 + @{vitality}]]}}"></button></div>
+</div>
+        <!-- Finesse -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Finesse</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_finesse_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_finesse_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_finesse_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_finesse" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_fin" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Finesse}} {{roll=[[1d20 + @{finesse}]]}}"></button></div>
+        </div>
+ 
+        <!-- Wisdom -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Wisdom</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_wisdom_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_wisdom_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_wisdom_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_wisdom" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_wis" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Wisdom}} {{roll=[[1d20 + @{wisdom}]]}}"></button></div>
+        </div>
+ 
+        <!-- Willpower -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Willpower</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_willpower_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_willpower_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_willpower_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_willpower" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Willpower}} {{roll=[[1d20 + @{willpower}]]}}"></button></div>
+        </div>
+    
+    <!-- Reflex -->
+    <div class="sheet-stat-row">
+    <div class="sheet-stat-name">Reflex</div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex_mod" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex_bonus" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_reflex" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Reflex}} {{roll=[[1d20 + @{reflex}]]}}"></button>
+    </div>
+</div>
+ </div>
+ 
+    <!-- RIGHT COLUMN -->
+    <div class="sheet-stat-column">
+        <div class="sheet-sub-header">Combat Stats</div>
+        <div class="sheet-stat-row sheet-small-label">
+            <div class="sheet-stat-name">Stat</div>
+            <div class="sheet-stat-num sheet-center">Base</div>
+            <div class="sheet-stat-num sheet-center">Mod</div>
+            <div class="sheet-stat-num sheet-center">Bonus</div>
+            <div class="sheet-stat-num sheet-center">Total</div>
+            <div class="sheet-stat-roll">Roll</div>
+        </div>
+ 
+        <!-- HP -->
+        <div class="sheet-stat-row">
+    <div class="sheet-stat-name">HP</div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_mod" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_bonus" value="0" class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-num"><input type="number" name="attr_hp_max" value="0" readonly class="sheet-underlined sheet-center"></div>
+    <div class="sheet-stat-roll"></div>
+    </div>
+ 
+        <!-- MP -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">MP</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mp_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mp_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mp_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mp_max" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"></div>
+        </div>
+ 
+        <!-- STR ATK -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">STR ATK</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_str_atk_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_str_atk_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_str_atk_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_str_atk" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"></div>
+        </div>
+ 
+        <!-- DEX ATK -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">DEX ATK</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_dex_atk" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"></div>
+        </div>
+ 
+        <!-- SPL -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">SPL</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_spl_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_spl_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_spl_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_spl" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"></div>
+        </div>
+ 
+        <!-- EVA -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">EVA</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_eva_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_eva_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_eva_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_eva" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_eva" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Evasion}} {{roll=[[1d20 + @{eva}]]}}"></button></div>
+        </div>
+ 
+        <!-- MOV -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">MOV</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mov_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mov_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mov_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_mov" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"></div>
+        </div>
+ <div style="height: 5px;"></div>
+        <div class="sheet-sub-header">Logistics & Accuracy</div>
+ 
+        <!-- Phys ACC -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Phys. ACC</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_acc_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_acc_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_acc_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_acc" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_acc" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Physical Accuracy}} {{roll=[[1d20 + @{acc}]]}}"></button></div>
+        </div>
+ 
+        <!-- Mag ACC -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Magi. ACC</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_macc" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"><button type="roll" name="roll_macc" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Magical Accuracy}} {{roll=[[1d20 + @{macc}]]}}"></button></div>
+        </div>
+ 
+        <!-- Inv Carry -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Inv. Carry</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_icw_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_icw_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_icw_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_icw_remaining" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"></div>
+        </div>
+ 
+        <!-- Equi Carry -->
+        <div class="sheet-stat-row">
+            <div class="sheet-stat-name">Equi. Carry</div>
+            <div class="sheet-stat-num"><input type="number" name="attr_ecw_base" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_ecw_mod" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_ecw_bonus" value="0" class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-num"><input type="number" name="attr_ecw_remaining" value="0" readonly class="sheet-underlined sheet-center"></div>
+            <div class="sheet-stat-roll"></div>
+        </div>
+        
+    </div>
+</div>
+</div>
+	    <!--Class Abilities -->
+	<div class="sheet-section-class">
+    <!-- JP Management Header -->
+    <div class="sheet-sub-header">Job Point (JP) Management</div>
+    <div class="sheet-row sheet-center" style="margin-bottom: 10px;">
+        <div class="sheet-col-1-3 sheet-small-label">
+            <input type="number" name="attr_jp_total" value="0" readonly class="sheet-underlined sheet-center" style="font-size: 1.2em; color: #2C5D28;">
+            <br/>Total JP Earned
+        </div>
+        <div class="sheet-col-1-3 sheet-small-label">
+            <input type="hidden" name="attr_jp_status" class="sheet-sp-status-switch" value="0">
+            <input type="number" name="attr_jp_spent" value="0" readonly class="sheet-underlined sheet-center sheet-sp-usage-box" style="font-size: 1.2em;">
+            <br/>Total JP Spent
+        </div>
+        <div class="sheet-col-1-3 sheet-small-label">
+            <label style="cursor: pointer; margin-top: 5px; display: inline-block;">
+                <input type="checkbox" name="attr_is_human" value="1"> <strong>Human</strong>
+            </label>
+        </div>
+    </div>
+ 
+    <div class="sheet-main-stats-container">
+        <!-- LEFT COLUMN: RACE -->
+        <div class="sheet-stat-column">
+            <div class="sheet-sub-header">Race Information</div>
+            <div class="sheet-stat-row">
+                <div class="sheet-stat-name">Race Name</div>
+                <div class="sheet-stat-num" style="flex:3;"><input type="text" name="attr_race_name" class="sheet-underlined"></div>
+                <div class="sheet-stat-num">Rank</div>
+                <div class="sheet-stat-num"><input type="number" name="attr_race_rank" value="1" class="sheet-underlined sheet-center"></div>
+            </div>
+ 
+            <div class="sheet-sub-header">Race Perks</div>
+            <textarea name="attr_race_perks" placeholder="Unique Strengths..."></textarea>
+ 
+            <div class="sheet-sub-header">Race Flaws</div>
+            <textarea name="attr_race_flaws" placeholder="Unique Weaknesses..."></textarea>
+        </div>
+ 
+        <!-- RIGHT COLUMN: JOBS (REPEATING) -->
+        <div class="sheet-stat-column">
+            <div class="sheet-sub-header">Job Progression</div>
+ 
+<fieldset class="repeating_jobs">
+    <!-- Keep all three of these as direct siblings inside the repitem -->
+    <input type="checkbox" name="attr_details_toggle" class="sheet-details-toggle" value="1">
+    <span class="sheet-details-arrow"></span>
+ 
+    <div class="sheet-stat-row">
+        <!-- Job Name and Rank go here -->
+        <div class="sheet-stat-name"><input type="text" name="attr_job_name" class="sheet-underlined"></div>
+        <div class="sheet-stat-num"><input type="number" name="attr_job_rank" class="sheet-underlined"></div>
+    </div>
+ 
+    <!-- This must be a sibling of the checkbox above -->
+    <div class="sheet-job-details">
+        <textarea name="attr_job_description"></textarea>
+    </div>
+</fieldset>
+        </div>
+    </div> <!-- Closes sheet-main-stats-container -->
+
+</div> <!-- Closes sheet-section-class -->
+ 
+ 
+	<!--Combat-->
+	<div class="sheet-section-combat">
+<div class="sheet-combat-grid">
+
+  <!-- LEFT: DEFENSE -->
+  <div class="sheet-combat-column">
+
+    <div class="sheet-header-bar">Defense</div>
+
+    <div class="sheet-defense-card">
+
+      <!-- Top row: inputs -->
+      <div class="sheet-defense-row sheet-defense-inputs">
+        <div class="sheet-defense-field">
+          <input type="number" name="attr_incoming_dmg" value="0">
+          <div class="sheet-small-label">Incoming Damage</div>
+        </div>
+
+        <div class="sheet-defense-field">
+          <select name="attr_dmg_type">
+            <option value="res" selected>vs RES</option>
+            <option value="con">vs CON</option>
+          </select>
+          <div class="sheet-small-label">Damage Type</div>
+        </div>
+      </div>
+
+      <!-- Bottom row: buttons -->
+      <div class="sheet-defense-row sheet-defense-actions">
+        <button type="action" name="act_block_dmg"
+                class="sheet-block-btn sheet-defense-btn">
+          BLOCK
+          <span class="sheet-defense-sub">D20 + Shield</span>
+        </button>
+
+        <button type="action" name="act_take_dmg"
+                class="sheet-take-btn sheet-defense-btn">
+          TAKE DMG
+          <span class="sheet-defense-sub">Base Stats Only</span>
+        </button>
+      </div>
+
+    </div> <!-- /sheet-defense-card -->
+  </div> <!-- /LEFT column -->
+
+  <!-- RIGHT: STATUS EFFECTS -->
+<div class="sheet-combat-column">
+
+  <input type="hidden" name="attr_status_scaling" value="0">
+  <input type="hidden" name="attr_status_scaling_source" value="STR ATK (Base)">
+  <input type="hidden" name="attr_status_defense_target" value="RES">
+
+  <div class="sheet-header-bar">Status Effects</div>
+
+  <div class="sheet-defense-card sheet-status-card">
+    <div class="sheet-row sheet-weapon-bottom-row sheet-center sheet-status-toprow">
+
+      <!-- BURN -->
+      <button type="roll" class="sheet-skill-btn" name="roll_status_burning"
+        value="&{template:5eDefault}{{title=@{character_name} — Burning}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Damage=[[10 + @{status_scaling}]] vs @{status_defense_target}}}{{Duration=[[1d2+1]]}}{{Effect=On apply + start of target’s turns. Drops by 1 when target is hit or their turn comes up.}}">
+        BURN
+      </button>
+
+      <!-- POISON -->
+      <button type="roll" class="sheet-skill-btn" name="roll_status_poison"
+        value="&{template:5eDefault}{{title=@{character_name} — Poison}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source}}}{{Damage=[[5 + @{status_scaling}]] true damage per turn}}{{Duration=[[1d2+3]] turns}}{{Effect=Deals true damage at the start of each affected turn.}}">
+        POISON
+      </button>
+
+      <!-- BLEED -->
+      <button type="roll" class="sheet-skill-btn" name="roll_status_bleed"
+        value="&{template:5eDefault}{{title=@{character_name} — Bleed}}{{outputall=1}}{{Damage=[[2d4]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">
+        BLEED
+      </button>
+      
+       <!-- MP REGEN (WIS/2) -->
+  <button type="roll" class="sheet-skill-btn sheet-mp-regen-btn" name="roll_mp_regen"
+    value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — MP Regen}} {{roll=[[floor(@{wisdom}/2)]]}}">
+    REGEN
+  </button>
+
+
+      <!-- Big convenience buttons (match BLOCK / TAKE DMG sizing) -->
+      <div class="sheet-defense-row sheet-defense-actions sheet-margin-top">
+          
+           <!-- CRT tracker (no functionality) -->
+  <div class="sheet-status-crt-wrap">
+    <input type="number" name="attr_crt" value="0" class="sheet-status-crt">
+    <div class="sheet-mini-label">CRT</div>
+  </div>
+
+        <!-- INIT (1d100, adds to tracker) -->
+        <button type="roll" name="roll_init" class="sheet-block-btn sheet-defense-btn"
+          value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Initiative}} {{roll=[[1d100 &{tracker}]]}}">
+          INIT
+          <span class="sheet-defense-sub">D100+Tracker</span>
+        </button>
+
+        <!-- DODGE (same as EVA roll on Stats tab) -->
+        <button type="roll" name="roll_dodge" class="sheet-take-btn sheet-defense-btn"
+          value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Dodge}} {{roll=[[1d20 + @{eva}]]}}">
+          DODGE
+          <span class="sheet-defense-sub">D20 + EVA</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div> <!-- /sheet-combat-grid -->
+</div>
+<div class="sheet-combat-grid sheet-combat-grid--wide">
+
+  <!-- LEFT: SHIELDS -->
+  <div class="sheet-combat-column">
+    <div class="sheet-header-bar">Shields</div>
+
+    <!-- globals (renamed to avoid collisions) -->
+    <input type="hidden" name="attr_active_shield_name" value="">
+    <input type="hidden" name="attr_active_shield_res_bonus" value="0">
+    <input type="hidden" name="attr_active_shield_con_bonus" value="0">
+
+    <fieldset class="repeating_shields">
+
+  <div class="sheet-collapsible sheet-collapsible--shield">
+    <!-- toggle (controls details visibility) -->
+    <input type="checkbox" class="sheet-collapse" name="attr_shield_open" value="1" title="Expand/collapse">
+
+    <!-- SUMMARY (always visible) -->
+    <div class="sheet-collapsible-summary sheet-shield-summary">
+      <!-- Active -->
+      <div class="sheet-center sheet-small-label">
+        <input type="checkbox" name="attr_shield_active" value="1">
+        <div class="sheet-mini-label">Active</div>
+      </div>
+
+      <!-- Name -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined" type="text" name="attr_shield_name" placeholder="Shield Name">
+        <div class="sheet-mini-label">Name</div>
+      </div>
+
+      <!-- RES / CON -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined sheet-center" type="number" name="attr_shield_res_bonus" value="0">
+        <div class="sheet-mini-label">RES</div>
+      </div>
+
+      <div class="sheet-small-label">
+        <input class="sheet-underlined sheet-center" type="number" name="attr_shield_con_bonus" value="0">
+        <div class="sheet-mini-label">CON</div>
+      </div>
+
+      <!-- Rank -->
+      <div class="sheet-small-label">
+        <select name="attr_shield_rank">
+          <option value="1">R1</option><option value="2">R2</option><option value="3">R3</option>
+          <option value="4">R4</option><option value="5">R5</option>
+        </select>
+        <div class="sheet-mini-label">Rank</div>
+      </div>
+    </div>
+
+    <!-- DETAILS (expandable) -->
+    <div class="sheet-collapsible-details">
+
+      <div class="sheet-collapsible-grid3">
+  <!-- Preset -->
+  <div class="sheet-small-label">
+    <select name="attr_shield_preset">
+      <option value="custom" selected>Custom</option>
+      <option value="buckler">Buckler</option>
+      <option value="kite_shield">Kite Shield</option>
+      <option value="tower_shield">Tower Shield</option>
+    </select>
+    <div class="sheet-mini-label">Preset</div>
+  </div>
+
+  <!-- Weight (moved here) -->
+  <div class="sheet-small-label">
+    <input class="sheet-underlined sheet-center"
+           type="number"
+           name="attr_shield_weight"
+           value="0"
+           step="0.1">
+    <div class="sheet-mini-label">Weight</div>
+  </div>
+
+  <!-- Req (display-only) -->
+  <div class="sheet-small-label">
+    <input class="sheet-underlined sheet-center"
+           type="text"
+           name="attr_shield_req_text"
+           value=""
+    <div class="sheet-mini-label">Req</div>
+  </div>
+
+      <!-- Effects -->
+      <div class="sheet-small-label sheet-margin-top-sm">
+        <textarea name="attr_shield_effect" placeholder="Shield Special Effects." class="sheet-collapsible-textarea"></textarea>
+        <div class="sheet-mini-label">Effects</div>
+      </div>
+
+      <!-- Skill -->
+      <div class="sheet-collapsible-skillrow sheet-margin-top-sm">
+        <div class="sheet-small-label">
+          <textarea name="attr_shield_skill_desc" placeholder="Shield Skill." class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Unique Skill</div>
+        </div>
+
+        <div class="sheet-center">
+          <button type="roll" class="sheet-skill-btn" name="roll_shield_skill"
+  value="&{template:5eDefault}{{title=@{character_name} — @{shield_name} Skill}}{{outputall=1}}{{Effect=@{shield_skill_desc}}}">
+  USE SKILL
+</button>
+<button type="roll" class="sheet-skill-btn" name="roll_shield_post"
+  value="&{template:5eDefault}{{title=@{character_name} — @{shield_name}}}{{outputall=1}}{{Rank=R@{shield_rank}}}{{Weight=@{shield_weight}}}{{Req=@{shield_req_text}}}{{RES Bonus=@{shield_res_bonus}}}{{CON Bonus=@{shield_con_bonus}}}{{Effects=@{shield_effect}}}{{Skill=@{shield_skill_desc}}}">
+  POST SHIELD
+</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</fieldset>
+ </div>
+
+    
+     <!-- RIGHT: WEAPONS -->
+  <div class="sheet-combat-column">
+    <div class="sheet-header-bar">Weapons</div>
+
+    <fieldset class="repeating_weapons">
+
+  <div class="sheet-collapsible sheet-collapsible--weapon">
+    <!-- toggle -->
+    <input type="checkbox" class="sheet-collapse" name="attr_weapon_open" value="1" title="Expand/collapse">
+
+    <!-- SUMMARY (compact like Cyberpunk list rows) -->
+    <div class="sheet-collapsible-summary sheet-weapon-summary">
+        
+        <!-- Active (mirrors shields) -->
+<div class="sheet-small-label sheet-center">
+  <input type="checkbox" name="attr_weapon_active" value="1" title="Active Weapon">
+  <div class="sheet-mini-label">Active</div>
+</div>
+
+      <!-- Name -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined" type="text" name="attr_weapon_name" placeholder="Name">
+        <div class="sheet-mini-label">Weapon</div>
+      </div>
+
+      <!-- Damage -->
+      <div class="sheet-small-label">
+        <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_base_dmg" value="0">
+        <div class="sheet-mini-label">DMG</div>
+      </div>
+
+      <!-- Rank -->
+      <div class="sheet-small-label">
+        <select name="attr_weapon_rank">
+          <option value="1">R1</option><option value="2">R2</option><option value="3">R3</option>
+          <option value="4">R4</option><option value="5">R5</option>
+        </select>
+        <div class="sheet-mini-label">Rank</div>
+      </div>
+
+      <!-- Attack -->
+      <div class="sheet-center">
+        <button type="roll" name="roll_attack" class="sheet-attack-btn sheet-take-btn"
+  value="&{template:5eDefault}{{title=@{character_name} — ATTACK}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{Hit=[[1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}]]}}{{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
+  ATTACK
+  <span class="sheet-defense-sub">1d20 + To-Hit</span>
+</button>
+<button type="roll" name="roll_weapon_crit" class="sheet-attack-btn sheet-block-btn"
+    value="&{template:5eDefault}{{title=@{character_name} — CRIT}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{CritMult=?{Crit Scaling|2}}}{{CritDamage=[[ ( @{weapon_base_dmg} * ?{Crit Scaling|2} ) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
+    CRIT
+    <span class="sheet-defense-sub">(DMG×Crit)+Stat</span>
+  </button>
+      </div>
+
+      <!-- keep these hidden workers exactly as you already use them -->
+      <input type="hidden" name="attr_weapon_scaling_expr" value="0">
+      <input type="hidden" name="attr_weapon_tohit_expr" value="@{acc}">
+      <input type="hidden" name="attr_weapon_attack_bonus_expr" value="@{acc}">
+      <input type="hidden" name="attr_weapon_attack_bonus_flat" value="0">
+    </div>
+
+    <!-- DETAILS -->
+    <div class="sheet-collapsible-details">
+
+      <div class="sheet-collapsible-grid3">
+        <!-- Type -->
+        <div class="sheet-small-label">
+          <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_type" placeholder="Type">
+          <div class="sheet-mini-label">Type</div>
+        </div>
+
+        <!-- Weight -->
+        <div class="sheet-small-label">
+          <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0" step="0.1">
+          <div class="sheet-mini-label">Weight</div>
+        </div>
+
+        <!-- Req -->
+        <div class="sheet-small-label">
+          <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_req_text" value="">
+          <div class="sheet-mini-label">Reqs</div>
+        </div>
+      </div>
+
+      <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+        <!-- Preset -->
+        <div class="sheet-small-label">
+          <select name="attr_weapon_preset">
+            <option value="custom">Custom</option>
+            <!-- keep your optgroups/options exactly as you had them -->
+            <optgroup label="STR Weapons">
+              <option value="greatsword">Greatsword</option>
+              <option value="greataxe">Greataxe</option>
+              <option value="greathammer">Greathammer</option>
+              <option value="gauntlet">Gauntlet</option>
+              <option value="mace">Mace</option>
+            </optgroup>
+            <optgroup label="DEX Weapons">
+              <option value="sword">Sword</option>
+              <option value="hand_axe">Hand-Axe</option>
+              <option value="dagger">Dagger</option>
+              <option value="whip">Whip</option>
+              <option value="polearm">Polearm</option>
+            </optgroup>
+            <optgroup label="INT Weapons">
+              <option value="focus_1h">Focus (1H)</option>
+              <option value="staff_2h">Staff (2H)</option>
+              <option value="prayer_beads_1h">Prayer Beads (1H)</option>
+              <option value="spellbook_varies">Spellbook</option>
+              <option value="consumable_scroll">Consumable Scroll</option>
+            </optgroup>
+            <optgroup label="Ranged Weapons">
+              <option value="shortbow">Shortbow</option>
+              <option value="longbow">Longbow</option>
+              <option value="crossbow">Crossbow</option>
+              <option value="throwing_daggers">Throwing Daggers</option>
+              <option value="chakrams">Chakrams</option>
+              <option value="throwing_axe">Throwing Axe</option>
+            </optgroup>
+            <optgroup label="Guns">
+              <option value="handgun">Handgun</option>
+              <option value="shotgun">Shotgun</option>
+              <option value="submachine_gun">Submachine Gun</option>
+              <option value="rifle">Rifle</option>
+            </optgroup>
+          </select>
+          <div class="sheet-mini-label">Preset</div>
+        </div>
+
+        <!-- Accuracy Type -->
+        <div class="sheet-small-label">
+          <select class="sheet-underlined" name="attr_weapon_accuracy_type">
+            <option value="auto" selected>Auto</option>
+            <option value="acc">ACC</option>
+            <option value="macc">Mag Acc</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div class="sheet-mini-label">Accuracy</div>
+        </div>
+
+        <!-- Scaling -->
+        <div class="sheet-small-label">
+          <select name="attr_weapon_scaling_type">
+            <option value="str">STR</option>
+            <option value="dex">DEX</option>
+            <option value="spl">SPL</option>
+            <option value="custom">Custom</option>
+            <option value="none" selected>N/A</option>
+          </select>
+          <div class="sheet-mini-label">Scaling</div>
+        </div>
+      </div>
+
+<div class="sheet-weapon-custom-row">
+
+  <!-- Hidden ACC toggle (must be DIRECTLY before the wrapper) -->
+  <input type="hidden" class="sheet-accuracy-toggle" name="attr_weapon_accuracy_toggle">
+
+  <!-- Custom ACC -->
+  <div class="sheet-custom-accuracy-wrap sheet-small-label">
+    <input class="sheet-underlined sheet-center"
+           type="text"
+           name="attr_weapon_accuracy_custom_formula"
+           placeholder="@{cha}/2)">
+    <div class="sheet-mini-label">Custom ACC</div>
+  </div>
+
+  <!-- Hidden Scaling toggle (must be DIRECTLY before the wrapper) -->
+  <input type="hidden" class="sheet-scaling-toggle" name="attr_weapon_scaling_toggle">
+
+  <!-- Custom Scaling/Bonus -->
+  <div class="sheet-custom-formula-wrap sheet-small-label">
+    <input class="sheet-underlined"
+           type="text"
+           name="attr_weapon_custom_formula"
+           placeholder="@{mov}/2">
+    <div class="sheet-mini-label">Custom Scaling</div>
+  </div>
+
+</div>
+
+      <div class="sheet-collapsible-grid2 sheet-margin-top-sm">
+        <div class="sheet-small-label">
+          <textarea name="attr_weapon_effects_base" class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Effects</div>
+        </div>
+        <div class="sheet-small-label">
+          <textarea name="attr_weapon_effects_alt" class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Alt</div>
+        </div>
+      </div>
+
+      <div class="sheet-collapsible-skillrow sheet-margin-top-sm">
+        <div class="sheet-small-label">
+          <textarea name="attr_weapon_skill_desc" placeholder="Weapon Skill" class="sheet-collapsible-textarea"></textarea>
+          <div class="sheet-mini-label">Weapon Skill</div>
+        </div>
+
+        <div class="sheet-center">
+          <button type="roll" class="sheet-skill-btn" name="roll_weapon_skill"
+  value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name} Skill}}{{outputall=1}}{{Effect=@{weapon_skill_desc}}}">
+  USE SKILL
+</button>
+<button type="roll" class="sheet-skill-btn" name="roll_weapon_post"
+  value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name}}}{{outputall=1}}{{Rank=R@{weapon_rank}}}{{Type=@{weapon_type}}}{{Weight=@{weapon_weight}}}{{Req=@{weapon_req_text}}}{{To-Hit=1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}}}{{Damage=@{weapon_base_dmg} + ( @{weapon_scaling_expr} )}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}{{Skill=@{weapon_skill_desc}}}">
+  POST WEAPON
+</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+ 
+	<!-- SKILLS -->
+<div class="sheet-section-spellbook">
+  <div class="sheet-sub-header">Skills</div>
+
+  <!-- SKILLS LIST -->
+  <fieldset class="repeating_skills">
+
+    <!-- Visibility flag MUST be directly before the wrapper you hide -->
+    <input type="hidden" class="sheet-skill-visible" name="attr_skill_visible" value="1">
+<input type="hidden" name="attr_skill_row_type" value="skill" class="sheet-row-type">
+
+<div class="sheet-skill-rowwrap">
+
+  <!-- DIVIDER DISPLAY (only visible when row type = divider) -->
+  <div class="sheet-divider-row">
+    <input type="text"
+           name="attr_skill_divider_label"
+           class="sheet-divider-label"
+           placeholder="Divider Label (e.g. Job Skills)">
+  </div>
+
+      <div class="sheet-collapsible sheet-collapsible--skill">
+
+        <!-- collapse toggle -->
+        <input type="checkbox" class="sheet-collapse" name="attr_skill_open" value="1" title="Expand/collapse">
+
+        <!-- SUMMARY ROW -->
+<div class="sheet-collapsible-summary sheet-skill-header">
+
+  <!-- Left: collapse + name -->
+  <div class="sheet-skill-header-left">
+    <input type="checkbox" class="sheet-collapse" name="attr_skill_open" value="1" title="Expand/collapse">
+    <input class="sheet-skill-name" type="text" name="attr_skill_name" placeholder="Skill Name">
+  </div>
+
+  <!-- Right: pills -->
+  <div class="sheet-skill-header-right">
+
+    <!-- Row Type -->
+    <select name="attr_skill_row_type" class="sheet-row-type-select">
+      <option value="skill" selected>Skill</option>
+      <option value="divider">Divider</option>
+    </select>
+
+    <!-- Category -->
+    <input type="text"
+           name="attr_skill_category"
+           class="sheet-skill-pill"
+           placeholder="Category">
+
+    <!-- Rank -->
+    <select name="attr_skill_rank_selected" class="sheet-skill-pill sheet-skill-rank">
+      <option value="1" selected>R1</option>
+      <option value="2">R2</option>
+      <option value="3">R3</option>
+    </select>
+
+    <!-- Type -->
+    <select name="attr_skill_kind" class="sheet-skill-pill">
+      <option value="Passive">Passive</option>
+      <option value="Attack">Attack</option>
+      <option value="Debuff">Debuff</option>
+      <option value="Heal/Barrier">Heal/Barrier</option>
+      <option value="Stance">Stance</option>
+      <option value="Utility">Utility</option>
+      <option value="Other" selected>Other</option>
+    </select>
+
+    <!-- Use -->
+    <select name="attr_skill_action" class="sheet-skill-pill">
+      <option value="Passive">Passive</option>
+      <option value="Action" selected>Action</option>
+      <option value="Minor">Minor</option>
+      <option value="Reaction">Reaction</option>
+      <option value="Stance">Stance</option>
+      <option value="Free">Free</option>
+    </select>
+
+  </div>
+</div>
+
+
+        <!-- DETAILS PANEL -->
+        <div class="sheet-collapsible-details">
+
+          <div class="sheet-collapsible-grid2">
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_skill_description" placeholder="Description"></textarea>
+              <div class="sheet-mini-label">Description</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_skill_effect" placeholder="Effect / Mechanics"></textarea>
+              <div class="sheet-mini-label">Effect</div>
+            </div>
+          </div>
+
+          <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_cooldown" placeholder="e.g. 2 Turns">
+              <div class="sheet-mini-label">Cooldown</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_cost" placeholder="e.g. 20 MP / 20%">
+              <div class="sheet-mini-label">Cost</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_tags" placeholder="e.g. Bleed, Cleave, AoE">
+              <div class="sheet-mini-label">Tags</div>
+            </div>
+          </div>
+
+          <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_range" placeholder="e.g. Melee / 30ft">
+              <div class="sheet-mini-label">Range</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_target" placeholder="e.g. 1 target / 3x3 AoE">
+              <div class="sheet-mini-label">Target/AoE</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_skill_notes" placeholder="Any short note">
+              <div class="sheet-mini-label">Notes</div>
+            </div>
+          </div>
+
+          <!-- AUTOMATION TOGGLES -->
+          <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+            <div class="sheet-small-label sheet-center">
+              <input type="checkbox" name="attr_skill_has_attack" value="1">
+              <div class="sheet-mini-label">Attack Roll</div>
+            </div>
+
+            <div class="sheet-small-label sheet-center">
+              <input type="checkbox" name="attr_skill_has_damage" value="1">
+              <div class="sheet-mini-label">Damage</div>
+            </div>
+
+            <div class="sheet-small-label sheet-center">
+              <input type="checkbox" name="attr_skill_uses_weapon" value="1">
+              <div class="sheet-mini-label">Add Active Weapon</div>
+            </div>
+          </div>
+
+          <!-- ATTACK SETTINGS -->
+          <input type="hidden" class="sheet-skill-attack-toggle" name="attr_skill_has_attack_toggle" value="0">
+          <div class="sheet-skill-attack-wrap sheet-margin-top-sm">
+            <div class="sheet-collapsible-grid3">
+              <div class="sheet-small-label">
+                <select name="attr_skill_acc_type" class="sheet-underlined">
+                  <option value="none" selected>None</option>
+                  <option value="acc">ACC</option>
+                  <option value="macc">MACC</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <div class="sheet-mini-label">Accuracy</div>
+              </div>
+
+              <input type="hidden" class="sheet-skill-accuracy-toggle" name="attr_skill_acc_type">
+
+              <div class="sheet-skill-custom-accuracy-wrap sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_acc_custom" placeholder="Custom ACC number">
+                <div class="sheet-mini-label">Custom ACC</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_attack_notes" placeholder="(optional)">
+                <div class="sheet-mini-label">Atk Notes</div>
+              </div>
+            </div>
+
+            <input type="hidden" name="attr_skill_acc_val" value="0">
+          </div>
+
+          <!-- DAMAGE SETTINGS -->
+          <input type="hidden" class="sheet-skill-damage-toggle" name="attr_skill_has_damage_toggle" value="0">
+          <div class="sheet-skill-damage-wrap sheet-margin-top-sm">
+            <div class="sheet-collapsible-grid3">
+              <div class="sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_base_dmg" value="0" placeholder="Base Skill DMG (e.g. 10 or 2d6+3)">
+                <div class="sheet-mini-label">Base Skill DMG</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <select name="attr_skill_stat_add" class="sheet-underlined">
+                  <option value="0" selected>None</option>
+                  <option value="@{str_atk}">STR ATK</option>
+                  <option value="@{dex_atk}">DEX ATK</option>
+                  <option value="@{spl}">SPL</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <div class="sheet-mini-label">Damage Stat</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_damage_notes" placeholder="(optional)">
+                <div class="sheet-mini-label">Dmg Notes</div>
+              </div>
+
+            <input type="hidden" class="sheet-skill-stat-toggle" name="attr_skill_stat_toggle" value="0">
+
+            <div class="sheet-skill-custom-stat-wrap sheet-row sheet-margin-top-sm">
+              <div class="sheet-col-1-2 sheet-small-label">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_skill_stat_custom" placeholder="Custom stat number">
+                <div class="sheet-mini-label">Custom Damage Stat</div>
+              </div>
+            </div>
+
+            <input type="hidden" name="attr_skill_weapon_add" value="0">
+            <input type="hidden" name="attr_skill_stat_val" value="0">
+          </div>
+
+          <!-- ROLL BUTTONS -->
+          <div class="sheet-row sheet-margin-top-sm">
+            <button type="roll" class="sheet-skill-btn" name="roll_skill_post"
+              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_action} • @{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">USE</button>
+
+            <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
+  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">
+  CRIT
+</button>
+          </div>
+
+        </div> <!-- /sheet-collapsible-details -->
+      </div> <!-- /sheet-collapsible -->
+    </div> <!-- /sheet-skill-rowwrap -->
+
+  </fieldset>
+</div>
+
+
+ 
+<!-- EQUIPMENT / INVENTORY -->
+<div class="sheet-section-inventory">
+
+  <div class="sheet-equip-grid">
+
+    <!-- LEFT: EQUIPMENT -->
+    <div class="sheet-equip-col">
+      <div class="sheet-sub-header">Equipment</div>
+
+      <!-- EQUIPPED SLOTS (freeform list: add/remove rows to match campaign slot count) -->
+      <fieldset class="repeating_equipped">
+        <div class="sheet-collapsible sheet-collapsible--item">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_item_open" value="1" title="Expand/collapse">
+
+          <!-- SUMMARY ROW -->
+          <div class="sheet-collapsible-summary sheet-item-summary">
+
+            <!-- Slot -->
+            <div class="sheet-small-label">
+              <select name="attr_item_slot" class="sheet-underlined">
+                <option value="Helm">Helm</option>
+                <option value="Armor">Armor</option>
+                <option value="Necklace">Necklace</option>
+                <option value="Ring">Ring</option>
+                <option value="Trinket">Trinket</option>
+                <option value="Other" selected>Other</option>
+              </select>
+              <div class="sheet-mini-label">Slot</div>
+            </div>
+            
+            <input type="hidden" class="sheet-item-slot-toggle" name="attr_item_slot_toggle" value="Custom">
+
+            <!-- Custom Slot -->
+            <div class="sheet-small-label sheet-item-slot-custom">
+              <input class="sheet-underlined" type="text" name="attr_item_slot_custom" placeholder="Custom Slot">
+              <div class="sheet-mini-label">Slot Name</div>
+            </div>
+
+            <!-- Name -->
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_item_name" placeholder="Item Name">
+              <div class="sheet-mini-label">Name</div>
+            </div>
+
+           <!-- Rank select -->
+<div class="sheet-small-label">
+  <select name="attr_item_rank_mode" class="sheet-underlined">
+    <option value="R1">R1</option>
+    <option value="R2">R2</option>
+    <option value="R3">R3</option>
+    <option value="R4">R4</option>
+    <option value="R5">R5</option>
+    <option value="Custom" selected>Custom</option>
+  </select>
+  <div class="sheet-mini-label">Rank</div>
+</div>
+
+<!-- Armor Preset (shows only when Slot = Armor) -->
+<div class="sheet-small-label sheet-item-armor-preset">
+  <select name="attr_item_armor_preset" class="sheet-underlined">
+    <option value="custom" selected>Custom</option>
+    <option value="clothing">Clothing</option>
+    <option value="gambeson">Gambeson</option>
+    <option value="chainmail">Chainmail</option>
+    <option value="half-plate">Half-Plate</option>
+    <option value="full-plate">Full-Plate</option>
+  </select>
+  <div class="sheet-mini-label">Armor</div>
+</div>
+
+<!-- MUST be directly before the wrapper you hide/show -->
+<input type="hidden" class="sheet-item-rank-toggle" name="attr_item_rank_mode">
+
+<!-- Rank custom -->
+<div class="sheet-small-label sheet-item-rank-custom">
+  <input class="sheet-underlined sheet-center" type="text" name="attr_item_rank_custom" placeholder="X">
+  <div class="sheet-mini-label">Rank Text</div>
+</div>
+
+            
+            <!-- Weight -->
+<div class="sheet-small-label">
+  <input class="sheet-underlined sheet-center"
+         type="number"
+         name="attr_item_weight"
+         value="0"
+         step="0.1"
+         min="0">
+  <div class="sheet-mini-label">Wgt</div>
+</div>
+            
+            <!-- Post -->
+            <div class="sheet-center">
+              <button type="roll" class="sheet-skill-btn" name="roll_equipped_post"
+                value="&{template:5eDefault}{{title=@{character_name} — @{item_name}}}{{outputall=1}}{{Type=Equipped • @{item_slot}}}{{Rank=@{item_rank_display}}}{{Stats=@{item_stats}}}{{desc=@{item_desc}}}{{skill=@{item_skill_name}}}{{cost=@{item_skill_cost}}}{{cooldown=@{item_skill_cd}}}{{Effect=@{item_skill_effect}}}">
+                POST
+              </button>
+            </div>
+
+          </div>
+
+          <!-- DETAILS -->
+          <div class="sheet-collapsible-details">
+
+            <div class="sheet-collapsible-grid2">
+              <div class="sheet-small-label">
+                <textarea class="sheet-collapsible-textarea" name="attr_item_desc" placeholder="Description"></textarea>
+                <div class="sheet-mini-label">Description</div>
+              </div>
+
+              <div class="sheet-small-label">
+                <textarea class="sheet-collapsible-textarea" name="attr_item_stats" placeholder="+1 CON | +30 MP | etc."></textarea>
+                <div class="sheet-mini-label">Stats</div>
+              </div>
+            </div>
+
+<div class="sheet-row sheet-margin-top-sm sheet-has-skill-row">
+  <label class="sheet-has-skill">
+    <input type="checkbox" name="attr_item_has_skill" value="1">
+    <span class="sheet-has-skill-text">Has Skill</span>
+  </label>
+</div>
+
+            <input type="hidden" name="attr_item_has_skill_toggle" class="sheet-item-skill-toggle" value="0">
+
+            <div class="sheet-item-skill-wrap sheet-margin-top-sm">
+              <div class="sheet-collapsible-grid3">
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined" type="text" name="attr_item_skill_name" placeholder="Skill Name">
+                  <div class="sheet-mini-label">Skill</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_item_skill_cost" placeholder="e.g. 30 MP">
+                  <div class="sheet-mini-label">Cost</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_item_skill_cd" placeholder="e.g. 2 Turns">
+                  <div class="sheet-mini-label">Cooldown</div>
+                </div>
+              </div>
+
+              <div class="sheet-small-label sheet-margin-top-sm">
+                <textarea class="sheet-collapsible-textarea" name="attr_item_skill_effect" placeholder="Skill effect text"></textarea>
+                <div class="sheet-mini-label">Skill Effect</div>
+              </div>
+
+              <div class="sheet-row sheet-margin-top-sm sheet-center">
+                <button type="roll" class="sheet-skill-btn" name="roll_item_skill_use"
+                  value="&{template:5eDefault}{{title=@{character_name} — @{item_skill_name}}}{{outputall=1}}{{From=@{item_name}}}{{Rank=@{item_rank_display}}}{{Cost=@{item_skill_cost}}}{{Cooldown=@{item_skill_cd}}}{{Effect=@{item_skill_effect}}}">
+                  USE SKILL
+                </button>
+              </div>
+            </div>
+
+            <!-- computed display -->
+            <input type="hidden" name="attr_item_rank_display" value="">
+
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- RIGHT: INVENTORY -->
+    <div class="sheet-equip-col">
+      <div class="sheet-sub-header">Inventory</div>
+
+      <!-- CURRENCIES (sits above inventory list) -->
+      <div class="sheet-small-label sheet-margin-top-sm">Currencies</div>
+ <fieldset class="repeating_currency">
+  <div class="sheet-currency-row">
+    <input class="sheet-underlined" type="text" name="attr_cur_name" placeholder="Currency (e.g. Gold, Credits, Shards)">
+    <input class="sheet-underlined sheet-center" type="number" name="attr_cur_amt" value="0">
+  </div>
+</fieldset>
+
+      <hr class="sheet-skills-divider">
+
+      <!-- INVENTORY ITEMS -->
+      <fieldset class="repeating_inventory">
+        <div class="sheet-collapsible sheet-collapsible--item">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_inv_open" value="1" title="Expand/collapse">
+
+          <div class="sheet-collapsible-summary sheet-item-summary">
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_inv_name" placeholder="Item Name">
+              <div class="sheet-mini-label">Item</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <select name="attr_inv_type" class="sheet-underlined">
+                <option value="Consumable">Consumable</option>
+                <option value="Ingredient">Ingredient</option>
+                <option value="Material">Material</option>
+                <option value="Gear">Gear</option>
+                <option value="Other" selected>Other</option>
+              </select>
+              <div class="sheet-mini-label">Type</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="number" name="attr_inv_qty" value="1" min="0">
+              <div class="sheet-mini-label">Qty</div>
+            </div>
+
+<!-- Weight (per item) -->
+<div class="sheet-small-label">
+  <input class="sheet-underlined sheet-center"
+         type="number"
+         name="attr_inv_weight"
+         value="0"
+         step="0.1"
+         min="0">
+  <div class="sheet-mini-label">Wgt</div>
+</div>
+
+
+            <div class="sheet-center">
+              <button type="roll" class="sheet-skill-btn" name="roll_inv_post"
+                value="&{template:5eDefault}{{title=@{character_name} — @{inv_name}}}{{outputall=1}}{{Type=Inventory • @{inv_type}}}{{Qty=@{inv_qty}}}{{desc=@{inv_desc}}}{{skill=@{inv_skill_name}}}{{cost=@{inv_skill_cost}}}{{cooldown=@{inv_skill_cd}}}{{Effect=@{inv_skill_effect}}}">
+                POST
+              </button>
+            </div>
+
+          </div>
+
+          <div class="sheet-collapsible-details">
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_inv_desc" placeholder="Description / notes"></textarea>
+              <div class="sheet-mini-label">Notes</div>
+            </div>
+
+<div class="sheet-row sheet-margin-top-sm sheet-has-skill-row">
+  <label class="sheet-has-skill">
+    <input type="checkbox" name="attr_inv_has_skill" value="1">
+    <span class="sheet-has-skill-text">Has Skill</span>
+  </label>
+</div>
+
+            <input type="hidden" name="attr_inv_has_skill_toggle" class="sheet-inv-skill-toggle" value="0">
+
+            <div class="sheet-inv-skill-wrap sheet-margin-top-sm">
+              <div class="sheet-collapsible-grid3">
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined" type="text" name="attr_inv_skill_name" placeholder="Skill Name">
+                  <div class="sheet-mini-label">Skill</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_inv_skill_cost" placeholder="e.g. 30 MP">
+                  <div class="sheet-mini-label">Cost</div>
+                </div>
+                <div class="sheet-small-label">
+                  <input class="sheet-underlined sheet-center" type="text" name="attr_inv_skill_cd" placeholder="e.g. 2 Turns">
+                  <div class="sheet-mini-label">Cooldown</div>
+                </div>
+              </div>
+
+              <div class="sheet-small-label sheet-margin-top-sm">
+                <textarea class="sheet-collapsible-textarea" name="attr_inv_skill_effect" placeholder="Skill effect text"></textarea>
+                <div class="sheet-mini-label">Skill Effect</div>
+              </div>
+
+              <div class="sheet-row sheet-margin-top-sm sheet-center">
+                <button type="roll" class="sheet-skill-btn" name="roll_inv_skill_use"
+                  value="&{template:5eDefault}{{title=@{character_name} — @{inv_skill_name}}}{{outputall=1}}{{From=@{inv_name}}}{{Cost=@{inv_skill_cost}}}{{Cooldown=@{inv_skill_cd}}}{{Effect=@{inv_skill_effect}}}">
+                  USE SKILL
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </fieldset>
+
+    </div>
+
+  </div> <!-- /sheet-equip-grid -->
+</div>
+
+
+<!-- TRAITS -->
+<div class="sheet-section-traits">
+
+  <div class="sheet-traits-grid">
+
+    <!-- LEFT COLUMN: TRAITS -->
+    <div class="sheet-traits-col">
+      <div class="sheet-sub-header">Traits</div>
+
+      <fieldset class="repeating_traits">
+
+        <div class="sheet-collapsible sheet-collapsible--trait">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_trait_open" value="1" title="Expand/collapse">
+
+          <!-- SUMMARY -->
+          <div class="sheet-collapsible-summary sheet-trait-summary">
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_trait_name" placeholder="Trait Name (e.g. Fearless)">
+              <div class="sheet-mini-label">Name</div>
+            </div>
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_trait_type" placeholder="Trait Type (e.g. Major Positive)">
+              <div class="sheet-mini-label">Type</div>
+            </div>
+
+            <div class="sheet-center">
+              <button type="roll" class="sheet-skill-btn" name="roll_trait_post"
+                value="&{template:5eDefault}{{title=@{character_name} — @{trait_name}}}{{outputall=1}}{{Type=@{trait_type}}}{{Effect=@{trait_effect}}}">
+                POST
+              </button>
+            </div>
+
+          </div>
+
+          <!-- DETAILS -->
+          <div class="sheet-collapsible-details">
+
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_trait_effect" placeholder="Trait Effect (e.g. Immune to Fear)"></textarea>
+              <div class="sheet-mini-label">Effect</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </fieldset>
+
+    </div>
+
+
+    <!-- RIGHT COLUMN: TITLES -->
+    <div class="sheet-traits-col">
+      <div class="sheet-sub-header">Titles</div>
+
+      <!-- Just move your entire repeating_titles fieldset here -->
+      <fieldset class="repeating_titles">
+
+        <div class="sheet-collapsible sheet-collapsible--title">
+
+          <input type="checkbox" class="sheet-collapse" name="attr_title_open" value="1" title="Expand/collapse">
+
+          <div class="sheet-collapsible-summary">
+
+            <div class="sheet-small-label">
+              <input class="sheet-underlined" type="text" name="attr_library_title_name" placeholder="Title Name">
+              <div class="sheet-mini-label">Title</div>
+            </div>
+
+            <div class="sheet-center sheet-small-label">
+              <input type="checkbox" name="attr_title_active" value="1">
+              <div class="sheet-mini-label">Active</div>
+            </div>
+
+  <!-- POST TITLE -->
+  <div class="sheet-center">
+    <button type="roll"
+            class="sheet-skill-btn"
+            name="roll_title_post"
+            value="&{template:5eDefault}{{title=@{character_name} — @{library_title_name}}}{{outputall=1}}{{Effect=@{library_title_effect}}}">
+      POST
+    </button>
+  </div>
+
+          </div>
+
+          <div class="sheet-collapsible-details">
+
+            <div class="sheet-small-label">
+              <textarea class="sheet-collapsible-textarea" name="attr_library_title_effect" placeholder="Title Effect"></textarea>
+              <div class="sheet-mini-label">Effect</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </fieldset>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+			
+			<div class="sheet-section-settings">
+  <h3 class="sheet-center">Settings</h3>
+  
+  <label class="sheet-checkbox-row">
+  <input type="checkbox" name="attr_uncap_stats" value="1">
+  <span>Uncap Stats</span>
+</label>
+
+  <!-- Weapon library JSON goes here later -->
+  <div class="sheet-row">
+    <div class="sheet-col-1">
+      <div class="sheet-sub-header">Weapon Library (JSON)</div>
+      <textarea name="attr_weapon_library_json" style="height: 220px;">
+          {
+  "version": 1,
+  "weapons": {
+    "greatsword": {
+      "name": "Greatsword",
+      "category": "STR",
+      "type": "Greatsword",
+      "baseWeight": 2.5,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 4, "dex": 2 }, "dmg": 10, "acc": 0, "effects": "Cleave 2" },
+        "2": { "req": { "str": 6, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Cleave 4" },
+        "3": { "req": { "str": 8, "dex": 6 }, "dmg": 14, "acc": 0, "effects": "Cleave 6" },
+        "4": { "req": { "str": 10, "dex": 8 }, "dmg": 16, "acc": 0, "effects": "Cleave 8", "alts": [{ "label": "Cleave 40% (Or 8)" }] },
+        "5": { "req": { "str": 12, "dex": 10 }, "dmg": 18, "acc": 0, "effects": "Cleave 10", "alts": [{ "label": "Cleave 50% (Or 10)" }] }
+      }
+    },
+
+    "greataxe": {
+      "name": "Greataxe",
+      "category": "STR",
+      "type": "Greataxe",
+      "baseWeight": 3.5,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 3, "dex": 2 }, "dmg": 8, "acc": 0, "effects": "Shred 2" },
+        "2": { "req": { "str": 6, "dex": 4 }, "dmg": 10, "acc": 0, "effects": "Shred 4" },
+        "3": { "req": { "str": 12, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Shred 6" },
+        "4": { "req": { "str": 16, "dex": 6 }, "dmg": 14, "acc": 0, "effects": "Shred 8" },
+        "5": { "req": { "str": 20, "dex": 6 }, "dmg": 16, "acc": 0, "effects": "Shred 10" }
+      }
+    },
+
+    "greathammer": {
+      "name": "Greathammer",
+      "category": "STR",
+      "type": "Greathammer",
+      "baseWeight": 7,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 5, "dex": 2 }, "dmg": 12, "acc": 0, "effects": "DC5 Knockdown" },
+        "2": { "req": { "str": 10, "dex": 4 }, "dmg": 14, "acc": 0, "effects": "DC5 Knockdown" },
+        "3": { "req": { "str": 15, "dex": 4 }, "dmg": 16, "acc": 0, "effects": "DC8 Knockdown" },
+        "4": { "req": { "str": 20, "dex": 6 }, "dmg": 18, "acc": 0, "effects": "DC10 Knockdown" },
+        "5": { "req": { "str": 25, "dex": 6 }, "dmg": 20, "acc": 0, "effects": "DC10 Knockdown" }
+      }
+    },
+
+    "gauntlet": {
+      "name": "Gauntlet",
+      "category": "STR",
+      "type": "Gauntlet",
+      "baseWeight": 0.5,
+      "notes": "Base Weight: 0.5 unless Unarmed, Unarmed is 0",
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 2, "dex": 2 }, "dmg": 3, "acc": 0, "effects": "1d2+1 Punches" },
+        "2": { "req": { "str": 4, "dex": 4 }, "dmg": 4, "acc": 0, "effects": "1d2+1 Punches" },
+        "3": { "req": { "str": 6, "dex": 4 }, "dmg": 5, "acc": 0, "effects": "1d2+1 Punches" },
+        "4": { "req": { "str": 8, "dex": 6 }, "dmg": 5, "acc": 0, "effects": "1d2+2 Punches" },
+        "5": { "req": { "str": 10, "dex": 6 }, "dmg": 6, "acc": 0, "effects": "1d2+2 Punches" }
+      }
+    },
+
+    "mace": {
+      "name": "Mace",
+      "category": "STR",
+      "type": "Mace",
+      "baseWeight": 2,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 3, "dex": 2 }, "dmg": 7, "acc": 0, "effects": "Daze DC 5" },
+        "2": { "req": { "str": 5, "dex": 2 }, "dmg": 8, "acc": 0, "effects": "Daze DC 8" },
+        "3": { "req": { "str": 7, "dex": 2 }, "dmg": 9, "acc": 0, "effects": "Daze DC 10" },
+        "4": { "req": { "str": 9, "dex": 4 }, "dmg": 10, "acc": 0, "effects": "Daze DC 10" },
+        "5": { "req": { "str": 10, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Daze DC 12" }
+      }
+    },
+
+    "sword": {
+      "name": "Sword",
+      "category": "DEX",
+      "type": "Sword",
+      "baseWeight": 0.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 2 }, "dmg": 5, "acc": 1, "effects": "" },
+        "2": { "req": { "dex": 4 }, "dmg": 6, "acc": 2, "effects": "" },
+        "3": { "req": { "dex": 6 }, "dmg": 7, "acc": 3, "effects": "" },
+        "4": { "req": { "dex": 8 }, "dmg": 8, "acc": 4, "effects": "", "alts": [{ "label": "+25% (Base) ACC (Or +4)" }] },
+        "5": { "req": { "dex": 10 }, "dmg": 9, "acc": 5, "effects": "", "alts": [{ "label": "+50% (Base) ACC (Or +5)" }] }
+      }
+    },
+
+    "hand_axe": {
+      "name": "Hand-Axe",
+      "category": "DEX",
+      "type": "Hand-Axe",
+      "baseWeight": 1,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 2, "str": 2 }, "dmg": 6, "acc": 0, "effects": "Cleave 2" },
+        "2": { "req": { "dex": 4, "str": 3 }, "dmg": 7, "acc": 0, "effects": "Cleave 2" },
+        "3": { "req": { "dex": 6, "str": 4 }, "dmg": 8, "acc": 0, "effects": "Cleave 3" },
+        "4": { "req": { "dex": 8, "str": 6 }, "dmg": 9, "acc": 0, "effects": "Cleave 4", "alts": [{ "label": "Cleave 20% (Or 4)" }] },
+        "5": { "req": { "dex": 10, "str": 8 }, "dmg": 10, "acc": 0, "effects": "Cleave 5", "alts": [{ "label": "Cleave 30% (Or 5)" }] }
+      }
+    },
+
+    "dagger": {
+      "name": "Dagger",
+      "category": "DEX",
+      "type": "Dagger",
+      "baseWeight": 0,
+      "defaultScaling": "dex",
+      "notes": "CRT lowers crit requirement. When dual wielded, crits begin at 3x.",
+      "ranks": {
+        "1": { "req": { "dex": 2 }, "dmg": 4, "acc": 0, "effects": "+1 CRT" },
+        "2": { "req": { "dex": 3 }, "dmg": 5, "acc": 0, "effects": "+1 CRT" },
+        "3": { "req": { "dex": 4 }, "dmg": 6, "acc": 0, "effects": "+2 CRT" },
+        "4": { "req": { "dex": 5 }, "dmg": 7, "acc": 0, "effects": "+2 CRT" },
+        "5": { "req": { "dex": 6 }, "dmg": 8, "acc": 0, "effects": "+3 CRT" }
+      }
+    },
+
+    "whip": {
+      "name": "Whip",
+      "category": "DEX",
+      "type": "Whip",
+      "baseWeight": 1,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 3 }, "dmg": 4, "acc": 0, "effects": "DC5 Bleed" },
+        "2": { "req": { "dex": 6 }, "dmg": 6, "acc": 0, "effects": "DC10 Bleed" },
+        "3": { "req": { "dex": 12 }, "dmg": 8, "acc": 0, "effects": "DC10 Bleed" },
+        "4": { "req": { "dex": 18 }, "dmg": 10, "acc": 0, "effects": "DC10 Bleed" },
+        "5": { "req": { "dex": 22 }, "dmg": 10, "acc": 0, "effects": "DC12 Bleed" }
+      }
+    },
+
+    "polearm": {
+      "name": "Polearm",
+      "category": "DEX",
+      "type": "Polearm",
+      "baseWeight": 2,
+      "defaultScaling": "dex",
+      "notes": "Works with Bucklers/Kite Shields.",
+      "ranks": {
+        "1": { "req": { "dex": 3, "str": 2 }, "dmg": 8, "acc": 0, "effects": "2 Square Range" },
+        "2": { "req": { "dex": 6, "str": 4 }, "dmg": 10, "acc": 0, "effects": "2 Square Range" },
+        "3": { "req": { "dex": 12, "str": 4 }, "dmg": 12, "acc": 0, "effects": "2 Square Range" },
+        "4": { "req": { "dex": 16, "str": 6 }, "dmg": 14, "acc": 0, "effects": "2 Square Range" },
+        "5": { "req": { "dex": 20, "str": 6 }, "dmg": 16, "acc": 0, "effects": "2 Square Range" }
+      }
+    },
+
+    "focus_1h": {
+      "name": "Focus (1 Handed)",
+      "category": "INT",
+      "type": "Focus",
+      "baseWeight": 0.5,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 2 }, "dmg": 3, "acc": 1, "effects": "+1 Mag. ACC" },
+        "2": { "req": { "int": 4 }, "dmg": 6, "acc": 1, "effects": "+1 Mag. ACC" },
+        "3": { "req": { "int": 8 }, "dmg": 9, "acc": 2, "effects": "+2 Mag. ACC" },
+        "4": { "req": { "int": 12 }, "dmg": 12, "acc": 3, "effects": "+3 Mag. ACC" },
+        "5": { "req": { "int": 16 }, "dmg": 16, "acc": 4, "effects": "+4 Mag. ACC" }
+      }
+    },
+
+    "staff_2h": {
+      "name": "Staff (2 Handed)",
+      "category": "INT",
+      "type": "Staff",
+      "baseWeight": 1,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 3 }, "dmg": 6, "acc": 0, "effects": "" },
+        "2": { "req": { "int": 6 }, "dmg": 8, "acc": 0, "effects": "" },
+        "3": { "req": { "int": 12 }, "dmg": 12, "acc": 0, "effects": "" },
+        "4": { "req": { "int": 16 }, "dmg": 16, "acc": 0, "effects": "" },
+        "5": { "req": { "int": 20 }, "dmg": 20, "acc": 0, "effects": "" }
+      }
+    },
+
+    "prayer_beads_1h": {
+      "name": "Prayer Beads (1 Handed)",
+      "category": "INT",
+      "type": "Prayer Beads",
+      "baseWeight": 0,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 2 }, "dmg": 4, "acc": 0, "effects": "+3 Healing" },
+        "2": { "req": { "int": 4 }, "dmg": 6, "acc": 0, "effects": "+5 Healing" },
+        "3": { "req": { "int": 8 }, "dmg": 8, "acc": 0, "effects": "+5 Healing" },
+        "4": { "req": { "int": 12 }, "dmg": 10, "acc": 0, "effects": "+10 Healing" },
+        "5": { "req": { "int": 16 }, "dmg": 12, "acc": 0, "effects": "+10 Healing" }
+      }
+    },
+
+    "spellbook_varies": {
+      "name": "Spellbook (Varies)",
+      "category": "INT",
+      "type": "Spellbook",
+      "baseWeight": null,
+      "defaultScaling": "spl",
+      "ranks": {
+        "1": { "req": { "int": 4 }, "dmg": 3, "acc": 0, "effects": "+1 Skill", "weight": 0, "notes": "1 Handed" },
+        "2": { "req": { "int": 8 }, "dmg": 5, "acc": 0, "effects": "+2 Skill", "weight": 0.5, "notes": "1 Handed" },
+        "3": { "req": { "int": 16 }, "dmg": 7, "acc": 0, "effects": "+3 Skill", "weight": 1, "notes": "1 Handed" },
+        "4": { "req": { "int": 20 }, "dmg": 9, "acc": 0, "effects": "+3 Skill", "weight": 1, "notes": "2 Handed" },
+        "5": { "req": { "int": 24 }, "dmg": 10, "acc": 0, "effects": "+4 Skill", "weight": 1.5, "notes": "2 Handed" }
+      }
+    },
+
+    "consumable_scroll": {
+      "name": "Consumable Scroll",
+      "category": "INT",
+      "type": "Consumable Scroll",
+      "baseWeight": 0,
+      "defaultScaling": "spl",
+      "notes": "Consumable Scrolls come with a spell and limited uses. Cheaper version of Scrolls; rank version available at half price.",
+      "ranks": {
+        "1": { "req": { "int": 2 }, "dmg": 3, "acc": 0, "effects": "2 Uses" },
+        "2": { "req": { "int": 3 }, "dmg": 6, "acc": 1, "effects": "2 Uses | +1 Mag. ACC" },
+        "3": { "req": { "int": 4 }, "dmg": 9, "acc": 2, "effects": "3 Uses | +2 Mag. ACC" },
+        "4": { "req": { "int": 5 }, "dmg": 12, "acc": 2, "effects": "3 Uses | +2 Mag. ACC" },
+        "5": { "req": { "int": 6 }, "dmg": 16, "acc": 3, "effects": "4 Uses | +3 Mag. ACC" }
+      }
+    },
+
+    "shortbow": {
+      "name": "Shortbow",
+      "category": "RANGED",
+      "type": "Shortbow",
+      "baseWeight": 0.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 3, "str": 2 }, "dmg": 3, "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
+        "2": { "req": { "dex": 6, "str": 4 }, "dmg": 4, "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
+        "3": { "req": { "dex": 9, "str": 6 }, "dmg": 5, "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
+        "4": { "req": { "dex": 12, "str": 8 }, "dmg": 6, "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
+        "5": { "req": { "dex": 16, "str": 10 }, "dmg": 7, "acc": 0, "effects": "20 Range | 1d2+1 Multiplier" }
+      }
+    },
+
+    "longbow": {
+      "name": "Longbow",
+      "category": "RANGED",
+      "type": "Longbow",
+      "baseWeight": 1.5,
+      "defaultScaling": "custom",
+      "notes": "STR OR DEX scaling (player choice).",
+      "ranks": {
+        "1": { "req": { "dex": 5, "str": 5 }, "dmg": 6, "acc": 0, "effects": "15 Range" },
+        "2": { "req": { "dex": 7, "str": 7 }, "dmg": 9, "acc": 0, "effects": "15 Range | CRT +1" },
+        "3": { "req": { "dex": 9, "str": 9 }, "dmg": 12, "acc": 0, "effects": "20 Range | CRT +1" },
+        "4": { "req": { "dex": 11, "str": 11 }, "dmg": 15, "acc": 0, "effects": "20 Range | CRT +2" },
+        "5": { "req": { "dex": 13, "str": 13 }, "dmg": 18, "acc": 0, "effects": "25 Range | CRT +3" }
+      }
+    },
+
+    "crossbow": {
+      "name": "Crossbow",
+      "category": "RANGED",
+      "type": "Crossbow",
+      "baseWeight": 1.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "str": 3, "dex": 4 }, "dmg": 5, "acc": 0, "effects": "15 Range | Cleave 2" },
+        "2": { "req": { "str": 5, "dex": 8 }, "dmg": 8, "acc": 0, "effects": "15 Range | Cleave 4" },
+        "3": { "req": { "str": 7, "dex": 12 }, "dmg": 11, "acc": 0, "effects": "20 Range | Cleave 6" },
+        "4": { "req": { "str": 9, "dex": 16 }, "dmg": 14, "acc": 0, "effects": "20 Range", "alts": [{ "label": "30% Cleave" }] },
+        "5": { "req": { "str": 11, "dex": 20 }, "dmg": 17, "acc": 0, "effects": "25 Range", "alts": [{ "label": "40% Cleave" }] }
+      }
+    },
+
+    "throwing_daggers": {
+      "name": "Throwing Daggers",
+      "category": "RANGED",
+      "type": "Throwing Daggers",
+      "baseWeight": 0,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 3 }, "dmg": 2, "acc": 0, "effects": "1d3 Daggers" },
+        "2": { "req": { "dex": 6 }, "dmg": 3, "acc": 0, "effects": "1d2+1 Daggers" },
+        "3": { "req": { "dex": 12 }, "dmg": 4, "acc": 0, "effects": "1d2+1 Daggers" },
+        "4": { "req": { "dex": 16 }, "dmg": 5, "acc": 0, "effects": "1d3+1 Daggers" },
+        "5": { "req": { "dex": 20 }, "dmg": 6, "acc": 0, "effects": "1d2+2 Daggers" }
+      }
+    },
+
+    "chakrams": {
+      "name": "Chakrams",
+      "category": "RANGED",
+      "type": "Chakrams",
+      "baseWeight": 0.5,
+      "defaultScaling": "dex",
+      "ranks": {
+        "1": { "req": { "dex": 4 }, "dmg": 5, "acc": 0, "effects": "DC10 Bleed" },
+        "2": { "req": { "dex": 8 }, "dmg": 8, "acc": 0, "effects": "DC10 Bleed" },
+        "3": { "req": { "dex": 12 }, "dmg": 11, "acc": 0, "effects": "DC12 Bleed" },
+        "4": { "req": { "dex": 16 }, "dmg": 14, "acc": 0, "effects": "DC12 Bleed" },
+        "5": { "req": { "dex": 20 }, "dmg": 17, "acc": 0, "effects": "DC14 Bleed" }
+      }
+    },
+
+    "throwing_axe": {
+      "name": "Throwing Axe",
+      "category": "RANGED",
+      "type": "Throwing Axe",
+      "baseWeight": 1.5,
+      "defaultScaling": "str",
+      "ranks": {
+        "1": { "req": { "str": 4 }, "dmg": 5, "acc": 0, "effects": "1d2 Axes" },
+        "2": { "req": { "str": 8 }, "dmg": 6, "acc": 0, "effects": "1d2 Axes" },
+        "3": { "req": { "str": 12 }, "dmg": 7, "acc": 0, "effects": "1d3 Axes" },
+        "4": { "req": { "str": 16 }, "dmg": 8, "acc": 0, "effects": "1d3 Axes" },
+        "5": { "req": { "str": 20 }, "dmg": 9, "acc": 0, "effects": "1d2+1" }
+      }
+    },
+
+    "handgun": {
+      "name": "Handgun",
+      "category": "GUNS",
+      "type": "Handgun",
+      "baseWeight": 1,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "dex": 5 }, "dmg": 12, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload" },
+        "2": { "req": { "dex": 5 }, "dmg": 14, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload | [Mod]" },
+        "3": { "req": { "dex": 7 }, "dmg": 16, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload | [Mod 1] | [Mod 2]" },
+        "4": { "req": { "dex": 7 }, "dmg": 18, "acc": 0, "effects": "10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3]" },
+        "5": { "req": { "dex": 9 }, "dmg": 20, "acc": 0, "effects": "10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]" }
+      }
+    },
+
+    "shotgun": {
+      "name": "Shotgun",
+      "category": "GUNS",
+      "type": "Shotgun",
+      "baseWeight": 2,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "dex": 5, "str": 5 }, "dmg": 21, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo" },
+        "2": { "req": { "dex": 5, "str": 5 }, "dmg": 23, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo | [Mod 1]" },
+        "3": { "req": { "dex": 7, "str": 7 }, "dmg": 25, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo | [Mod 1] | [Mod 2]" },
+        "4": { "req": { "dex": 7, "str": 7 }, "dmg": 27, "acc": 0, "effects": "3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3]" },
+        "5": { "req": { "dex": 9, "str": 9 }, "dmg": 30, "acc": 0, "effects": "3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]" }
+      }
+    },
+
+    "submachine_gun": {
+      "name": "Submachine Gun",
+      "category": "GUNS",
+      "type": "Submachine Gun",
+      "baseWeight": 1.5,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "dex": 5, "fin": 5 }, "dmg": 6, "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo" },
+        "2": { "req": { "dex": 5, "fin": 5 }, "dmg": 7, "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo | [1 Mod]" },
+        "3": { "req": { "dex": 7, "fin": 7 }, "dmg": 8, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 5 Ammo | [2 Mods]" },
+        "4": { "req": { "dex": 7, "fin": 7 }, "dmg": 9, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 6 Ammo | [3 Mods]" },
+        "5": { "req": { "dex": 9, "fin": 9 }, "dmg": 10, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 7 Ammo | [4 Mods]" }
+      }
+    },
+
+    "rifle": {
+      "name": "Rifle",
+      "category": "GUNS",
+      "type": "Rifle",
+      "baseWeight": 2,
+      "defaultScaling": "none",
+      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
+      "ranks": {
+        "1": { "req": { "fin": 5, "str": 5 }, "dmg": 17, "acc": 0, "effects": "15 Range | 2 Ammo" },
+        "2": { "req": { "fin": 5, "str": 5 }, "dmg": 19, "acc": 0, "effects": "15 Range | x2.5 Crit | 2 Ammo | [1 Mod]" },
+        "3": { "req": { "fin": 7, "str": 7 }, "dmg": 21, "acc": 0, "effects": "15 Range | x2.5 Crit | 3 Ammo | [2 Mods]" },
+        "4": { "req": { "fin": 7, "str": 7 }, "dmg": 23, "acc": 0, "effects": "15 Range | x2.5 Crit | 3 Ammo | [3 Mods]" },
+        "5": { "req": { "fin": 9, "str": 9 }, "dmg": 25, "acc": 0, "effects": "15 Range | x3 Crit | 4 Ammo | [4 Mods]" }
+      }
+    }
+  }
+}</textarea>
+    </div>
+  </div>
+ 
+ 
+  <div class="sheet-row sheet-margin-top">
+  <div class="sheet-col-1">
+    <div class="sheet-sub-header">Shield Library (JSON)</div>
+    <textarea name="attr_shield_library_json" style="height: 220px;">
+        {
+  "version": 1,
+  "shields": {
+    "buckler": {
+      "name": "Buckler",
+      "baseWeight": 0.5,
+      "ranks": {
+        "1": {
+          "res": 3,
+          "con": 0,
+          "req": { "str": 0 },
+          "effects": "19 Parry\nParry: Deal Minicrit (1.5x) Clash. Negates DMG."
+        },
+        "2": { "res": 5,  "con": 0, "req": { "str": 0 }, "effects": "19 Parry" },
+        "3": { "res": 7,  "con": 0, "req": { "str": 0 }, "effects": "18 Parry" },
+        "4": { "res": 9,  "con": 0, "req": { "str": 0 }, "effects": "18 Parry" },
+        "5": { "res": 10, "con": 0, "req": { "str": 0 }, "effects": "17 Parry" }
+      }
+    },
+
+    "kite_shield": {
+      "name": "Kite Shield",
+      "baseWeight": 1.5,
+      "ranks": {
+        "1": {
+          "res": 6,
+          "con": 0,
+          "req": { "str": 2 },
+          "effects": "19 Trade\nTrade: Take DMG and Block, deal Clash DMG."
+        },
+        "2": { "res": 8,  "con": 0, "req": { "str": 3 }, "effects": "18 Trade" },
+        "3": { "res": 10, "con": 0, "req": { "str": 4 }, "effects": "17 Trade" },
+        "4": { "res": 12, "con": 0, "req": { "str": 5 }, "effects": "16 Trade" },
+        "5": { "res": 15, "con": 0, "req": { "str": 6 }, "effects": "15 Trade" }
+      }
+    },
+
+    "tower_shield": {
+      "name": "Tower Shield",
+      "baseWeight": 6,
+      "ranks": {
+        "1": {
+          "res": 8,
+          "con": 0,
+          "req": { "str": 6 },
+          "effects": "19 Bash\nBash: Take DMG and Block. Deal Full RES as DMG. Dazes on Crit."
+        },
+        "2": { "res": 12, "con": 0, "req": { "str": 8 },  "effects": "19 Bash" },
+        "3": { "res": 16, "con": 0, "req": { "str": 10 }, "effects": "18 Bash" },
+        "4": { "res": 20, "con": 0, "req": { "str": 12 }, "effects": "18 Bash" },
+        "5": { "res": 24, "con": 0, "req": { "str": 14 }, "effects": "17 Bash" }
+      }
+    }
+  }
+}
+
+    </textarea>
+  </div>
+</div>
+
+<div class="sheet-row">
+  <div class="sheet-col-1">
+    <div class="sheet-sub-header">Armor Library (JSON)</div>
+    <textarea name="attr_armor_library_json" style="height: 220px;">
+{
+  "version": 1,
+  "armors": {
+    "clothing": {
+      "name": "Clothing",
+      "class": "Light",
+      "baseWeight": 0,
+      "ranks": {
+        "1": { "effects": "1 RES | +1 EVA | +1 MOV" },
+        "2": { "effects": "2 RES | +2 EVA | +2 MOV" },
+        "3": { "effects": "4 RES | 2 CON | +3 EVA | +3 MOV" },
+        "4": { "effects": "6 RES | 4 CON | +4 EVA | +4 MOV" },
+        "5": { "effects": "8 RES | 6 CON | +50% (Base) EVA or +5 | +5 MOV" }
+      }
+    },
+    "gambeson": {
+      "name": "Gambeson",
+      "class": "Light",
+      "baseWeight": 1,
+      "ranks": {
+        "1": { "effects": "4 RES | +1 MOV" },
+        "2": { "effects": "6 RES | +1 MOV" },
+        "3": { "effects": "8 RES | 4 CON | +2 MOV | +2 EVA" },
+        "4": { "effects": "10 RES | 6 CON | +2 MOV | +2 EVA" },
+        "5": { "effects": "12 RES | 8 CON | +3 MOV | +3 EVA" }
+      }
+    },
+    "chainmail": {
+      "name": "Chainmail",
+      "class": "Medium",
+      "baseWeight": 6,
+      "ranks": {
+        "1": { "effects": "5 RES" },
+        "2": { "effects": "7 RES | 5 CON" },
+        "3": { "effects": "10 RES | 7 CON" },
+        "4": { "effects": "12 RES | 10 CON" },
+        "5": { "effects": "14 RES | 12 CON" }
+      }
+    },
+    "half-plate": {
+      "name": "Half-Plate",
+      "class": "Medium",
+      "baseWeight": 9.5,
+      "ranks": {
+        "1": { "effects": "7 RES | -2 EVA" },
+        "2": { "effects": "9 RES | 7 CON | -2 EVA" },
+        "3": { "effects": "12 RES | 9 CON | -1 EVA" },
+        "4": { "effects": "14 RES | 12 CON | -1 EVA" },
+        "5": { "effects": "16 RES | 14 CON" }
+      }
+    },
+    "full-plate": {
+      "name": "Full-Plate",
+      "class": "Heavy",
+      "baseWeight": 10,
+      "ranks": {
+        "1": { "effects": "9 RES | -4 EVA" },
+        "2": { "effects": "11 RES | 9 CON | -4 EVA" },
+        "3": { "effects": "14 RES | 11 CON | -3 EVA" },
+        "4": { "effects": "16 RES | 14 CON | -3 EVA" },
+        "5": { "effects": "18 RES | 16 CON | -2 EVA" }
+      }
+    }
+  }
+}
+    </textarea>
+  </div>
+</div>
+
+</div>
+
+	</div>
+	<span class="sheet-spacer"></span>
+					<h4 class="sheet-center">Game Notes</h4>
+				<textarea name="attr_gamenotes" title="Game notes"></textarea>
+<!-- End of PC Sheet-->
+ 
+<!--Footer -->
+	<div class="sheet-row sheet-footer">
+		<div class="sheet-col-1 sheet-small-label sheet-center">
+			<img src="http://i.imgur.com/QQpi55r.png" width=300 >
+		</div>
+	</div>
+</div>
+ 
+ 
+<!-- Roll Templates -->
+<rolltemplate class="sheet-rolltemplate-5eDefault">
+	<div class="sheet-rt-card">
+		<div class="sheet-rt-header{{#weapon}} sheet-weapon{{/weapon}}{{#spell}} sheet-spell{{/spell}}{{#ability}} sheet-ability{{/ability}}{{#save}} sheet-save{{/save}}{{#deathsave}} sheet-deathsave{{/deathsave}}">
+			<div class="sheet-rt-title">{{title}}</div>
+			{{#subheader}}
+			<div class="sheet-rt-subheader">{{subheader}}{{#subheaderright}} &bullet; {{subheaderright}}{{/subheaderright}}</div>
+			{{/subheader}}
+			{{#subheader2}}
+			<div class="sheet-rt-subheader">{{subheader2}}{{#subheaderright2}} &bullet; {{subheaderright2}}{{/subheaderright2}}</div>
+			{{/subheader2}}
+		</div>
+			{{#emote}}
+			<p class="sheet-rt-emote">{{character_name}} {{emote}}</p>
+			{{/emote}}
+			<div class="sheet-main-content">
+ 
+				<!--Weapon based attacks-->
+				{{#attack}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">hits AC {{attack}}</div>
+				</div>
+				{{/attack}}
+				{{#damage}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{damage}}</div>
+				</div>
+				{{/damage}}
+				{{#attackshowinfoblock}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-center">Range</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{attackrange}}</div>
+				</div>
+				{{/attackshowinfoblock}}
+ 
+				<!--Spellcasting-->
+				{{#spellshowinfoblock}}
+				<div class="sheet-row sheet-padb">
+					<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center"><span class="sheet-rt-key">Duration</span><br/><span class="sheet-rt-value">{{spellduration}}</span></div>
+					<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center"><span class="sheet-rt-key">Target/AoE</span><br/><span class="sheet-rt-value">{{spelltarget}}</span></div>
+					<div class="sheet-col-1-2 sheet-padl sheet-padr sheet-center"><span class="sheet-rt-key">Range</span></div>
+					<div class="sheet-col-1-2 sheet-left"><span class="sheet-rt-value">{{spellrange}}</span></div>
+				</div>
+				{{/spellshowinfoblock}}
+				{{#spellshowattack}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Attack</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellattack}} AC Hit</div>
+				</div>
+				{{/spellshowattack}}
+				{{#spellshowsavethrow}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Save</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellsavestat}}</div>
+				</div>
+				{{/spellshowsavethrow}}
+				{{#spellshowhealing}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Healing</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellhealing}} HP healed</div>
+				</div>
+				{{/spellshowhealing}}
+				{{#spellshowdamage}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Damage</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spelldamage}}</div>
+				</div>
+				{{/spellshowdamage}}
+				{{#spellshoweffects}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Effect</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spelleffect}}</div>
+				</div>
+				{{/spellshoweffects}}
+				{{#spellshowsavethrow}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">Save success</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{spellsavesuccess}}</div>
+				</div>
+				{{/spellshowsavethrow}}
+ 
+				<!--NPC-->
+				{{#npccorestats}}
+				<div class="sheet-row">
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-key">Stat</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-key">Score</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-key">Mod</div>
+				</div>
+				<div class="sheet-row">
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">STR</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_strength}}</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_strength_mod}}</div>
+				</div>
+				<div class="sheet-row">
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">DEX</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_dexterity}}</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_dexterity_mod}}</div>
+				</div>
+				<div class="sheet-row">
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">CON</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_constitution}}</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_constitution_mod}}</div>
+				</div>
+				<div class="sheet-row">
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">INT</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_intelligence}}</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_intelligence_mod}}</div>
+				</div>
+				<div class="sheet-row">
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">WIS</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_wisdom}}</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_wisdom_mod}}</div>
+				</div>
+				<div class="sheet-row">
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">CHA</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_charisma}}</div>
+					<div class="sheet-col-1-3 sheet-padl sheet-padr sheet-rt-value">{{npc_charisma_mod}}</div>
+				</div>
+				{{/npccorestats}}
+				<!--Generic section-->
+				{{#freetext}}
+					<div class="sheet-row">
+						<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-key-wide">{{freetextname}}</div>
+						<div class="sheet-col-1 sheet-padl sheet-padr sheet-rt-value">{{freetext}}</div>
+					</div>
+				{{/freetext}}
+				{{#roll}}
+				<div class="sheet-row">
+					<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{rollname}}</div>
+					<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{roll}}</div>
+				</div>
+				{{/roll}}
+				<!--Outputall-->
+				{{#outputall}}
+					{{#allprops() outputall title subheader subheaderright subheader2 subheaderright2 emote weapon spell ability save deathsave}}
+						<div class="sheet-row">
+							<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{key}}</div>
+							<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{value}}</div>
+						</div>
+					{{/allprops() outputall title subheader subheaderright subheader2 subheaderright2 emote weapon spell ability save deathsave}}
+				{{/outputall}}
+				<!--DEBUG-->
+				{{#debug}}
+					{{#allprops()}}
+						<div class="sheet-row">
+							<div class="sheet-col-5-12 sheet-padl sheet-padr sheet-rt-key">{{key}} (DEBUG)</div>
+							<div class="sheet-col-7-12 sheet-padr sheet-rt-value">{{value}}</div>
+						</div>
+					{{/allprops()}}
+				{{/debug}}
+			</div>
+		</div>
+</rolltemplate>
+ 
+ 
+<script type="text/worker">
+
+on(
+  "sheet:opened " +
+  "change:level change:height_class change:race_rank change:is_human " +
+  "change:repeating_jobs:job_rank remove:repeating_jobs " +
+
+  "change:strength_base change:dexterity_base change:intelligence_base change:charisma_base change:agility_base change:resistance_base change:constitution_base " +
+  "change:strength_mod change:dexterity_mod change:intelligence_mod change:charisma_mod change:agility_mod change:resistance_mod change:constitution_mod " +
+  "change:strength_bonus change:dexterity_bonus change:intelligence_bonus change:charisma_bonus change:agility_bonus change:resistance_bonus change:constitution_bonus " +
+
+  "change:vitality_mod change:wisdom_mod change:finesse_mod change:willpower_mod change:reflex_mod " +
+  "change:vitality_bonus change:wisdom_bonus change:finesse_bonus change:willpower_bonus change:reflex_bonus " +
+
+  "change:str_atk_mod change:str_atk_bonus " +
+  "change:dex_atk_mod change:dex_atk_bonus " +
+  "change:spl_mod change:spl_bonus " +
+
+  "change:weapon_total_weight change:equipped_total_weight change:inventory_total_weight change:shield_total_weight " +
+  "change:icw_mod change:icw_bonus change:ecw_mod change:ecw_bonus " +
+
+  "change:hp_mod change:hp_bonus change:mp_mod change:mp_bonus " +
+  "change:acc_mod change:acc_bonus change:macc_mod change:macc_bonus " +
+  "change:eva_mod change:eva_bonus change:mov_mod change:mov_bonus",
+function () {
+
+  var coreNames = ["strength", "dexterity", "intelligence", "charisma", "agility", "resistance", "constitution"];
+  var derivativeNames = ["vitality", "wisdom", "finesse", "willpower", "reflex"];
+
+  var attrList = [
+    "level", "height_class", "race_rank", "is_human",
+    "uncap_stats",
+
+    "hp_mod", "hp_bonus",
+    "mp_mod", "mp_bonus",
+    "acc_mod", "acc_bonus",
+    "macc_mod", "macc_bonus",
+    "eva_mod", "eva_bonus",
+    "mov_mod", "mov_bonus",
+
+    "str_atk_mod", "str_atk_bonus",
+    "dex_atk_mod", "dex_atk_bonus",
+    "spl_mod", "spl_bonus",
+
+    "icw_mod", "icw_bonus",
+    "ecw_mod", "ecw_bonus",
+
+    // weights (needed for remaining calc)
+    "weapon_total_weight",
+    "shield_total_weight",
+    "equipped_total_weight",
+    "inventory_total_weight",
+
+    // brace
+    "bracing_dmg", "bracing_auto", "bracing_last_height"
+  ];
+
+  for (var i = 0; i < coreNames.length; i++) {
+    var s1 = coreNames[i];
+    attrList.push(s1 + "_base", s1 + "_mod", s1 + "_bonus");
+  }
+  for (var j = 0; j < derivativeNames.length; j++) {
+    var s2 = derivativeNames[j];
+    attrList.push(s2 + "_base", s2 + "_mod", s2 + "_bonus");
+  }
+
+  getAttrs(attrList, function (v) {
+    var level = parseInt(v.level, 10) || 1;
+    var height = v.height_class || "Medium";
+    var cap = level + 10;
+
+    var finalAttrs = {};
+    finalAttrs.stat_cap = cap;
+var uncap = (parseInt(v.uncap_stats, 10) || 0);
+
+    var spentSP = 0;
+
+    // PASS 1: core bases + totals
+    for (var k = 0; k < coreNames.length; k++) {
+      var s = coreNames[k];
+
+      var base = parseInt(v[s + "_base"], 10);
+      if (isNaN(base) || base < 1) base = 1;
+      var uncap = (parseInt(v.uncap_stats, 10) || 0);
+if (!uncap && base > cap) base = cap;
+
+      finalAttrs[s + "_base"] = base;
+      spentSP += Math.max(0, base - 1);
+
+      var hMod = 0;
+      if (s === "resistance" || s === "constitution") {
+        if (height === "Short") hMod = -1;
+        else if (height === "Tall") hMod = 1;
+        else if (height === "Giant") hMod = 2;
+      }
+
+      finalAttrs[s + "_total"] =
+        base +
+        (parseInt(v[s + "_mod"], 10) || 0) +
+        (parseInt(v[s + "_bonus"], 10) || 0) +
+        hMod;
+    }
+
+    // PASS 2: derivative bases
+    finalAttrs.vitality_base  = Math.floor(((finalAttrs.resistance_base + finalAttrs.constitution_base) / 2) + (finalAttrs.strength_total / 3));
+    finalAttrs.wisdom_base    = Math.floor((Math.max(finalAttrs.intelligence_total, finalAttrs.charisma_total) / 2) + (finalAttrs.dexterity_total / 3));
+    finalAttrs.finesse_base   = Math.floor((finalAttrs.dexterity_total / 2) + (Math.max(finalAttrs.agility_total, finalAttrs.intelligence_total) / 3));
+    finalAttrs.willpower_base = Math.floor((finalAttrs.charisma_total / 2) + (finalAttrs.strength_total / 3));
+    finalAttrs.reflex_base    = Math.floor((finalAttrs.agility_total / 2) + (Math.max(finalAttrs.dexterity_total, finalAttrs.intelligence_total) / 3));
+
+    // PASS 3: derivative totals
+    for (var m = 0; m < derivativeNames.length; m++) {
+      var d = derivativeNames[m];
+      finalAttrs[d] =
+        (finalAttrs[d + "_base"] || 0) +
+        (parseInt(v[d + "_mod"], 10) || 0) +
+        (parseInt(v[d + "_bonus"], 10) || 0);
+    }
+
+    // PASS 4: resources + combat + carry
+    finalAttrs.hp_base = (finalAttrs.vitality * 2) + (level * 2) + 40;
+    finalAttrs.hp_max  = finalAttrs.hp_base + (parseInt(v.hp_mod, 10) || 0) + (parseInt(v.hp_bonus, 10) || 0);
+
+    var rawMP = (finalAttrs.wisdom * 2) + (level * 2) + 5;
+    finalAttrs.mp_base = Math.round(rawMP / 10) * 10;
+    finalAttrs.mp_max  = finalAttrs.mp_base + (parseInt(v.mp_mod, 10) || 0) + (parseInt(v.mp_bonus, 10) || 0);
+
+    finalAttrs.str_atk_base = Math.floor(finalAttrs.strength_total / 2);
+    finalAttrs.str_atk      = finalAttrs.str_atk_base + (parseInt(v.str_atk_mod, 10) || 0) + (parseInt(v.str_atk_bonus, 10) || 0);
+
+    finalAttrs.dex_atk_base = Math.floor(finalAttrs.dexterity_total / 2.5);
+    finalAttrs.dex_atk      = finalAttrs.dex_atk_base + (parseInt(v.dex_atk_mod, 10) || 0) + (parseInt(v.dex_atk_bonus, 10) || 0);
+
+    finalAttrs.spl_base = Math.floor(finalAttrs.intelligence_total / 2.5);
+    finalAttrs.spl      = finalAttrs.spl_base + (parseInt(v.spl_mod, 10) || 0) + (parseInt(v.spl_bonus, 10) || 0);
+
+    finalAttrs.eva_base = Math.floor(((finalAttrs.agility_total / 2) + (finalAttrs.reflex / 2)) / 2);
+    finalAttrs.eva      = finalAttrs.eva_base + (parseInt(v.eva_mod, 10) || 0) + (parseInt(v.eva_bonus, 10) || 0);
+
+    var rawMov = ((finalAttrs.finesse + finalAttrs.reflex) / 2) + 5;
+    finalAttrs.mov_base = Math.round(rawMov / 5) * 5;
+    finalAttrs.mov      = finalAttrs.mov_base + (parseInt(v.mov_mod, 10) || 0) + (parseInt(v.mov_bonus, 10) || 0);
+
+    finalAttrs.acc_base  = Math.floor(((finalAttrs.dexterity_total / 2) + (finalAttrs.finesse / 2)) / 2);
+    finalAttrs.acc       = finalAttrs.acc_base + (parseInt(v.acc_mod, 10) || 0) + (parseInt(v.acc_bonus, 10) || 0);
+
+    finalAttrs.macc_base = Math.floor(((finalAttrs.intelligence_total / 2) + (finalAttrs.wisdom / 2)) / 2);
+    finalAttrs.macc      = finalAttrs.macc_base + (parseInt(v.macc_mod, 10) || 0) + (parseInt(v.macc_bonus, 10) || 0);
+
+    finalAttrs.icw_base = (finalAttrs.vitality * 3) + 5;
+    finalAttrs.icw      = finalAttrs.icw_base + (parseInt(v.icw_mod, 10) || 0) + (parseInt(v.icw_bonus, 10) || 0);
+
+    finalAttrs.ecw_base = (finalAttrs.vitality * 2) + 10;
+    finalAttrs.ecw      = finalAttrs.ecw_base + (parseInt(v.ecw_mod, 10) || 0) + (parseInt(v.ecw_bonus, 10) || 0);
+
+    // ===== Carry remaining (single source of truth) =====
+var weaponW = parseFloat(v.weapon_total_weight) || 0;
+var shieldW = parseFloat(v.shield_total_weight) || 0;
+var equipW  = parseFloat(v.equipped_total_weight) || 0;
+
+finalAttrs.ecw_used = weaponW + shieldW + equipW;
+finalAttrs.ecw_remaining = (parseFloat(finalAttrs.ecw) || 0) - finalAttrs.ecw_used;
+
+var invW = parseFloat(v.inventory_total_weight) || 0;
+finalAttrs.icw_used = invW;
+finalAttrs.icw_remaining = (parseFloat(finalAttrs.icw) || 0) - finalAttrs.icw_used;
+
+    // Brace auto
+    var braceByHeight = { Short: 10, Medium: 20, Tall: 30, Giant: 40 };
+    var braceAuto = (parseInt(v.bracing_auto, 10) || 1);
+    var lastHeight = v.bracing_last_height || "";
+
+    if (braceAuto === 1 && lastHeight !== height && height !== "Custom") {
+      finalAttrs.bracing_dmg = (braceByHeight[height] != null) ? braceByHeight[height] : 20;
+      finalAttrs.bracing_last_height = height;
+    }
+
+    // PASS 5: budgets
+    getSectionIDs("repeating_jobs", function (idarray) {
+      var jobFields = [];
+      for (var n = 0; n < idarray.length; n++) jobFields.push("repeating_jobs_" + idarray[n] + "_job_rank");
+
+      getAttrs(jobFields, function (rows) {
+        var spFromRanks = 0;
+        var totalJPUsed = Math.max(0, parseInt(v.race_rank, 10) || 0);
+
+        function calcSP(rank) {
+          var earned = 0;
+          for (var r = 1; r <= rank; r++) {
+            if (r !== 1 && r !== 3 && (r <= 3 || r % 3 !== 0)) earned++;
+          }
+          return earned;
+        }
+
+        spFromRanks += calcSP(totalJPUsed);
+
+        for (var p = 0; p < idarray.length; p++) {
+          var id = idarray[p];
+          var rr = parseInt(rows["repeating_jobs_" + id + "_job_rank"], 10) || 0;
+          totalJPUsed += rr;
+          spFromRanks += calcSP(rr);
+        }
+
+        var spTotalBudget = 10 + (level * 3) + spFromRanks;
+        finalAttrs.sp_total  = spTotalBudget;
+        finalAttrs.sp_spent  = spentSP;
+        finalAttrs.sp_status = (spentSP > spTotalBudget) ? 1 : 0;
+
+        finalAttrs.jp_total  = Math.max(0, (level - 1) + (parseInt(v.is_human, 10) || 0));
+        finalAttrs.jp_spent  = Math.max(0, totalJPUsed - 2);
+        finalAttrs.jp_status = (finalAttrs.jp_spent > finalAttrs.jp_total) ? 1 : 0;
+
+        // map for HTML
+        finalAttrs.strength     = finalAttrs.strength_total;
+        finalAttrs.dexterity    = finalAttrs.dexterity_total;
+        finalAttrs.intelligence = finalAttrs.intelligence_total;
+        finalAttrs.charisma     = finalAttrs.charisma_total;
+        finalAttrs.agility      = finalAttrs.agility_total;
+        finalAttrs.resistance   = finalAttrs.resistance_total;
+        finalAttrs.constitution = finalAttrs.constitution_total;
+
+        setAttrs(finalAttrs);
+      });
+    });
+  });
+});
+
+
+// ✅ If the player edits Brace manually, stop auto-updating it from Height.
+on("change:bracing_dmg", () => {
+  getAttrs(["bracing_auto"], (v) => {
+    if ((parseInt(v.bracing_auto) || 1) === 1) {
+      setAttrs({ bracing_auto: 0 });
+    }
+  });
+});
+
+ 
+    /* --- SCRIPT 2: TITLE LIBRARY ENFORCER --- */
+    on("change:repeating_titles:title_active", function(eventInfo) {
+        getSectionIDs("repeating_titles", function(idarray) {
+            const fields = [];
+            idarray.forEach(id => {
+                fields.push(`repeating_titles_${id}_title_active`, `repeating_titles_${id}_library_title_name`, `repeating_titles_${id}_library_title_effect`);
+            });
+ 
+            getAttrs(fields, function(v) {
+                let activeIDs = idarray.filter(id => parseInt(v[`repeating_titles_${id}_title_active`]) === 1);
+                let update = {};
+ 
+                // Limit to 2: If user checks a 3rd, uncheck it immediately
+                if (activeIDs.length > 2) {
+                    const sourceID = eventInfo.sourceAttribute.split("_")[2];
+                    update[`repeating_titles_${sourceID}_title_active`] = 0;
+                    activeIDs = activeIDs.filter(id => id !== sourceID);
+                }
+ 
+                // Sync Header Title 1
+                if (activeIDs[0]) {
+                    update["title_1"] = v[`repeating_titles_${activeIDs[0]}_library_title_name`];
+                    update["title_1_effect"] = v[`repeating_titles_${activeIDs[0]}_library_title_effect`];
+                } else {
+                    update["title_1"] = "";
+                    update["title_1_effect"] = "No title equipped.";
+                }
+ 
+                // Sync Header Title 2
+                if (activeIDs[1]) {
+                    update["title_2"] = v[`repeating_titles_${activeIDs[1]}_library_title_name`];
+                    update["title_2_effect"] = v[`repeating_titles_${activeIDs[1]}_library_title_effect`];
+                } else {
+                    update["title_2"] = "";
+                    update["title_2_effect"] = "No title equipped.";
+                }
+ 
+                setAttrs(update);
+            });
+        });
+    });
+    
+const toInt = (v) => parseInt(v, 10) || 0;
+
+function handleDamage(isBlocking, info) {
+  getAttrs([
+    "character_name",
+    "incoming_dmg",
+    "dmg_type",
+    "resistance",
+    "constitution",
+    "shield_res_bonus",
+    "shield_con_bonus"
+  ], (v) => {
+    const name = v.character_name || "Character";
+    const incoming = toInt(v.incoming_dmg);
+
+    const dmgType = (v.dmg_type === "con") ? "con" : "res";
+    const statLabel = (dmgType === "con") ? "CON" : "RES";
+
+    // Total defense stat
+    const baseStat = (dmgType === "con") ? toInt(v.constitution) : toInt(v.resistance);
+
+    // Shield bonus only applies when blocking
+    const shieldBonus =
+      isBlocking
+        ? ((dmgType === "con") ? toInt(v.shield_con_bonus) : toInt(v.shield_res_bonus))
+        : 0;
+
+    const effectiveDefense = baseStat + shieldBonus;
+
+    // Build the roll template output
+    let macro =
+  `&{template:5eDefault} ` +
+  `{{title=${name} — ${isBlocking ? "BLOCK" : "TAKE DMG"}}} ` +
+  `{{outputall=1}} ` +
+  `{{Incoming=${incoming}}} ` +
+  `{{Defense=${statLabel} ${baseStat}${isBlocking ? ` + Shield ${shieldBonus} = ${effectiveDefense}` : ""}}} ` +
+  `{{DamageTaken=[[{${incoming}-${effectiveDefense},0}kh1]]}}`;
+
+    // Add a plain d20 check for BLOCK (NOT used in damage math)
+    if (isBlocking) {
+      macro += ` {{BlockCheck=[[1d20]]}}`;
+    }
+
+    startRoll(macro, (results) => finishRoll(results.rollId));
+  });
+}
+
+// Listeners for the two buttons
+on("clicked:block_dmg", (info) => handleDamage(true, info));
+on("clicked:take_dmg", (info) => handleDamage(false, info));
+
+// Custom Weapon Scaling
+on("change:repeating_weapons:weapon_scaling_type", () => {
+  getSectionIDs("repeating_weapons", (ids) => {
+    const attrs = ids.map(id => `repeating_weapons_${id}_weapon_scaling_type`);
+    getAttrs(attrs, (v) => {
+      const out = {};
+      ids.forEach(id => {
+        const t = v[`repeating_weapons_${id}_weapon_scaling_type`] || "none";
+        out[`repeating_weapons_${id}_weapon_scaling_toggle`] = t;
+      });
+      setAttrs(out);
+    });
+  });
+});
+
+// Attack Button Logic
+on("change:repeating_weapons:weapon_scaling_type change:repeating_weapons:weapon_custom_formula sheet:opened", () => {
+  getSectionIDs("repeating_weapons", (ids) => {
+    const fields = ids.flatMap(id => ([
+      `repeating_weapons_${id}_weapon_scaling_type`,
+      `repeating_weapons_${id}_weapon_custom_formula`
+    ]));
+
+    getAttrs(fields, (v) => {
+      const out = {};
+      ids.forEach(id => {
+        const type = v[`repeating_weapons_${id}_weapon_scaling_type`] || "none";
+        const custom = v[`repeating_weapons_${id}_weapon_custom_formula`] || "0";
+
+        // Damage scaling expression
+        let scalingExpr = "0";
+        if (type === "str") scalingExpr = "@{str_atk}";
+        else if (type === "dex") scalingExpr = "@{dex_atk}";
+        else if (type === "spl") scalingExpr = "@{spl}";
+        else if (type === "custom") scalingExpr = custom; // e.g. @{mov}/2
+
+        // Hit bonus expression (ACC vs MACC)
+        // SPL implies magic accuracy; everything else defaults to ACC.
+        const atkBonusExpr = (type === "spl") ? "@{macc}" : "@{acc}";
+
+        out[`repeating_weapons_${id}_weapon_scaling_expr`] = scalingExpr;
+        out[`repeating_weapons_${id}_weapon_attack_bonus_expr`] = atkBonusExpr;
+
+        // Keep your CSS toggle in sync too
+        out[`repeating_weapons_${id}_weapon_scaling_toggle`] = type;
+      });
+
+      setAttrs(out);
+    });
+  });
+});
+
+// Sum equipped weapon weight
+on("change:repeating_weapons:weapon_weight remove:repeating_weapons sheet:opened", () => {
+  getSectionIDs("repeating_weapons", (ids) => {
+    const fields = ids.map(id => `repeating_weapons_${id}_weapon_weight`);
+    getAttrs(fields, (v) => {
+      const total = ids.reduce((sum, id) => {
+        const w = parseFloat(v[`repeating_weapons_${id}_weapon_weight`]) || 0;
+        return sum + w;
+      }, 0);
+      setAttrs({ weapon_total_weight: total });
+    });
+  });
+});
+
+// ===== Equipped items total weight (ALL equipped rows) =====
+on("change:repeating_equipped:item_weight remove:repeating_equipped sheet:opened", () => {
+  getSectionIDs("repeating_equipped", (ids) => {
+    const fields = ids.map(id => `repeating_equipped_${id}_item_weight`);
+    getAttrs(fields, (v) => {
+      const total = ids.reduce((sum, id) => {
+        const w = parseFloat(v[`repeating_equipped_${id}_item_weight`]) || 0;
+        return sum + w;
+      }, 0);
+      setAttrs({ equipped_total_weight: total });
+    });
+  });
+});
+
+
+// ===== Inventory total weight (ALL inventory rows, weight * qty) =====
+on("sheet:opened change:repeating_inventory:inv_weight change:repeating_inventory:inv_qty remove:repeating_inventory", function() {
+  getSectionIDs("repeating_inventory", function(ids) {
+    var fields = [];
+    for (var i = 0; i < ids.length; i++) {
+      fields.push("repeating_inventory_" + ids[i] + "_inv_weight");
+      fields.push("repeating_inventory_" + ids[i] + "_inv_qty");
+    }
+    getAttrs(fields, function(v) {
+      var total = 0;
+      for (var j = 0; j < ids.length; j++) {
+        var w = parseFloat(v["repeating_inventory_" + ids[j] + "_inv_weight"]) || 0;
+        var q = parseFloat(v["repeating_inventory_" + ids[j] + "_inv_qty"]) || 0;
+        total += w * q;
+      }
+      setAttrs({ inventory_total_weight: total });
+    });
+  });
+});
+
+
+// ===== Shield total weight (ALL shields) =====
+on("change:repeating_shields:shield_weight remove:repeating_shields sheet:opened", () => {
+  getSectionIDs("repeating_shields", (ids) => {
+    const fields = ids.map(id => `repeating_shields_${id}_shield_weight`);
+    getAttrs(fields, (v) => {
+      const total = ids.reduce((sum, id) => {
+        const w = parseFloat(v[`repeating_shields_${id}_shield_weight`]) || 0;
+        return sum + w;
+      }, 0);
+      setAttrs({ shield_total_weight: total });
+    });
+  });
+});
+
+
+
+// Custom Weapon Scaling + Accuracy Override
+on(
+  "change:repeating_weapons:weapon_scaling_type change:repeating_weapons:weapon_custom_formula change:repeating_weapons:weapon_accuracy_type change:repeating_weapons:weapon_accuracy_custom_formula sheet:opened",
+  () => {
+    getSectionIDs("repeating_weapons", (ids) => {
+      const fields = ids.flatMap((id) => ([
+        `repeating_weapons_${id}_weapon_scaling_type`,
+        `repeating_weapons_${id}_weapon_custom_formula`,
+        `repeating_weapons_${id}_weapon_accuracy_type`,
+        `repeating_weapons_${id}_weapon_accuracy_custom_formula`,
+      ]));
+
+      getAttrs(fields, (v) => {
+        const out = {};
+        ids.forEach((id) => {
+          const dmgType = (v[`repeating_weapons_${id}_weapon_scaling_type`] || "none").toLowerCase();
+          const dmgCustom = (v[`repeating_weapons_${id}_weapon_custom_formula`] || "0").trim();
+
+          const accType = (v[`repeating_weapons_${id}_weapon_accuracy_type`] || "auto").toLowerCase();
+          const accCustom = (v[`repeating_weapons_${id}_weapon_accuracy_custom_formula`] || "0").trim();
+
+          // DAMAGE scaling expression (unchanged)
+          let scalingExpr = "0";
+          if (dmgType === "str") scalingExpr = "@{str_atk}";
+          else if (dmgType === "dex") scalingExpr = "@{dex_atk}";
+          else if (dmgType === "spl") scalingExpr = "@{spl}";
+          else if (dmgType === "custom") scalingExpr = dmgCustom || "0";
+
+          // TO-HIT expression (NEW)
+          // auto = old behavior: SPL -> macc, otherwise acc
+          let tohitExpr = "@{acc}";
+          if (accType === "auto") {
+            tohitExpr = (dmgType === "spl") ? "@{macc}" : "@{acc}";
+          } else if (accType === "acc") {
+            tohitExpr = "@{acc}";
+          } else if (accType === "macc") {
+            tohitExpr = "@{macc}";
+          } else if (accType === "custom") {
+            tohitExpr = accCustom || "0";
+          }
+
+          out[`repeating_weapons_${id}_weapon_scaling_expr`] = scalingExpr;
+          out[`repeating_weapons_${id}_weapon_tohit_expr`] = tohitExpr;
+
+          // existing toggle (if you use it)
+          out[`repeating_weapons_${id}_weapon_scaling_toggle`] = dmgType;
+
+          // NEW toggle to show/hide accuracy custom input
+          out[`repeating_weapons_${id}_weapon_accuracy_toggle`] = accType;
+        });
+
+        setAttrs(out);
+      });
+    });
+  }
+);
+
+
+// Mirror Slot select into a hidden toggle so CSS can react
+on("change:repeating_equipped:item_slot sheet:opened", function (evt) {
+  if (!evt || !evt.sourceAttribute) return;
+  var m = evt.sourceAttribute.match(/repeating_equipped_([^_]+)_item_slot/);
+  if (!m) return;
+  var rowId = m[1];
+
+  getAttrs(["repeating_equipped_" + rowId + "_item_slot"], function (v) {
+    var slot = v["repeating_equipped_" + rowId + "_item_slot"] || "Custom";
+    var upd = {};
+    upd["repeating_equipped_" + rowId + "_item_slot_toggle"] = slot;
+    setAttrs(upd);
+  });
+});
+
+// ===== Armor Library (Equipped tab helper) =====
+on(
+  "change:repeating_equipped:item_armor_preset change:repeating_equipped:item_rank_mode change:repeating_equipped:item_slot sheet:opened",
+  (evt) => {
+    // Find the row prefix
+    if (!evt || !evt.sourceAttribute || !evt.sourceAttribute.startsWith("repeating_equipped_")) return;
+    const prefix = evt.sourceAttribute.replace(/_(item_armor_preset|item_rank_mode|item_slot)$/, "");
+
+    getAttrs(
+      [
+        "armor_library_json",
+        `${prefix}_item_slot`,
+        `${prefix}_item_armor_preset`,
+        `${prefix}_item_rank_mode`
+      ],
+      (v) => {
+        const slot = v[`${prefix}_item_slot`] || "Other";
+        if (slot !== "Armor") return; // only run for armor slot
+
+        const preset = (v[`${prefix}_item_armor_preset`] || "custom").toLowerCase();
+        const rankMode = v[`${prefix}_item_rank_mode`] || "R1";
+
+        if (preset === "custom") return;
+        if (rankMode === "Custom") return; // custom rank text: don't overwrite
+
+        // RankMode is "R1".."R5" -> "1".."5"
+        const rank = String(rankMode).replace(/^R/, "");
+
+        const lib = safeParseJSON(v.armor_library_json);
+        if (!lib || !lib.armors || !lib.armors[preset]) return;
+
+        const armor = lib.armors[preset];
+        const r = (armor.ranks && armor.ranks[rank]) ? armor.ranks[rank] : null;
+        if (!r) return;
+
+        const update = {};
+        update[`${prefix}_item_name`] = armor.name || preset;
+        update[`${prefix}_item_weight`] = (r.weight != null) ? r.weight : (armor.baseWeight != null ? armor.baseWeight : 0);
+        update[`${prefix}_item_stats`] = r.effects || "";
+
+        setAttrs(update);
+      }
+    );
+  }
+);
+
+
+// Weapon Library
+const safeParseJSON = (s) => {
+  try { return JSON.parse(s || ""); } catch (e) { return null; }
+};
+
+const fmtReq = (reqObj) => {
+  if (!reqObj) return "";
+  const order = ["str","dex","int","spl","mov","con","res"]; // adjust if you want
+  const parts = [];
+  order.forEach((k) => {
+    if (reqObj[k] != null) parts.push(`${k.toUpperCase()} ${reqObj[k]}`);
+  });
+  // include any extra keys not in order
+  Object.keys(reqObj).forEach((k) => {
+    if (!order.includes(k)) parts.push(`${k.toUpperCase()} ${reqObj[k]}`);
+  });
+  return parts.join(" | ");
+};
+
+on(
+  "change:repeating_weapons:weapon_preset change:repeating_weapons:weapon_rank sheet:opened",
+  (evt) => {
+    const prefix = evt.sourceAttribute.replace(/_(weapon_preset|weapon_rank)$/, "");
+
+    getAttrs(
+      [
+        "weapon_library_json",
+        `${prefix}_weapon_preset`,
+        `${prefix}_weapon_rank`,
+      ],
+      (v) => {
+        const preset = (v[`${prefix}_weapon_preset`] || "custom").toLowerCase();
+        const rank = String(v[`${prefix}_weapon_rank`] || "1");
+
+        if (preset === "custom") return;
+
+        const lib = safeParseJSON(v.weapon_library_json);
+        if (!lib || !lib.weapons || !lib.weapons[preset]) {
+          // If the library isn't loaded yet, do nothing (prevents overwriting)
+          return;
+        }
+
+        const weapon = lib.weapons[preset];
+        const r = (weapon.ranks && weapon.ranks[rank]) ? weapon.ranks[rank] : null;
+        if (!r) return;
+
+        const update = {};
+        update[`${prefix}_weapon_name`] = weapon.name || preset;
+        update[`${prefix}_weapon_type`] = weapon.type || weapon.category || "";
+        update[`${prefix}_weapon_rank`] = rank;
+
+        // Weight/damage (rank can override baseWeight if you want later)
+        update[`${prefix}_weapon_weight`] = (r.weight != null) ? r.weight : (weapon.baseWeight != null ? weapon.baseWeight : 0);
+        update[`${prefix}_weapon_base_dmg`] = r.dmg != null ? r.dmg : 0;
+
+        // Flat accuracy bonus (0 if absent)
+        update[`${prefix}_weapon_attack_bonus_flat`] = r.acc != null ? r.acc : 0;
+
+        // Effects split into two fields
+        update[`${prefix}_weapon_effects_base`] = r.effects || "";
+        update[`${prefix}_weapon_effects_alt`] = (r.alts && r.alts.length) ? r.alts.map(a => a.label).join(" / ") : "";
+
+        // Requirements text (display-only)
+        update[`${prefix}_weapon_req_text`] = fmtReq(r.req);
+
+        // Default scaling type if supplied (so your scaling worker can populate expr/tohit)
+        if (weapon.defaultScaling) {
+          update[`${prefix}_weapon_scaling_type`] = weapon.defaultScaling;
+        }
+
+        setAttrs(update);
+      }
+    );
+  }
+);
+
+// Shield Library (REPEATING)
+on("change:repeating_shields:shield_preset change:repeating_shields:shield_rank sheet:opened", (info) => {
+  getAttrs(["shield_library_json"], (vTop) => {
+    const lib = safeParseJSON(vTop.shield_library_json);
+    if (!lib || !lib.shields) return;
+
+    getSectionIDs("repeating_shields", (ids) => {
+      // If this was triggered by a single row changing, we only update that row (faster + safer)
+      let targetIDs = ids;
+      if (info && info.sourceAttribute && info.sourceAttribute.startsWith("repeating_shields_")) {
+        const parts = info.sourceAttribute.split("_"); // repeating, shields, ROWID, shield, preset|rank
+        const rowid = parts[2];
+        targetIDs = ids.includes(rowid) ? [rowid] : ids;
+      }
+
+      const fields = [];
+      targetIDs.forEach(id => {
+        fields.push(
+          `repeating_shields_${id}_shield_preset`,
+          `repeating_shields_${id}_shield_rank`
+        );
+      });
+
+      getAttrs(fields, (v) => {
+        const update = {};
+
+        targetIDs.forEach(id => {
+          const preset = (v[`repeating_shields_${id}_shield_preset`] || "custom").toLowerCase();
+          const rank = String(v[`repeating_shields_${id}_shield_rank`] || "1");
+          if (preset === "custom") return;
+
+          const shield = lib.shields[preset];
+          const r = shield?.ranks?.[rank];
+          if (!shield || !r) return;
+
+          update[`repeating_shields_${id}_shield_name`] = shield.name || preset;
+          update[`repeating_shields_${id}_shield_rank`] = rank;
+
+          update[`repeating_shields_${id}_shield_weight`] =
+            (r.weight != null) ? r.weight :
+            (shield.baseWeight != null ? shield.baseWeight : 0);
+
+          update[`repeating_shields_${id}_shield_res_bonus`] = (r.res != null) ? r.res : 0;
+          update[`repeating_shields_${id}_shield_con_bonus`] = (r.con != null) ? r.con : 0;
+
+          update[`repeating_shields_${id}_shield_req_text`] = r.req ? fmtReq(r.req) : "";
+          update[`repeating_shields_${id}_shield_effect`] = r.effects || "";
+        });
+
+        if (Object.keys(update).length) setAttrs(update);
+      });
+    });
+  });
+});
+
+
+// Active Shield Function
+function syncActiveShield(eventInfo) {
+  getSectionIDs("repeating_shields", (ids) => {
+    const fields = [];
+    ids.forEach(id => {
+      fields.push(
+        `repeating_shields_${id}_shield_active`,
+        `repeating_shields_${id}_shield_name`,
+        `repeating_shields_${id}_shield_res_bonus`,
+        `repeating_shields_${id}_shield_con_bonus`
+      );
+    });
+
+    getAttrs(fields, (v) => {
+      // Which rows are checked?
+      let activeIDs = ids.filter(id => String(v[`repeating_shields_${id}_shield_active`]) === "1");
+
+      const update = {};
+
+      // If more than one is active, prefer the one the user just clicked on (if we can detect it)
+      if (activeIDs.length > 1 && eventInfo && eventInfo.sourceAttribute) {
+        const parts = eventInfo.sourceAttribute.split("_"); // repeating, shields, ROWID, shield, active
+        const sourceID = parts[2];
+
+        // If the source row is active, turn off all others
+        if (activeIDs.includes(sourceID)) {
+          activeIDs.forEach(id => {
+            if (id !== sourceID) update[`repeating_shields_${id}_shield_active`] = 0;
+          });
+          activeIDs = [sourceID];
+        } else {
+          // otherwise just keep the first and disable the rest
+          activeIDs.slice(1).forEach(id => update[`repeating_shields_${id}_shield_active`] = 0);
+          activeIDs = [activeIDs[0]];
+        }
+      } else if (activeIDs.length > 1) {
+        // No eventInfo (e.g., sheet opened): keep first, disable the rest
+        activeIDs.slice(1).forEach(id => update[`repeating_shields_${id}_shield_active`] = 0);
+        activeIDs = [activeIDs[0]];
+      }
+
+      // Copy active row into GLOBAL shield attrs used by BLOCK/TAKE DMG
+      if (activeIDs[0]) {
+        const id = activeIDs[0];
+        update["shield_name"] = v[`repeating_shields_${id}_shield_name`] || "";
+        update["shield_res_bonus"] = parseInt(v[`repeating_shields_${id}_shield_res_bonus`], 10) || 0;
+        update["shield_con_bonus"] = parseInt(v[`repeating_shields_${id}_shield_con_bonus`], 10) || 0;
+      } else {
+        // No active shield
+        update["shield_name"] = "";
+        update["shield_res_bonus"] = 0;
+        update["shield_con_bonus"] = 0;
+      }
+
+      setAttrs(update);
+    });
+  });
+}
+
+// Run when toggling active, and when editing the active shield’s fields
+on("change:repeating_shields:shield_active sheet:opened", (info) => syncActiveShield(info));
+on("change:repeating_shields:shield_name change:repeating_shields:shield_res_bonus change:repeating_shields:shield_con_bonus", (info) => syncActiveShield(info));
+
+
+
+// Status scaling (BASE) = max(STR ATK base, DEX ATK base, SPL base)
+on("change:str_atk_base change:dex_atk_base change:spl_base sheet:opened", () => {
+  getAttrs(["str_atk_base", "dex_atk_base", "spl_base"], v => {
+    const sAtkB = Number(v.str_atk_base) || 0;
+    const dAtkB = Number(v.dex_atk_base) || 0;
+    const splB  = Number(v.spl_base) || 0;
+
+    // pick highest; tie-breaker order: STR base > DEX base > SPL base (change if you want)
+    let best = sAtkB;
+    let source = "STR ATK (Base)";
+
+    if (dAtkB > best) { best = dAtkB; source = "DEX ATK (Base)"; }
+    if (splB  > best) { best = splB;  source = "SPL (Base)"; }
+
+    setAttrs({
+      status_scaling: best,
+      status_scaling_source: source,
+      status_defense_target: (source.startsWith("SPL")) ? "CON" : "RES"
+    });
+  });
+});
+
+// ===== Active Weapon (mirrors Active Shield behavior) =====
+function syncActiveWeapon(evt) {
+  getSectionIDs("repeating_weapons", function(ids) {
+    var fields = [];
+    for (var i = 0; i < ids.length; i++) {
+      var id = ids[i];
+      fields.push(
+        "repeating_weapons_" + id + "_weapon_active",
+        "repeating_weapons_" + id + "_weapon_name",
+        "repeating_weapons_" + id + "_weapon_base_dmg",
+        "repeating_weapons_" + id + "_weapon_rank"
+      );
+    }
+
+    getAttrs(fields, function(v) {
+      var activeIDs = [];
+      for (var j = 0; j < ids.length; j++) {
+        var rid = ids[j];
+        if (String(v["repeating_weapons_" + rid + "_weapon_active"]) === "1") {
+          activeIDs.push(rid);
+        }
+      }
+
+      var update = {};
+
+      // If multiple actives, prefer the one that triggered the event (when possible)
+      if (activeIDs.length > 1 && evt && evt.sourceAttribute) {
+        // expecting: repeating_weapons_ROWID_weapon_active
+        var parts = evt.sourceAttribute.split("_");
+        var sourceID = parts[2];
+
+        var keep = sourceID;
+        // If for some reason sourceID isn’t in activeIDs, just keep the first
+        var found = false;
+        for (var k = 0; k < activeIDs.length; k++) {
+          if (activeIDs[k] === keep) { found = true; break; }
+        }
+        if (!found) keep = activeIDs[0];
+
+        for (var m = 0; m < activeIDs.length; m++) {
+          var other = activeIDs[m];
+          if (other !== keep) {
+            update["repeating_weapons_" + other + "_weapon_active"] = 0;
+          }
+        }
+        activeIDs = [keep];
+      } else if (activeIDs.length > 1) {
+        // No evt (sheet opened) — keep first, clear others
+        for (var n = 1; n < activeIDs.length; n++) {
+          update["repeating_weapons_" + activeIDs[n] + "_weapon_active"] = 0;
+        }
+        activeIDs = [activeIDs[0]];
+      }
+
+      // Copy active weapon into global attrs
+      if (activeIDs.length === 1) {
+        var a = activeIDs[0];
+        update["active_weapon_name"] = v["repeating_weapons_" + a + "_weapon_name"] || "";
+        update["active_weapon_base_dmg"] = parseInt(v["repeating_weapons_" + a + "_weapon_base_dmg"], 10) || 0;
+        update["active_weapon_rank"] = parseInt(v["repeating_weapons_" + a + "_weapon_rank"], 10) || 0;
+      } else {
+        update["active_weapon_name"] = "";
+        update["active_weapon_base_dmg"] = 0;
+        update["active_weapon_rank"] = 0;
+      }
+
+      setAttrs(update);
+    });
+  });
+}
+
+// ===== Autoset Attack Skill =====
+on(
+  "change:repeating_weapons:weapon_active remove:repeating_weapons sheet:opened " +
+  "change:repeating_weapons:weapon_name change:repeating_weapons:weapon_base_dmg change:repeating_weapons:weapon_rank",
+  function(evt) {
+    syncActiveWeapon(evt);
+  }
+);
+
+on("change:repeating_skills:skill_kind", function(evt) {
+  var prefix = (evt.sourceAttribute || "").replace(/_skill_kind$/, "");
+  if (!prefix) return;
+
+  getAttrs(
+    [
+      prefix + "_skill_kind",
+      prefix + "_skill_has_attack",
+      prefix + "_skill_has_damage",
+      prefix + "_skill_acc_type"
+    ],
+    function(v) {
+      var kind = (v[prefix + "_skill_kind"] || "").trim();
+      if (kind !== "Attack") return;
+
+      var update = {};
+      if (String(v[prefix + "_skill_has_attack"] || "") !== "1") update[prefix + "_skill_has_attack"] = "1";
+      if (String(v[prefix + "_skill_has_damage"] || "") !== "1") update[prefix + "_skill_has_damage"] = "1";
+
+      var accType = (v[prefix + "_skill_acc_type"] || "").trim();
+      if (!accType || accType === "none") update[prefix + "_skill_acc_type"] = "acc";
+
+      setAttrs(update);
+    }
+  );
+});
+
+// ===== Skill Attack Toggle =====
+on("change:repeating_skills:skill_has_attack change:repeating_skills:skill_has_damage sheet:opened", function(evt) {
+  getSectionIDs("repeating_skills", function(ids) {
+    if (!ids || !ids.length) return;
+
+    var fields = [];
+    for (var i = 0; i < ids.length; i++) {
+      var id = ids[i];
+      fields.push(
+        "repeating_skills_" + id + "_skill_has_attack",
+        "repeating_skills_" + id + "_skill_has_damage"
+      );
+    }
+
+    getAttrs(fields, function(v) {
+      var update = {};
+      for (var j = 0; j < ids.length; j++) {
+        var rid = ids[j];
+
+        var atk = String(v["repeating_skills_" + rid + "_skill_has_attack"] || "") === "1" ? "1" : "0";
+        var dmg = String(v["repeating_skills_" + rid + "_skill_has_damage"] || "") === "1" ? "1" : "0";
+
+        update["repeating_skills_" + rid + "_skill_has_attack_toggle"] = atk;
+        update["repeating_skills_" + rid + "_skill_has_damage_toggle"] = dmg;
+      }
+      setAttrs(update);
+    });
+  });
+});
+
+// ===== Skills: toggle for custom damage stat field =====
+on("change:repeating_skills:skill_stat_add remove:repeating_skills sheet:opened", function(evt) {
+  getSectionIDs("repeating_skills", function(ids) {
+    if (!ids || !ids.length) return;
+
+    var fields = [];
+    for (var i = 0; i < ids.length; i++) {
+      fields.push("repeating_skills_" + ids[i] + "_skill_stat_add");
+    }
+
+    getAttrs(fields, function(v) {
+      var update = {};
+      for (var j = 0; j < ids.length; j++) {
+        var id = ids[j];
+        var val = (v["repeating_skills_" + id + "_skill_stat_add"] || "0");
+        // store exactly "custom" or whatever the select is set to
+        update["repeating_skills_" + id + "_skill_stat_toggle"] = val;
+      }
+      setAttrs(update);
+    });
+  });
+});
+
+// ===== Skills: if "Add Active Weapon" checked, copy active weapon dmg into skill_weapon_add =====
+function syncSkillWeaponAdds() {
+  getAttrs(["active_weapon_base_dmg"], function(root) {
+    var aw = parseInt(root.active_weapon_base_dmg, 10);
+    if (isNaN(aw)) aw = 0;
+
+    getSectionIDs("repeating_skills", function(ids) {
+      if (!ids || !ids.length) return;
+
+      var fields = [];
+      for (var i = 0; i < ids.length; i++) {
+        var id = ids[i];
+        fields.push(
+          "repeating_skills_" + id + "_skill_uses_weapon",
+          "repeating_skills_" + id + "_skill_weapon_add"
+        );
+      }
+
+      getAttrs(fields, function(v) {
+        var update = {};
+        for (var j = 0; j < ids.length; j++) {
+          var rid = ids[j];
+          var useW = String(v["repeating_skills_" + rid + "_skill_uses_weapon"] || "") === "1";
+          var desired = useW ? aw : 0;
+
+          var current = parseInt(v["repeating_skills_" + rid + "_skill_weapon_add"], 10);
+          if (isNaN(current)) current = 0;
+
+          if (current !== desired) {
+            update["repeating_skills_" + rid + "_skill_weapon_add"] = desired;
+          }
+        }
+
+        if (Object.keys(update).length) setAttrs(update);
+      });
+    });
+  });
+}
+
+on(
+  "change:active_weapon_base_dmg change:repeating_skills:skill_uses_weapon remove:repeating_skills sheet:opened",
+  function() {
+    syncSkillWeaponAdds();
+  }
+);
+
+// ===== Skills: compute numeric damage stat into skill_stat_val =====
+function syncSkillStatVals() {
+  getAttrs(["str_atk", "dex_atk", "spl"], function(core) {
+    var strAtk = parseInt(core.str_atk, 10); if (isNaN(strAtk)) strAtk = 0;
+    var dexAtk = parseInt(core.dex_atk, 10); if (isNaN(dexAtk)) dexAtk = 0;
+    var spl    = parseInt(core.spl, 10);     if (isNaN(spl)) spl = 0;
+
+    getSectionIDs("repeating_skills", function(ids) {
+      if (!ids || !ids.length) return;
+
+      var fields = [];
+      for (var i = 0; i < ids.length; i++) {
+        var id = ids[i];
+        fields.push(
+          "repeating_skills_" + id + "_skill_stat_add",
+          "repeating_skills_" + id + "_skill_stat_custom",
+          "repeating_skills_" + id + "_skill_stat_val"
+        );
+      }
+
+      getAttrs(fields, function(v) {
+        var update = {};
+        for (var j = 0; j < ids.length; j++) {
+          var rid = ids[j];
+          var sel = (v["repeating_skills_" + rid + "_skill_stat_add"] || "0").trim();
+          var desired = 0;
+
+          if (sel === "@{str_atk}") desired = strAtk;
+          else if (sel === "@{dex_atk}") desired = dexAtk;
+          else if (sel === "@{spl}") desired = spl;
+          else if (sel === "custom") {
+            var c = parseInt(v["repeating_skills_" + rid + "_skill_stat_custom"], 10);
+            desired = isNaN(c) ? 0 : c;
+          } else desired = 0;
+
+          var current = parseInt(v["repeating_skills_" + rid + "_skill_stat_val"], 10);
+          if (isNaN(current)) current = 0;
+
+          if (current !== desired) {
+            update["repeating_skills_" + rid + "_skill_stat_val"] = desired;
+          }
+        }
+
+        if (Object.keys(update).length) setAttrs(update);
+      });
+    });
+  });
+}
+
+on(
+  "change:str_atk change:dex_atk change:spl " +
+  "change:repeating_skills:skill_stat_add change:repeating_skills:skill_stat_custom " +
+  "remove:repeating_skills sheet:opened",
+  function() {
+    syncSkillStatVals();
+  }
+);
+
+// ===== Skills: compute numeric accuracy into skill_acc_val =====
+function syncSkillAccVals() {
+  getAttrs(["acc", "macc"], function(core) {
+    var acc  = parseInt(core.acc, 10);  if (isNaN(acc))  acc = 0;
+    var macc = parseInt(core.macc, 10); if (isNaN(macc)) macc = 0;
+
+    getSectionIDs("repeating_skills", function(ids) {
+      if (!ids || !ids.length) return;
+
+      var fields = [];
+      for (var i = 0; i < ids.length; i++) {
+        var id = ids[i];
+        fields.push(
+          "repeating_skills_" + id + "_skill_has_attack",
+          "repeating_skills_" + id + "_skill_acc_type",
+          "repeating_skills_" + id + "_skill_acc_custom",
+          "repeating_skills_" + id + "_skill_acc_val"
+        );
+      }
+
+      getAttrs(fields, function(v) {
+        var update = {};
+        for (var j = 0; j < ids.length; j++) {
+          var rid = ids[j];
+
+          var hasAtk = String(v["repeating_skills_" + rid + "_skill_has_attack"] || "") === "1";
+          var type   = (v["repeating_skills_" + rid + "_skill_acc_type"] || "none").trim();
+          var desired = 0;
+
+          if (hasAtk) {
+            if (type === "acc") desired = acc;
+            else if (type === "macc") desired = macc;
+            else if (type === "custom") {
+              var c = parseInt(v["repeating_skills_" + rid + "_skill_acc_custom"], 10);
+              desired = isNaN(c) ? 0 : c;
+            }
+          }
+
+          var current = parseInt(v["repeating_skills_" + rid + "_skill_acc_val"], 10);
+          if (isNaN(current)) current = 0;
+
+          if (current !== desired) {
+            update["repeating_skills_" + rid + "_skill_acc_val"] = desired;
+          }
+        }
+
+        if (Object.keys(update).length) setAttrs(update);
+      });
+    });
+  });
+}
+
+on(
+  "change:acc change:macc " +
+  "change:repeating_skills:skill_has_attack " +
+  "change:repeating_skills:skill_acc_type change:repeating_skills:skill_acc_custom " +
+  "remove:repeating_skills sheet:opened",
+  function() { syncSkillAccVals(); }
+);
+
+// ===== Skills: Rank 1–3 storage + active sync into base fields =====
+(function () {
+  const FIELDS = [
+    "skill_action",
+    "skill_kind",
+    "skill_cost",
+    "skill_cooldown",
+    "skill_tags",
+    "skill_range",
+    "skill_target",
+    "skill_description",
+    "skill_effect"
+  ];
+
+  function rowBaseFromEvt(evt) {
+    const src = (evt && evt.sourceAttribute) || "";
+    const m = src.match(/^(repeating_skills_[^_]+)_/);
+    return m ? m[1] : "";
+  }
+
+  function syncRowRankToBase(rowBase) {
+    const rankAttr = `${rowBase}_skill_rank_selected`;
+    const gets = [rankAttr];
+
+    FIELDS.forEach(f => {
+      gets.push(`${rowBase}_${f}`);          // base
+      gets.push(`${rowBase}_${f}_r1`);       // rank stores
+      gets.push(`${rowBase}_${f}_r2`);
+      gets.push(`${rowBase}_${f}_r3`);
+    });
+
+    getAttrs(gets, v => {
+      const rank = (v[rankAttr] || "1").trim();
+      const update = {};
+
+      // If selected rank store is blank, initialize it from current base
+      FIELDS.forEach(f => {
+        const baseKey = `${rowBase}_${f}`;
+        const storeKey = `${rowBase}_${f}_r${rank}`;
+        const storeVal = (v[storeKey] ?? "").toString();
+
+        if (storeVal === "") {
+          update[storeKey] = (v[baseKey] ?? "");
+        }
+      });
+
+      // Copy selected rank store -> base (what your roll buttons reference)
+      FIELDS.forEach(f => {
+        const baseKey = `${rowBase}_${f}`;
+        const storeKey = `${rowBase}_${f}_r${rank}`;
+        const desired = (update.hasOwnProperty(storeKey) ? update[storeKey] : (v[storeKey] ?? ""));
+        if ((v[baseKey] ?? "") !== desired) update[baseKey] = desired;
+      });
+
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  }
+
+  function syncBaseToSelectedRankStore(rowBase) {
+    const rankAttr = `${rowBase}_skill_rank_selected`;
+    const gets = [rankAttr];
+    FIELDS.forEach(f => {
+      gets.push(`${rowBase}_${f}`);
+      gets.push(`${rowBase}_${f}_r1`);
+      gets.push(`${rowBase}_${f}_r2`);
+      gets.push(`${rowBase}_${f}_r3`);
+    });
+
+    getAttrs(gets, v => {
+      const rank = (v[rankAttr] || "1").trim();
+      const update = {};
+
+      FIELDS.forEach(f => {
+        const baseKey = `${rowBase}_${f}`;
+        const storeKey = `${rowBase}_${f}_r${rank}`;
+        const baseVal = (v[baseKey] ?? "");
+        const storeVal = (v[storeKey] ?? "");
+
+        // Keep the selected rank store updated with edits made to the base fields
+        if (storeVal !== baseVal) update[storeKey] = baseVal;
+      });
+
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  }
+
+  // When rank changes, load that rank into the base fields
+  on("change:repeating_skills:skill_rank_selected", function (evt) {
+    const rowBase = rowBaseFromEvt(evt);
+    if (rowBase) syncRowRankToBase(rowBase);
+  });
+
+  // When any base field changes (user editing), save it back into the selected rank store
+  on(
+    "change:repeating_skills:skill_action " +
+    "change:repeating_skills:skill_kind " +
+    "change:repeating_skills:skill_cost " +
+    "change:repeating_skills:skill_cooldown " +
+    "change:repeating_skills:skill_tags " +
+    "change:repeating_skills:skill_range " +
+    "change:repeating_skills:skill_target " +
+    "change:repeating_skills:skill_description " +
+    "change:repeating_skills:skill_effect",
+    function (evt) {
+      const rowBase = rowBaseFromEvt(evt);
+      if (rowBase) syncBaseToSelectedRankStore(rowBase);
+    }
+  );
+
+  // On open, ensure base fields match selected rank for every row
+  on("sheet:opened", function () {
+    getSectionIDs("repeating_skills", function (ids) {
+      (ids || []).forEach(id => syncRowRankToBase(`repeating_skills_${id}`));
+    });
+  });
+})();
+
+const norm = (s) => (s || "").toString().trim().toLowerCase();
+
+
+// Dividers always visible
+if (rowType !== "divider") {
+  if (mode === "by" && filter) {
+    visible = cat.includes(filter) ? 1 : 0;
+  }
+}
+
+
+
+// ===== Equipment / Inventory item toggles + rank display =====
+function syncEquippedTogglesAndRank() {
+  getSectionIDs("repeating_equipped", (ids) => {
+    const fields = [];
+    ids.forEach(id => {
+      fields.push(
+        `repeating_equipped_${id}_item_has_skill`,
+        `repeating_equipped_${id}_item_has_skill_toggle`,
+        `repeating_equipped_${id}_item_rank_mode`,
+        `repeating_equipped_${id}_item_rank_custom`,
+        `repeating_equipped_${id}_item_rank_display`
+      );
+    });
+
+    getAttrs(fields, (v) => {
+      const update = {};
+      ids.forEach(id => {
+        const base = `repeating_equipped_${id}_`;
+        const has = String(v[base + "item_has_skill"] || "") === "1" ? "1" : "0";
+        update[base + "item_has_skill_toggle"] = has;
+
+        const mode = (v[base + "item_rank_mode"] || "Custom").trim();
+        const custom = (v[base + "item_rank_custom"] || "").trim();
+        const disp = (mode === "Custom") ? (custom || "Custom") : mode;
+        update[base + "item_rank_display"] = disp;
+      });
+      setAttrs(update);
+    });
+  });
+}
+
+function syncInventoryToggles() {
+  getSectionIDs("repeating_inventory", (ids) => {
+    const fields = [];
+    ids.forEach(id => {
+      fields.push(
+        `repeating_inventory_${id}_inv_has_skill`,
+        `repeating_inventory_${id}_inv_has_skill_toggle`
+      );
+    });
+
+    getAttrs(fields, (v) => {
+      const update = {};
+      ids.forEach(id => {
+        const base = `repeating_inventory_${id}_`;
+        const has = String(v[base + "inv_has_skill"] || "") === "1" ? "1" : "0";
+        update[base + "inv_has_skill_toggle"] = has;
+      });
+      setAttrs(update);
+    });
+  });
+}
+
+on("change:repeating_equipped:item_has_skill change:repeating_equipped:item_rank_mode change:repeating_equipped:item_rank_custom remove:repeating_equipped sheet:opened", () => {
+  syncEquippedTogglesAndRank();
+});
+
+on("change:repeating_inventory:inv_has_skill remove:repeating_inventory sheet:opened", () => {
+  syncInventoryToggles();
+});
+
+</script>
+ 
+
