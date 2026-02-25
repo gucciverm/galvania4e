@@ -3585,26 +3585,6 @@ button.sheet-attack-btn[type="roll"]::before{
   display: block !important; 
 }
 
-/* Hide a skill row when skill_visible is 0 */
-.sheet-skill-visible[value="0"] + .sheet-skill-rowwrap {
-  display: none !important;
-}
-
-/* Optional: filter bar layout */
-.sheet-skill-filterbar {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.sheet-skillcat-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  margin: 4px 0;
-}
-
 /* ========== SKILL HEADER CLEANUP ========== */
 
 .sheet-skill-header {
@@ -3910,6 +3890,12 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
 .sheet-item-rank-toggle:not([value="Custom"]) + .sheet-item-rank-custom { display:none; }
 .sheet-item-rank-toggle[value="Custom"] + .sheet-item-rank-custom { display:block; }
 
+/* Armor preset hidden by default */
+.sheet-item-armor-preset { display: none; }
+
+/* Show armor preset only when slot toggle == Armor */
+.sheet-item-slot-toggle[value="Armor"] ~ .sheet-item-armor-preset { display: block; }
+
 /* Equipped item skill toggle */
 .sheet-item-skill-wrap { display: none; }
 .sheet-item-skill-toggle[value="1"] + .sheet-item-skill-wrap { display: block; }
@@ -3917,6 +3903,7 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
 /* Inventory item skill toggle */
 .sheet-inv-skill-wrap { display: none; }
 .sheet-inv-skill-toggle[value="1"] + .sheet-inv-skill-wrap { display: block; }
+
 
 /* ===== Equipment tab two-column layout ===== */
 .sheet-equip-grid{
@@ -4031,6 +4018,17 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
   border-radius: 12px; /* keep if you want */
   padding-left: 0;     /* h4 had left padding that shifts things */
   font-size: 12px;
+}
+
+/* Equipment/Inventory: keep Qty/Wgt compact */
+.sheet-section-inventory input[name="attr_inv_qty"],
+.sheet-section-inventory input[name="attr_inv_weight"],
+.sheet-section-inventory input[name="attr_item_weight"]{
+  width: 56px !important;
+  max-width: 56px !important;
+  min-width: 56px !important;
+  flex: 0 0 56px !important;
+  text-align: center;
 }
 
 /* =========================================================
