@@ -3314,9 +3314,11 @@ span.sheet-title-info {
 
 /* Optional: Make the text reddish so players know it's a special override */
 .sheet-custom-formula-wrap input {
-    color: #a020f0; 
-    font-weight: bold;
+    color: inherit;
+    font-weight: normal;
+    text-align: center;
 }
+
 /* Hide custom accuracy input unless Accuracy Type = custom */
 /* Hide by default */
 .sheet-custom-accuracy-wrap {
@@ -3451,18 +3453,6 @@ button.sheet-defense-btn[type="roll"]::before {
   min-width: 0;
 }
 
-/* weapon summary layout (add Active column like shields) */
-.sheet-weapon-summary{
-  grid-template-columns: 46px 1fr 70px 70px minmax(120px, 1fr);
-}
-
-/* match shield checkbox sizing */
-.sheet-weapon-summary input[type="checkbox"][name="attr_weapon_active"]{
-  width: 14px;
-  height: 14px;
-  margin: 0 auto;
-  display: block;
-}
 
 .sheet-collapsible-summary,
 .sheet-collapsible-summary *{
@@ -3522,11 +3512,6 @@ button.sheet-defense-btn[type="roll"]::before {
 .sheet-combat-grid--wide {
   margin-top: 12px;
   align-items: flex-start; /* don’t force matching height if one side grows */
-}
-
-.sheet-weapon-summary .sheet-attack-btn{
-  width: 100%;
-  max-width: 100%;
 }
 
 /* remove the Roll20 dice icon for this button too */
@@ -3898,11 +3883,11 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
 
 /* Equipped item skill toggle */
 .sheet-item-skill-wrap { display: none; }
-.sheet-item-skill-toggle[value="1"] + .sheet-item-skill-wrap { display: block; }
+.sheet-item-has-skill:checked ~ .sheet-item-skill-wrap { display: block; }
 
 /* Inventory item skill toggle */
 .sheet-inv-skill-wrap { display: none; }
-.sheet-inv-skill-toggle[value="1"] + .sheet-inv-skill-wrap { display: block; }
+.sheet-inv-has-skill:checked ~ .sheet-inv-skill-wrap { display: block; }
 
 
 /* ===== Equipment tab two-column layout ===== */
@@ -4070,6 +4055,18 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
   overflow: visible !important;
 }
 
+/* ===== Ultimates divider ===== */
+.sheet-ult-divider{
+  margin: 14px 0;
+  border-bottom: 2px solid #444;
+  opacity: 0.85;
+}
+
+/* ===== Ultimates summary row layout ===== */
+.sheet-ult-summary{
+  grid-template-columns: 46px 1fr 140px 140px;
+}
+
 /* ===== Nuclear option: unsquish Has Skill text everywhere ===== */
 .sheet-has-skill-text{
   display: inline-block !important;
@@ -4100,4 +4097,246 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
 /* If some "center" class is doing flex+tiny width, override it */
 .sheet-section-inventory .sheet-row .sheet-has-skill{
   justify-content: flex-start !important;
+}
+
+/* Make the custom stat block behave nicely when it lives inside the grid */
+.sheet-skill-custom-stat-wrap{
+  margin-top: 0 !important;
+}
+
+
+/* =========================================================
+   UI HEALTH PASS: Standardize inputs (EXCEPT Stats page)
+   ========================================================= */
+
+/* 1) Base control sizing for all non-Stats sections */
+.sheet-section-class input[type="text"],
+.sheet-section-class input[type="number"],
+.sheet-section-class select,
+.sheet-section-class textarea,
+
+.sheet-section-combat input[type="text"],
+.sheet-section-combat input[type="number"],
+.sheet-section-combat select,
+.sheet-section-combat textarea,
+
+.sheet-section-spellbook input[type="text"],
+.sheet-section-spellbook input[type="number"],
+.sheet-section-spellbook select,
+.sheet-section-spellbook textarea,
+
+.sheet-section-inventory input[type="text"],
+.sheet-section-inventory input[type="number"],
+.sheet-section-inventory select,
+.sheet-section-inventory textarea,
+
+.sheet-section-traits input[type="text"],
+.sheet-section-traits input[type="number"],
+.sheet-section-traits select,
+.sheet-section-traits textarea,
+
+.sheet-section-settings input[type="text"],
+.sheet-section-settings input[type="number"],
+.sheet-section-settings select,
+.sheet-section-settings textarea {
+  box-sizing: border-box !important;
+  font-size: 12px !important;       /* keep your sheet-wide 12px baseline :contentReference[oaicite:4]{index=4} */
+  line-height: 16px !important;
+}
+
+/* Text/Number/Select: consistent “single-line” height */
+.sheet-section-class input[type="text"],
+.sheet-section-class input[type="number"],
+.sheet-section-class select,
+.sheet-section-combat input[type="text"],
+.sheet-section-combat input[type="number"],
+.sheet-section-combat select,
+.sheet-section-spellbook input[type="text"],
+.sheet-section-spellbook input[type="number"],
+.sheet-section-spellbook select,
+.sheet-section-inventory input[type="text"],
+.sheet-section-inventory input[type="number"],
+.sheet-section-inventory select,
+.sheet-section-traits input[type="text"],
+.sheet-section-traits input[type="number"],
+.sheet-section-traits select,
+.sheet-section-settings input[type="text"],
+.sheet-section-settings input[type="number"],
+.sheet-section-settings select {
+  height: 22px !important;
+  padding: 2px 4px !important;
+  margin: 0 0 2px 0 !important;
+  vertical-align: middle !important;
+}
+
+/* Textareas: stop being “randomly huge” by default */
+.sheet-section-class textarea,
+.sheet-section-combat textarea,
+.sheet-section-spellbook textarea,
+.sheet-section-inventory textarea,
+.sheet-section-traits textarea,
+.sheet-section-settings textarea {
+  width: 100% !important;
+  height: 110px !important;   /* overrides the global 150px default :contentReference[oaicite:5]{index=5} */
+  padding: 4px 6px !important;
+}
+
+/* Collapsible textareas (skills/equipment/etc): slightly tighter */
+.sheet-section-spellbook .sheet-collapsible-textarea,
+.sheet-section-inventory .sheet-collapsible-textarea,
+.sheet-section-combat .sheet-collapsible-textarea,
+.sheet-section-class .sheet-collapsible-textarea {
+  height: 95px !important;
+}
+
+/* 2) Make “pill” dropdowns/inputs compact (Skills header pills etc.) */
+.sheet-section-spellbook .sheet-skill-pill,
+.sheet-section-spellbook .sheet-row-type-select,
+.sheet-section-spellbook select.sheet-skill-pill,
+.sheet-section-spellbook input.sheet-skill-pill {
+  height: 18px !important;
+  line-height: 14px !important;
+  font-size: 11px !important;
+  padding: 1px 4px !important;
+}
+
+/* 3) Keep NAME fields bigger (weapons/items/skills) */
+.sheet-section-combat input[name="attr_weapon_name"],
+.sheet-section-inventory input[name="attr_item_name"],
+.sheet-section-spellbook input[name="attr_skill_name"],
+.sheet-section-spellbook .sheet-skill-name {
+  height: 26px !important;
+  font-size: 13px !important;
+  line-height: 18px !important;
+  padding: 3px 6px !important;
+}
+
+/* 4) Fix “Rank Text” being weirdly big: tighten those specific inputs */
+.sheet-item-rank-custom input[type="text"] {
+  height: 18px !important;
+  font-size: 11px !important;
+  padding: 1px 4px !important;
+}
+
+/* 5) Optional: reduce mini-label crowding (helps the “squished text” vibe) */
+.sheet-mini-label {
+  line-height: 12px !important;
+  margin-top: 1px !important;
+}
+
+/* ===== Equipment: Rank Text size ===== */
+.sheet-section-inventory input[name="attr_item_rank_custom"]{
+  height: 22px !important;
+  font-size: 12px !important;
+  line-height: 16px !important;
+  padding: 2px 4px !important;
+}
+
+.sheet-section-inventory input[name="attr_item_rank_custom"]{
+  max-width: 90px !important;
+}
+
+/* ===== Ultimates: make Name wider, Type narrower ===== */
+.sheet-ult-summary{
+  display: grid !important;
+  grid-template-columns: minmax(220px, 2fr) 110px 140px !important;
+  gap: 10px !important;
+  align-items: end !important;
+}
+
+.sheet-ult-summary > .sheet-small-label{
+  min-width: 0;
+}
+
+.sheet-ult-summary input[name="attr_ult_name"],
+.sheet-ult-summary select[name="attr_ult_type"],
+.sheet-ult-summary input[name="attr_ult_cost"]{
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.sheet-ult-summary select[name="attr_ult_type"]{
+  max-width: 110px;
+}
+
+/* =========================================================
+   FINAL WEAPON HEADER FIX
+   ========================================================= */
+.sheet-weapon-summary{
+  display: grid !important;
+  grid-template-columns: 34px minmax(120px, 1fr) 44px 58px 96px !important;
+  gap: 8px !important;
+  align-items: end !important;
+}
+
+.sheet-weapon-summary > *{
+  min-width: 0 !important;
+}
+
+/* active checkbox wrapper */
+.sheet-weapon-summary > .sheet-small-label.sheet-center{
+  min-width: 34px !important;
+}
+
+/* active checkbox itself */
+.sheet-weapon-summary input[type="checkbox"][name="attr_weapon_active"]{
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 auto 2px auto !important;
+  display: block !important;
+}
+
+/* name */
+.sheet-weapon-summary input[name="attr_weapon_name"]{
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* dmg */
+.sheet-weapon-summary input[name="attr_weapon_base_dmg"]{
+  width: 44px !important;
+  min-width: 44px !important;
+  text-align: center !important;
+}
+
+/* rank */
+.sheet-weapon-summary select[name="attr_weapon_rank"]{
+  width: 58px !important;
+  min-width: 58px !important;
+}
+
+/* button column */
+.sheet-weapon-summary > .sheet-center:last-child{
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  align-items: stretch !important;
+  min-width: 96px !important;
+}
+
+/* buttons */
+.sheet-weapon-summary > .sheet-center:last-child .sheet-attack-btn{
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 28px !important;
+  padding: 3px 4px !important;
+  line-height: 1.05 !important;
+  font-size: 10px !important;
+  white-space: normal !important;
+}
+
+/* tiny subtitle */
+.sheet-weapon-summary .sheet-defense-sub{
+  display: block !important;
+  font-size: 8px !important;
+  line-height: 1.05 !important;
+  margin-top: 1px !important;
+}
+
+/* Make Custom Scaling look like normal fields */
+.repeating_weapons input[name="attr_weapon_scaling_custom"]{
+  color: #555 !important;
+  text-align: center !important;
+  font-weight: normal !important;
 }
