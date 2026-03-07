@@ -212,7 +212,7 @@
     <div class="sheet-stat-num"><input type="number" name="attr_vitality_mod" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_vitality_bonus" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_vitality" value="0" readonly class="sheet-underlined sheet-center"></div>
-    <div class="sheet-stat-roll"><button type="roll" name="roll_fin" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Vitality}} {{roll=[[1d20 + @{vitality}]]}}"></button></div>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_vit" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Vitality}} {{roll=[[1d20 + @{vitality}]]}}"></button></div>
 </div>
         <!-- Finesse -->
         <div class="sheet-stat-row">
@@ -557,9 +557,9 @@
     <div class="sheet-header-bar">Shields</div>
 
     <!-- globals (renamed to avoid collisions) -->
-    <input type="hidden" name="attr_active_shield_name" value="">
-    <input type="hidden" name="attr_active_shield_res_bonus" value="0">
-    <input type="hidden" name="attr_active_shield_con_bonus" value="0">
+    <input type="hidden" name="attr_shield_name" value="">
+<input type="hidden" name="attr_shield_res_bonus" value="0">
+<input type="hidden" name="attr_shield_con_bonus" value="0">
 
     <fieldset class="repeating_shields">
 
@@ -632,8 +632,10 @@
     <input class="sheet-underlined sheet-center"
            type="text"
            name="attr_shield_req_text"
-           value=""
+           value="">
     <div class="sheet-mini-label">Req</div>
+  </div>
+  
   </div>
 
       <!-- Effects -->
@@ -949,12 +951,14 @@
             <!-- Type -->
             <select name="attr_skill_kind" class="sheet-skill-pill">
               <option value="Passive">Passive</option>
-              <option value="Attack">Attack</option>
-              <option value="Debuff">Debuff</option>
-              <option value="Heal/Barrier">Heal/Barrier</option>
+              <option value="Wind-Up">Wind-Up</option>
+              <option value="Full">Full</option>
+              <option value="Major" selected>Major</option>
+              <option value="Movement">Movement</option>
+              <option value="Minor">Minor</option>
+              <option value="Reaction">Reaction</option>
               <option value="Stance">Stance</option>
-              <option value="Utility">Utility</option>
-              <option value="Other" selected>Other</option>
+              <option value="Free">Free</option>
             </select>
 
             <!-- Use -->
@@ -1606,8 +1610,8 @@
         "1": { "req": { "str": 4, "dex": 2 }, "dmg": 10, "acc": 0, "effects": "Cleave 2" },
         "2": { "req": { "str": 6, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Cleave 4" },
         "3": { "req": { "str": 8, "dex": 6 }, "dmg": 14, "acc": 0, "effects": "Cleave 6" },
-        "4": { "req": { "str": 10, "dex": 8 }, "dmg": 16, "acc": 0, "effects": "Cleave 8", "alts": [{ "label": "Cleave 40% (Or 8)" }] },
-        "5": { "req": { "str": 12, "dex": 10 }, "dmg": 18, "acc": 0, "effects": "Cleave 10", "alts": [{ "label": "Cleave 50% (Or 10)" }] }
+        "4": { "req": { "str": 10, "dex": 8 }, "dmg": 16, "acc": 0, "effects": "Cleave 40% or 8" },
+        "5": { "req": { "str": 12, "dex": 10 }, "dmg": 18, "acc": 0, "effects": "Cleave 50% or 10" }
       }
     },
 
@@ -1679,11 +1683,11 @@
       "baseWeight": 0.5,
       "defaultScaling": "dex",
       "ranks": {
-        "1": { "req": { "dex": 2 }, "dmg": 5, "acc": 1, "effects": "" },
-        "2": { "req": { "dex": 4 }, "dmg": 6, "acc": 2, "effects": "" },
-        "3": { "req": { "dex": 6 }, "dmg": 7, "acc": 3, "effects": "" },
-        "4": { "req": { "dex": 8 }, "dmg": 8, "acc": 4, "effects": "", "alts": [{ "label": "+25% (Base) ACC (Or +4)" }] },
-        "5": { "req": { "dex": 10 }, "dmg": 9, "acc": 5, "effects": "", "alts": [{ "label": "+50% (Base) ACC (Or +5)" }] }
+        "1": { "req": { "dex": 2 }, "dmg": 5, "acc": 1, "effects": "+1 ACC" },
+        "2": { "req": { "dex": 4 }, "dmg": 6, "acc": 2, "effects": "+2 ACC" },
+        "3": { "req": { "dex": 6 }, "dmg": 7, "acc": 3, "effects": "+3 ACC" },
+        "4": { "req": { "dex": 8 }, "dmg": 8, "acc": 4, "effects": "+4 ACC or 25%" },
+        "5": { "req": { "dex": 10 }, "dmg": 9, "acc": 5, "effects": "+5 ACC or 50%" }
       }
     },
 
@@ -1697,8 +1701,8 @@
         "1": { "req": { "dex": 2, "str": 2 }, "dmg": 6, "acc": 0, "effects": "Cleave 2" },
         "2": { "req": { "dex": 4, "str": 3 }, "dmg": 7, "acc": 0, "effects": "Cleave 2" },
         "3": { "req": { "dex": 6, "str": 4 }, "dmg": 8, "acc": 0, "effects": "Cleave 3" },
-        "4": { "req": { "dex": 8, "str": 6 }, "dmg": 9, "acc": 0, "effects": "Cleave 4", "alts": [{ "label": "Cleave 20% (Or 4)" }] },
-        "5": { "req": { "dex": 10, "str": 8 }, "dmg": 10, "acc": 0, "effects": "Cleave 5", "alts": [{ "label": "Cleave 30% (Or 5)" }] }
+        "4": { "req": { "dex": 8, "str": 6 }, "dmg": 9, "acc": 0, "effects": "Cleave 4 or 20%" },
+        "5": { "req": { "dex": 10, "str": 8 }, "dmg": 10, "acc": 0, "effects": "Cleave 5 or 30%" }
       }
     },
 
@@ -1866,8 +1870,8 @@
         "1": { "req": { "str": 3, "dex": 4 }, "dmg": 5, "acc": 0, "effects": "15 Range | Cleave 2" },
         "2": { "req": { "str": 5, "dex": 8 }, "dmg": 8, "acc": 0, "effects": "15 Range | Cleave 4" },
         "3": { "req": { "str": 7, "dex": 12 }, "dmg": 11, "acc": 0, "effects": "20 Range | Cleave 6" },
-        "4": { "req": { "str": 9, "dex": 16 }, "dmg": 14, "acc": 0, "effects": "20 Range", "alts": [{ "label": "30% Cleave" }] },
-        "5": { "req": { "str": 11, "dex": 20 }, "dmg": 17, "acc": 0, "effects": "25 Range", "alts": [{ "label": "40% Cleave" }] }
+        "4": { "req": { "str": 9, "dex": 16 }, "dmg": 14, "acc": 0, "effects": "20 Range | Cleave 8 or 30%" },
+        "5": { "req": { "str": 11, "dex": 20 }, "dmg": 17, "acc": 0, "effects": "25 Range | Cleave 10 or 40% Cleave" }
       }
     },
 
@@ -2423,13 +2427,13 @@ if (!uncap && base > cap) base = cap;
     finalAttrs.mp_base = Math.round(rawMP / 10) * 10;
     finalAttrs.mp_max  = finalAttrs.mp_base + (parseInt(v.mp_mod, 10) || 0) + (parseInt(v.mp_bonus, 10) || 0);
 
-    finalAttrs.str_atk_base = Math.floor(finalAttrs.strength_total / 2);
+    finalAttrs.str_atk_base = Math.floor(finalAttrs.strength_total / 1.5);
     finalAttrs.str_atk      = finalAttrs.str_atk_base + (parseInt(v.str_atk_mod, 10) || 0) + (parseInt(v.str_atk_bonus, 10) || 0);
 
-    finalAttrs.dex_atk_base = Math.floor(finalAttrs.dexterity_total / 2.5);
+    finalAttrs.dex_atk_base = Math.floor(finalAttrs.dexterity_total / 3);
     finalAttrs.dex_atk      = finalAttrs.dex_atk_base + (parseInt(v.dex_atk_mod, 10) || 0) + (parseInt(v.dex_atk_bonus, 10) || 0);
 
-    finalAttrs.spl_base = Math.floor(finalAttrs.intelligence_total / 2.5);
+    finalAttrs.spl_base = Math.floor(finalAttrs.intelligence_total / 3);
     finalAttrs.spl      = finalAttrs.spl_base + (parseInt(v.spl_mod, 10) || 0) + (parseInt(v.spl_bonus, 10) || 0);
 
 // Height → EVA modifier
@@ -2556,8 +2560,8 @@ const ATTR_ALIASES = {
   ref: "reflex",
   hp: "hp",
   mp: "mp",
-  str atk: "str_atk",
-  dex atk: "dex_atk",
+  str_atk: "str_atk",
+  dex_atk: "dex_atk",
   spl: "spl",
   eva: "eva",
   mov: "mov",
@@ -2565,6 +2569,7 @@ const ATTR_ALIASES = {
   macc: "macc",
   icw: "icw",
   ecw: "ecw",
+  
 
 
   // keep these as-is if they exist on your sheet
@@ -2700,7 +2705,7 @@ function handleDamage(isBlocking, info) {
   });
 }
 
-// Listeners for the two buttons
+
 on("clicked:block_dmg", (info) => handleDamage(true, info));
 on("clicked:take_dmg", (info) => handleDamage(false, info));
 
@@ -3006,60 +3011,50 @@ on(
 );
 
 // Shield Library (REPEATING)
-on("change:repeating_shields:shield_preset change:repeating_shields:shield_rank sheet:opened", (info) => {
-  getAttrs(["shield_library_json"], (vTop) => {
-    const lib = safeParseJSON(vTop.shield_library_json);
-    if (!lib || !lib.shields) return;
+on(
+  "change:repeating_shields:shield_preset change:repeating_shields:shield_rank sheet:opened",
+  (evt) => {
+    if (!evt || !evt.sourceAttribute) return;
 
-    getSectionIDs("repeating_shields", (ids) => {
-      // If this was triggered by a single row changing, we only update that row (faster + safer)
-      let targetIDs = ids;
-      if (info && info.sourceAttribute && info.sourceAttribute.startsWith("repeating_shields_")) {
-        const parts = info.sourceAttribute.split("_"); // repeating, shields, ROWID, shield, preset|rank
-        const rowid = parts[2];
-        targetIDs = ids.includes(rowid) ? [rowid] : ids;
-      }
+    const prefix = evt.sourceAttribute.replace(/_(shield_preset|shield_rank)$/, "");
 
-      const fields = [];
-      targetIDs.forEach(id => {
-        fields.push(
-          `repeating_shields_${id}_shield_preset`,
-          `repeating_shields_${id}_shield_rank`
-        );
-      });
+    getAttrs(
+      [
+        "shield_library_json",
+        `${prefix}_shield_preset`,
+        `${prefix}_shield_rank`
+      ],
+      (v) => {
+        const preset = (v[`${prefix}_shield_preset`] || "custom").toLowerCase();
+        const rank = String(v[`${prefix}_shield_rank`] || "1");
 
-      getAttrs(fields, (v) => {
+        if (preset === "custom") return;
+
+        const lib = safeParseJSON(v.shield_library_json);
+        if (!lib || !lib.shields || !lib.shields[preset]) return;
+
+        const shield = lib.shields[preset];
+        const r = (shield.ranks && shield.ranks[rank]) ? shield.ranks[rank] : null;
+        if (!r) return;
+
         const update = {};
+        update[`${prefix}_shield_name`] = shield.name || preset;
+        update[`${prefix}_shield_rank`] = rank;
+        update[`${prefix}_shield_weight`] =
+          (r.weight != null) ? r.weight :
+          (shield.baseWeight != null ? shield.baseWeight : 0);
 
-        targetIDs.forEach(id => {
-          const preset = (v[`repeating_shields_${id}_shield_preset`] || "custom").toLowerCase();
-          const rank = String(v[`repeating_shields_${id}_shield_rank`] || "1");
-          if (preset === "custom") return;
+        update[`${prefix}_shield_res_bonus`] = (r.res != null) ? r.res : 0;
+        update[`${prefix}_shield_con_bonus`] = (r.con != null) ? r.con : 0;
+        update[`${prefix}_shield_req_text`] = r.req ? fmtReq(r.req) : "";
+        update[`${prefix}_shield_effect`] = r.effects || "";
+        update[`${prefix}_shield_skill_desc`] = r.skill || "";
 
-          const shield = lib.shields[preset];
-          const r = shield?.ranks?.[rank];
-          if (!shield || !r) return;
-
-          update[`repeating_shields_${id}_shield_name`] = shield.name || preset;
-          update[`repeating_shields_${id}_shield_rank`] = rank;
-
-          update[`repeating_shields_${id}_shield_weight`] =
-            (r.weight != null) ? r.weight :
-            (shield.baseWeight != null ? shield.baseWeight : 0);
-
-          update[`repeating_shields_${id}_shield_res_bonus`] = (r.res != null) ? r.res : 0;
-          update[`repeating_shields_${id}_shield_con_bonus`] = (r.con != null) ? r.con : 0;
-
-          update[`repeating_shields_${id}_shield_req_text`] = r.req ? fmtReq(r.req) : "";
-          update[`repeating_shields_${id}_shield_effect`] = r.effects || "";
-        });
-
-        if (Object.keys(update).length) setAttrs(update);
-      });
-    });
-  });
-});
-
+        setAttrs(update);
+      }
+    );
+  }
+);
 
 // Active Shield Function
 function syncActiveShield(eventInfo) {
@@ -3630,5 +3625,4 @@ on("change:repeating_equipped:item_rank_mode change:repeating_equipped:item_rank
 
 </script>
  
-
 
