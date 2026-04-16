@@ -1025,9 +1025,9 @@
   
  <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_skill_post"
-              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_action} • @{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
-              USE
-            </button>
+  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_action} • @{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
+  USE
+</button>
           </div>
 
           <!-- AUTOMATION TOGGLES -->
@@ -1113,7 +1113,8 @@
   </div>
 
   <input type="hidden" name="attr_skill_weapon_add" value="0">
-  <input type="hidden" name="attr_skill_stat_val" value="0">
+<input type="hidden" name="attr_skill_weapon_hit_bonus" value="0">
+<input type="hidden" name="attr_skill_stat_val" value="0">
 
 </div> <!-- /sheet-skill-damage-wrap -->
 
@@ -3153,7 +3154,8 @@ function syncActiveWeapon(evt) {
         "repeating_weapons_" + id + "_weapon_active",
         "repeating_weapons_" + id + "_weapon_name",
         "repeating_weapons_" + id + "_weapon_base_dmg",
-        "repeating_weapons_" + id + "_weapon_rank"
+        "repeating_weapons_" + id + "_weapon_rank",
+        "repeating_weapons_" + id + "_weapon_attack_bonus_flat"
       );
     }
 
@@ -3175,7 +3177,6 @@ function syncActiveWeapon(evt) {
         var sourceID = parts[2];
 
         var keep = sourceID;
-        // If for some reason sourceID isn’t in activeIDs, just keep the first
         var found = false;
         for (var k = 0; k < activeIDs.length; k++) {
           if (activeIDs[k] === keep) { found = true; break; }
@@ -3203,10 +3204,12 @@ function syncActiveWeapon(evt) {
         update["active_weapon_name"] = v["repeating_weapons_" + a + "_weapon_name"] || "";
         update["active_weapon_base_dmg"] = parseInt(v["repeating_weapons_" + a + "_weapon_base_dmg"], 10) || 0;
         update["active_weapon_rank"] = parseInt(v["repeating_weapons_" + a + "_weapon_rank"], 10) || 0;
+        update["active_weapon_attack_bonus_flat"] = parseInt(v["repeating_weapons_" + a + "_weapon_attack_bonus_flat"], 10) || 0;
       } else {
         update["active_weapon_name"] = "";
         update["active_weapon_base_dmg"] = 0;
         update["active_weapon_rank"] = 0;
+        update["active_weapon_attack_bonus_flat"] = 0;
       }
 
       setAttrs(update);
@@ -3217,7 +3220,8 @@ function syncActiveWeapon(evt) {
 // ===== Autoset Attack Skill =====
 on(
   "change:repeating_weapons:weapon_active remove:repeating_weapons sheet:opened " +
-  "change:repeating_weapons:weapon_name change:repeating_weapons:weapon_base_dmg change:repeating_weapons:weapon_rank",
+  "change:repeating_weapons:weapon_name change:repeating_weapons:weapon_base_dmg " +
+  "change:repeating_weapons:weapon_rank change:repeating_weapons:weapon_attack_bonus_flat",
   function(evt) {
     syncActiveWeapon(evt);
   }
@@ -3303,11 +3307,14 @@ on("change:repeating_skills:skill_stat_add remove:repeating_skills sheet:opened"
   });
 });
 
-// ===== Skills: if "Add Active Weapon" checked, copy active weapon dmg into skill_weapon_add =====
+// ===== Skills: if "Add Active Weapon" checked, copy active weapon dmg + hit bonus =====
 function syncSkillWeaponAdds() {
-  getAttrs(["active_weapon_base_dmg"], function(root) {
-    var aw = parseInt(root.active_weapon_base_dmg, 10);
-    if (isNaN(aw)) aw = 0;
+  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat"], function(root) {
+    var awDmg = parseInt(root.active_weapon_base_dmg, 10);
+    if (isNaN(awDmg)) awDmg = 0;
+
+    var awHit = parseInt(root.active_weapon_attack_bonus_flat, 10);
+    if (isNaN(awHit)) awHit = 0;
 
     getSectionIDs("repeating_skills", function(ids) {
       if (!ids || !ids.length) return;
@@ -3317,7 +3324,8 @@ function syncSkillWeaponAdds() {
         var id = ids[i];
         fields.push(
           "repeating_skills_" + id + "_skill_uses_weapon",
-          "repeating_skills_" + id + "_skill_weapon_add"
+          "repeating_skills_" + id + "_skill_weapon_add",
+          "repeating_skills_" + id + "_skill_weapon_hit_bonus"
         );
       }
 
@@ -3326,13 +3334,21 @@ function syncSkillWeaponAdds() {
         for (var j = 0; j < ids.length; j++) {
           var rid = ids[j];
           var useW = String(v["repeating_skills_" + rid + "_skill_uses_weapon"] || "") === "1";
-          var desired = useW ? aw : 0;
 
-          var current = parseInt(v["repeating_skills_" + rid + "_skill_weapon_add"], 10);
-          if (isNaN(current)) current = 0;
+          var desiredDmg = useW ? awDmg : 0;
+          var desiredHit = useW ? awHit : 0;
 
-          if (current !== desired) {
-            update["repeating_skills_" + rid + "_skill_weapon_add"] = desired;
+          var currentDmg = parseInt(v["repeating_skills_" + rid + "_skill_weapon_add"], 10);
+          if (isNaN(currentDmg)) currentDmg = 0;
+
+          var currentHit = parseInt(v["repeating_skills_" + rid + "_skill_weapon_hit_bonus"], 10);
+          if (isNaN(currentHit)) currentHit = 0;
+
+          if (currentDmg !== desiredDmg) {
+            update["repeating_skills_" + rid + "_skill_weapon_add"] = desiredDmg;
+          }
+          if (currentHit !== desiredHit) {
+            update["repeating_skills_" + rid + "_skill_weapon_hit_bonus"] = desiredHit;
           }
         }
 
@@ -3343,7 +3359,8 @@ function syncSkillWeaponAdds() {
 }
 
 on(
-  "change:active_weapon_base_dmg change:repeating_skills:skill_uses_weapon remove:repeating_skills sheet:opened",
+  "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat " +
+  "change:repeating_skills:skill_uses_weapon remove:repeating_skills sheet:opened",
   function() {
     syncSkillWeaponAdds();
   }
