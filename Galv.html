@@ -251,7 +251,7 @@
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_mod" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex_bonus" value="0" class="sheet-underlined sheet-center"></div>
     <div class="sheet-stat-num"><input type="number" name="attr_reflex" value="0" readonly class="sheet-underlined sheet-center"></div>
-    <div class="sheet-stat-roll"><button type="roll" name="roll_wil" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Reflex}} {{roll=[[1d20 + @{reflex}]]}}"></button>
+    <div class="sheet-stat-roll"><button type="roll" name="roll_ref" value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Reflex}} {{roll=[[1d20 + @{reflex}]]}}"></button>
     </div>
 </div>
  </div>
@@ -506,17 +506,17 @@
     <div class="sheet-row sheet-weapon-bottom-row sheet-center sheet-status-toprow">
 
 <!-- BURN -->
-<button type="roll" class="sheet-skill-btn" name="roll_status_burning" value="&{template:5eDefault}{{title=@{character_name} — Burning}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Duration=[[ ?{Duration|R1 (1d5),1d5|R2 (1d4+1),1d4+1|R3 (1d3+2),1d3+2|R4 (1d2+3),1d2+3|R5 (5),5} ]] turns}}{{Burn Tick (per trigger)=[[ floor((6 + (0.40*@{status_scaling}) + (0.70*@{level})) * (0.75 + 0.25*?{Rank|1|2|3|4|5})) ]]}} {{vs=@{status_defense_target}}}{{Effect=Deals damage on-hit and at the start of target's turn.}}">BURN</button>
+<button type="roll" class="sheet-skill-btn" name="roll_status_burning" value="&{template:5eDefault}{{title=@{character_name} — Burning}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Duration=[[ ?{Duration|R1 (1d5),1d5|R2 (1d4+1),1d4+1|R3 (1d3+2),1d3+2|R4 (1d2+3),1d2+3|R5 (5),5} ]] turns}}{{Burn Tick (per trigger)=[[ floor((6 + 0.40 * @{status_scaling} + 0.70 * @{level}) * (?{Rank|1|2|3|4|5} + 3) / 4) ]]}}{{vs=@{status_defense_target}}}{{Effect=Deals damage on-hit and at the start of target's turn.}}">BURN</button>
 
 <!-- POISON -->
-<button type="roll" class="sheet-skill-btn" name="roll_status_poison" value="&{template:5eDefault}{{title=@{character_name} — Poison}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Scaling=Uses @{status_scaling_source} (true damage)}}{{Duration=[[ ?{Duration|R1 (1d5),1d5|R2 (1d4+1),1d4+1|R3 (1d3+2),1d3+2|R4 (1d2+3),1d2+3|R5 (5),5} ]] turns}}{{Poison Tick=[[ floor((6 + (0.30*@{status_scaling}) + (0.50*@{level})) * (0.75 + 0.25*?{Rank|1|2|3|4|5})) ]]}}{{HP%=[[ {0,(?{Rank|1|2|3|4|5}-3)}kh1 * 2 ]]% of target Max HP}}{{Effect=At start of each affected turn: deal true damage.}}">POISON</button>
+<button type="roll" class="sheet-skill-btn" name="roll_status_poison" value="&{template:5eDefault}{{title=@{character_name} — Poison}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Scaling=Uses @{status_scaling_source} (true damage)}}{{Duration=[[ ?{Duration|R1 (1d5),1d5|R2 (1d4+1),1d4+1|R3 (1d3+2),1d3+2|R4 (1d2+3),1d2+3|R5 (5),5} ]] turns}}{{Poison Tick=[[ floor((6 + 0.30 * @{status_scaling} + 0.50 * @{level}) * (?{Rank|1|2|3|4|5} + 3) / 4) ]]}}{{HP%=[[ {0,(?{Rank|1|2|3|4|5}-3)}kh1 * 2 ]]% of target Max HP}}{{Effect=At start of each affected turn: deal true damage.}}">POISON</button>
 
 <!-- BLEED -->
 <button type="roll" class="sheet-skill-btn" name="roll_status_bleed"
   value="&{template:5eDefault}{{title=@{character_name} — Bleed}}{{outputall=1}}{{Rank=?{Rank|1|2|3|4|5}}}{{Damage=[[ (2d4) * ?{Rank|1|2|3|4|5} ]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">BLEED</button>
       
        <!-- MP REGEN (WIS/2) -->
-  <button type="roll" class="sheet-skill-btn sheet-mp-regen-btn" name="roll_mp_regen"
+  <button type="roll" class="sheet-skill-btn" name="roll_mp_regen"
     value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — MP Regen}} {{roll=[[floor(@{wisdom}/2)]]}}">
     REGEN
   </button>
@@ -532,14 +532,14 @@
   </div>
 
         <!-- INIT (1d100, adds to tracker) -->
-        <button type="roll" name="roll_init" class="sheet-block-btn sheet-defense-btn"
+        <button type="roll" class="sheet-skill-btn" name="roll_init"
           value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Initiative}} {{roll=[[1d100 &{tracker}]]}}">
           INIT
           <span class="sheet-defense-sub">D100+Tracker</span>
         </button>
 
         <!-- DODGE (same as EVA roll on Stats tab) -->
-        <button type="roll" name="roll_dodge" class="sheet-take-btn sheet-defense-btn"
+        <button type="roll" class="sheet-skill-btn" name="roll_dodge"
           value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Dodge}} {{roll=[[1d20 + @{eva}]]}}">
           DODGE
           <span class="sheet-defense-sub">D20 + EVA</span>
@@ -654,13 +654,12 @@
         <div class="sheet-center">
           <button type="roll" class="sheet-skill-btn" name="roll_shield_skill"
   value="&{template:5eDefault}{{title=@{character_name} — @{shield_name} Skill}}{{outputall=1}}{{Effect=@{shield_skill_desc}}}">
-  USE SKILL
+  SKILL
 </button>
 <button type="roll" class="sheet-skill-btn" name="roll_shield_post"
   value="&{template:5eDefault}{{title=@{character_name} — @{shield_name}}}{{outputall=1}}{{Rank=R@{shield_rank}}}{{Weight=@{shield_weight}}}{{Req=@{shield_req_text}}}{{RES Bonus=@{shield_res_bonus}}}{{CON Bonus=@{shield_con_bonus}}}{{Effects=@{shield_effect}}}{{Skill=@{shield_skill_desc}}}">
-  POST SHIELD
+  POST
 </button>
-
         </div>
       </div>
 
@@ -713,12 +712,12 @@
 
       <!-- Attack -->
       <div class="sheet-center">
-        <button type="roll" name="roll_attack" class="sheet-attack-btn sheet-take-btn"
+        <button type="roll" class="sheet-skill-btn" name="roll_attack"
   value="&{template:5eDefault}{{title=@{character_name} — ATTACK}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{Hit=[[1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}]]}}{{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
-  ATTACK
+  HIT
   <span class="sheet-defense-sub">1d20 + To-Hit</span>
 </button>
-<button type="roll" name="roll_weapon_crit" class="sheet-attack-btn sheet-block-btn"
+<button type="roll" class="sheet-skill-btn" name="roll_weapon_crit"
     value="&{template:5eDefault}{{title=@{character_name} — CRIT}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{CritMult=?{Crit Scaling|2}}}{{CritDamage=[[ ( @{weapon_base_dmg} * ?{Crit Scaling|2} ) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
     CRIT
     <span class="sheet-defense-sub">(DMG×Crit)+Stat</span>
@@ -872,11 +871,11 @@
         <div class="sheet-center">
           <button type="roll" class="sheet-skill-btn" name="roll_weapon_skill"
   value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name} Skill}}{{outputall=1}}{{Effect=@{weapon_skill_desc}}}">
-  USE SKILL
+  SKILL
 </button>
 <button type="roll" class="sheet-skill-btn" name="roll_weapon_post"
   value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name}}}{{outputall=1}}{{Rank=R@{weapon_rank}}}{{Type=@{weapon_type}}}{{Weight=@{weapon_weight}}}{{Req=@{weapon_req_text}}}{{To-Hit=1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}}}{{Damage=@{weapon_base_dmg} + ( @{weapon_scaling_expr} )}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}{{Skill=@{weapon_skill_desc}}}">
-  POST WEAPON
+  POST
 </button>
         </div>
       </div>
@@ -959,16 +958,7 @@
               <option value="Reaction">Reaction</option>
               <option value="Stance">Stance</option>
               <option value="Free">Free</option>
-            </select>
-
-            <!-- Use -->
-            <select name="attr_skill_action" class="sheet-skill-pill">
-              <option value="Passive">Passive</option>
-              <option value="Action" selected>Action</option>
-              <option value="Minor">Minor</option>
-              <option value="Reaction">Reaction</option>
-              <option value="Stance">Stance</option>
-              <option value="Free">Free</option>
+              <option value="Free">Other</option>
             </select>
 
           </div>
@@ -1025,9 +1015,13 @@
   
  <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_skill_post"
-  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_action} • @{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
+  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
   USE
 </button>
+            <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
+              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">
+              CRIT
+            </button>
           </div>
 
           <!-- AUTOMATION TOGGLES -->
@@ -1117,16 +1111,6 @@
 <input type="hidden" name="attr_skill_stat_val" value="0">
 
 </div> <!-- /sheet-skill-damage-wrap -->
-
-          <!-- ROLL BUTTONS -->
-          <div class="sheet-row sheet-margin-top-sm">
-
-            <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
-              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">
-              CRIT
-            </button>
-          </div>
-
         </div> <!-- /sheet-collapsible-details -->
 
       </div> <!-- /sheet-collapsible -->
@@ -1188,10 +1172,87 @@
         </div>
 
         <div class="sheet-row sheet-margin-top-sm">
-          <button type="roll" class="sheet-skill-btn" name="roll_ult_use"
-            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
+<button type="roll" class="sheet-skill-btn" name="roll_ult_use"
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{Effect=Attack: [[1d20+@{ult_acc_val}+@{ult_weapon_hit_bonus}]] | Damage: [[@{ult_base_dmg}+@{ult_weapon_add}+@{ult_stat_val}]]}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
             USE
           </button>
+          <button type="roll" class="sheet-skill-btn" name="roll_ult_crit"
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{ult_base_dmg}]] * ?{Crit Scaling|2} + @{ult_weapon_add} + @{ult_stat_val} ]]}}">
+            CRIT
+          </button>
+        </div>
+
+        <!-- AUTOMATION TOGGLES -->
+        <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+          <div class="sheet-small-label sheet-center">
+            <input type="checkbox" name="attr_ult_has_attack" value="1">
+            <div class="sheet-mini-label">Attack Roll</div>
+          </div>
+          <div class="sheet-small-label sheet-center">
+            <input type="checkbox" name="attr_ult_has_damage" value="1">
+            <div class="sheet-mini-label">Damage</div>
+          </div>
+          <div class="sheet-small-label sheet-center">
+            <input type="checkbox" name="attr_ult_uses_weapon" value="1">
+            <div class="sheet-mini-label">Add Active Weapon</div>
+          </div>
+        </div>
+
+        <!-- ATTACK SETTINGS -->
+        <input type="hidden" class="sheet-ult-attack-toggle" name="attr_ult_has_attack_toggle" value="0">
+        <div class="sheet-ult-attack-wrap sheet-margin-top-sm">
+          <div class="sheet-collapsible-grid3">
+            <div class="sheet-small-label">
+              <select name="attr_ult_acc_type" class="sheet-underlined">
+                <option value="none" selected>None</option>
+                <option value="acc">ACC</option>
+                <option value="macc">MACC</option>
+                <option value="custom">Custom</option>
+              </select>
+              <div class="sheet-mini-label">Accuracy</div>
+            </div>
+            <input type="hidden" class="sheet-ult-accuracy-toggle" name="attr_ult_acc_type">
+            <div class="sheet-ult-custom-accuracy-wrap sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_ult_acc_custom" placeholder="Custom ACC">
+              <div class="sheet-mini-label">Custom ACC</div>
+            </div>
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_ult_attack_notes" placeholder="(optional)">
+              <div class="sheet-mini-label">Atk Notes</div>
+            </div>
+          </div>
+          <input type="hidden" name="attr_ult_acc_val" value="0">
+        </div>
+
+        <!-- DAMAGE SETTINGS -->
+        <input type="hidden" class="sheet-ult-damage-toggle" name="attr_ult_has_damage_toggle" value="0">
+        <div class="sheet-ult-damage-wrap sheet-margin-top-sm">
+          <div class="sheet-collapsible-grid3">
+            <div class="sheet-small-label">
+              <input class="sheet-underlined sheet-center" type="text" name="attr_ult_base_dmg" value="0" placeholder="Base Ult DMG">
+              <div class="sheet-mini-label">Base Ult DMG</div>
+            </div>
+            <div class="sheet-small-label">
+              <select name="attr_ult_stat_add" class="sheet-underlined">
+                <option value="0" selected>None</option>
+                <option value="@{str_atk}">STR ATK</option>
+                <option value="@{dex_atk}">DEX ATK</option>
+                <option value="@{spl}">SPL</option>
+                <option value="custom">Custom</option>
+              </select>
+              <div class="sheet-mini-label">Damage Stat</div>
+            </div>
+            <div class="sheet-small-label">
+              <input type="hidden" class="sheet-ult-stat-toggle" name="attr_ult_stat_toggle" value="0">
+              <div class="sheet-ult-custom-stat-wrap">
+                <input class="sheet-underlined sheet-center" type="text" name="attr_ult_stat_custom" placeholder="Custom stat">
+                <div class="sheet-mini-label">Custom Damage Stat</div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="attr_ult_weapon_add" value="0">
+          <input type="hidden" name="attr_ult_weapon_hit_bonus" value="0">
+          <input type="hidden" name="attr_ult_stat_val" value="0">
         </div>
 
       </div> <!-- /details -->
@@ -1322,7 +1383,6 @@
 <div class="sheet-row sheet-margin-top-sm sheet-has-skill-row">
   <input type="checkbox" class="sheet-item-has-skill" name="attr_item_has_skill" value="1" />
   <span class="sheet-has-skill-text">Has Skill</span>
-  </label>
 
 
             <div class="sheet-item-skill-wrap sheet-margin-top-sm">
@@ -2384,8 +2444,7 @@ var uncap = (parseInt(v.uncap_stats, 10) || 0);
 
       var base = parseInt(v[s + "_base"], 10);
       if (isNaN(base) || base < 1) base = 1;
-      var uncap = (parseInt(v.uncap_stats, 10) || 0);
-if (!uncap && base > cap) base = cap;
+      uncap = (parseInt(v.uncap_stats, 10) || 0);
 
       finalAttrs[s + "_base"] = base;
       spentSP += Math.max(0, base - 1);
@@ -2424,8 +2483,8 @@ if (!uncap && base > cap) base = cap;
     finalAttrs.hp_base = (finalAttrs.vitality * 2) + (level * 2) + 40;
     finalAttrs.hp_max  = finalAttrs.hp_base + (parseInt(v.hp_mod, 10) || 0) + (parseInt(v.hp_bonus, 10) || 0);
 
-    var rawMP = (finalAttrs.wisdom * 2) + (level * 2) + 5;
-    finalAttrs.mp_base = Math.round(rawMP / 10) * 10;
+    var rawMP = (finalAttrs.wisdom * 3) + (level * 2) + 20;
+    finalAttrs.mp_base = Math.round(rawMP / 5) * 5;
     finalAttrs.mp_max  = finalAttrs.mp_base + (parseInt(v.mp_mod, 10) || 0) + (parseInt(v.mp_bonus, 10) || 0);
 
     finalAttrs.str_atk_base = Math.floor(finalAttrs.strength_total / 1.5);
@@ -2710,43 +2769,6 @@ function handleDamage(isBlocking, info) {
 on("clicked:block_dmg", (info) => handleDamage(true, info));
 on("clicked:take_dmg", (info) => handleDamage(false, info));
 
-
-// Attack Button Logic
-on("change:repeating_weapons:weapon_scaling_type change:repeating_weapons:weapon_custom_formula sheet:opened", () => {
-  getSectionIDs("repeating_weapons", (ids) => {
-    const fields = ids.flatMap(id => ([
-      `repeating_weapons_${id}_weapon_scaling_type`,
-      `repeating_weapons_${id}_weapon_custom_formula`
-    ]));
-
-    getAttrs(fields, (v) => {
-      const out = {};
-      ids.forEach(id => {
-        const type = v[`repeating_weapons_${id}_weapon_scaling_type`] || "none";
-        const custom = v[`repeating_weapons_${id}_weapon_custom_formula`] || "0";
-
-        // Damage scaling expression
-        let scalingExpr = "0";
-        if (type === "str") scalingExpr = "@{str_atk}";
-        else if (type === "dex") scalingExpr = "@{dex_atk}";
-        else if (type === "spl") scalingExpr = "@{spl}";
-        else if (type === "custom") scalingExpr = custom; // e.g. @{mov}/2
-
-        // Hit bonus expression (ACC vs MACC)
-        // SPL implies magic accuracy; everything else defaults to ACC.
-        const atkBonusExpr = (type === "spl") ? "@{macc}" : "@{acc}";
-
-        out[`repeating_weapons_${id}_weapon_scaling_expr`] = scalingExpr;
-        out[`repeating_weapons_${id}_weapon_attack_bonus_expr`] = atkBonusExpr;
-
-        // Keep your CSS toggle in sync too
-        out[`repeating_weapons_${id}_weapon_scaling_toggle`] = type;
-      });
-
-      setAttrs(out);
-    });
-  });
-});
 
 // Sum equipped weapon weight
 on("change:repeating_weapons:weapon_weight remove:repeating_weapons sheet:opened", () => {
@@ -3137,7 +3159,7 @@ on("change:str_atk_base change:dex_atk_base change:spl_base sheet:opened", () =>
     if (splB  > best) { best = splB;  source = "SPL (Base)"; }
 
     setAttrs({
-      status_scaling: best,
+      status_scaling:        best,
       status_scaling_source: source,
       status_defense_target: (source.startsWith("SPL")) ? "CON" : "RES"
     });
@@ -3607,6 +3629,167 @@ const FIELDS = [
 })();
 
 const norm = (s) => (s || "").toString().trim().toLowerCase();
+
+// ===== Ultimates: Attack/Damage toggle =====
+on("change:repeating_ultimates:ult_has_attack change:repeating_ultimates:ult_has_damage sheet:opened", function() {
+  getSectionIDs("repeating_ultimates", function(ids) {
+    if (!ids || !ids.length) return;
+    var fields = [];
+    for (var i = 0; i < ids.length; i++) {
+      fields.push(
+        "repeating_ultimates_" + ids[i] + "_ult_has_attack",
+        "repeating_ultimates_" + ids[i] + "_ult_has_damage"
+      );
+    }
+    getAttrs(fields, function(v) {
+      var update = {};
+      for (var j = 0; j < ids.length; j++) {
+        var rid = ids[j];
+        update["repeating_ultimates_" + rid + "_ult_has_attack_toggle"] = String(v["repeating_ultimates_" + rid + "_ult_has_attack"] || "") === "1" ? "1" : "0";
+        update["repeating_ultimates_" + rid + "_ult_has_damage_toggle"] = String(v["repeating_ultimates_" + rid + "_ult_has_damage"] || "") === "1" ? "1" : "0";
+      }
+      setAttrs(update);
+    });
+  });
+});
+
+// ===== Ultimates: custom stat toggle =====
+on("change:repeating_ultimates:ult_stat_add remove:repeating_ultimates sheet:opened", function() {
+  getSectionIDs("repeating_ultimates", function(ids) {
+    if (!ids || !ids.length) return;
+    var fields = ids.map(function(id) { return "repeating_ultimates_" + id + "_ult_stat_add"; });
+    getAttrs(fields, function(v) {
+      var update = {};
+      for (var j = 0; j < ids.length; j++) {
+        update["repeating_ultimates_" + ids[j] + "_ult_stat_toggle"] = v["repeating_ultimates_" + ids[j] + "_ult_stat_add"] || "0";
+      }
+      setAttrs(update);
+    });
+  });
+});
+
+// ===== Ultimates: weapon adds =====
+function syncUltWeaponAdds() {
+  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat"], function(root) {
+    var awDmg = parseInt(root.active_weapon_base_dmg, 10) || 0;
+    var awHit = parseInt(root.active_weapon_attack_bonus_flat, 10) || 0;
+    getSectionIDs("repeating_ultimates", function(ids) {
+      if (!ids || !ids.length) return;
+      var fields = [];
+      for (var i = 0; i < ids.length; i++) {
+        fields.push(
+          "repeating_ultimates_" + ids[i] + "_ult_uses_weapon",
+          "repeating_ultimates_" + ids[i] + "_ult_weapon_add",
+          "repeating_ultimates_" + ids[i] + "_ult_weapon_hit_bonus"
+        );
+      }
+      getAttrs(fields, function(v) {
+        var update = {};
+        for (var j = 0; j < ids.length; j++) {
+          var rid = ids[j];
+          var useW = String(v["repeating_ultimates_" + rid + "_ult_uses_weapon"] || "") === "1";
+          var desiredDmg = useW ? awDmg : 0;
+          var desiredHit = useW ? awHit : 0;
+          if ((parseInt(v["repeating_ultimates_" + rid + "_ult_weapon_add"], 10) || 0) !== desiredDmg)
+            update["repeating_ultimates_" + rid + "_ult_weapon_add"] = desiredDmg;
+          if ((parseInt(v["repeating_ultimates_" + rid + "_ult_weapon_hit_bonus"], 10) || 0) !== desiredHit)
+            update["repeating_ultimates_" + rid + "_ult_weapon_hit_bonus"] = desiredHit;
+        }
+        if (Object.keys(update).length) setAttrs(update);
+      });
+    });
+  });
+}
+
+on(
+  "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat " +
+  "change:repeating_ultimates:ult_uses_weapon remove:repeating_ultimates sheet:opened",
+  function() { syncUltWeaponAdds(); }
+);
+
+// ===== Ultimates: stat val =====
+function syncUltStatVals() {
+  getAttrs(["str_atk", "dex_atk", "spl"], function(core) {
+    var strAtk = parseInt(core.str_atk, 10) || 0;
+    var dexAtk = parseInt(core.dex_atk, 10) || 0;
+    var spl    = parseInt(core.spl, 10)     || 0;
+    getSectionIDs("repeating_ultimates", function(ids) {
+      if (!ids || !ids.length) return;
+      var fields = [];
+      for (var i = 0; i < ids.length; i++) {
+        fields.push(
+          "repeating_ultimates_" + ids[i] + "_ult_stat_add",
+          "repeating_ultimates_" + ids[i] + "_ult_stat_custom",
+          "repeating_ultimates_" + ids[i] + "_ult_stat_val"
+        );
+      }
+      getAttrs(fields, function(v) {
+        var update = {};
+        for (var j = 0; j < ids.length; j++) {
+          var rid = ids[j];
+          var sel = (v["repeating_ultimates_" + rid + "_ult_stat_add"] || "0").trim();
+          var desired;
+          if (sel === "@{str_atk}") desired = "@{str_atk}";
+          else if (sel === "@{dex_atk}") desired = "@{dex_atk}";
+          else if (sel === "@{spl}") desired = "@{spl}";
+          else if (sel === "custom") desired = normalizeExpr(v["repeating_ultimates_" + rid + "_ult_stat_custom"]);
+          else desired = "0";
+          var current = (v["repeating_ultimates_" + rid + "_ult_stat_val"] || "").toString().trim();
+          if (current !== desired) update["repeating_ultimates_" + rid + "_ult_stat_val"] = desired;
+        }
+        if (Object.keys(update).length) setAttrs(update);
+      });
+    });
+  });
+}
+
+on(
+  "change:str_atk change:dex_atk change:spl " +
+  "change:repeating_ultimates:ult_stat_add change:repeating_ultimates:ult_stat_custom " +
+  "remove:repeating_ultimates sheet:opened",
+  function() { syncUltStatVals(); }
+);
+
+// ===== Ultimates: acc val =====
+function syncUltAccVals() {
+  getSectionIDs("repeating_ultimates", function(ids) {
+    if (!ids || !ids.length) return;
+    var fields = [];
+    for (var i = 0; i < ids.length; i++) {
+      fields.push(
+        "repeating_ultimates_" + ids[i] + "_ult_has_attack",
+        "repeating_ultimates_" + ids[i] + "_ult_acc_type",
+        "repeating_ultimates_" + ids[i] + "_ult_acc_custom",
+        "repeating_ultimates_" + ids[i] + "_ult_acc_val"
+      );
+    }
+    getAttrs(fields, function(v) {
+      var update = {};
+      for (var j = 0; j < ids.length; j++) {
+        var rid = ids[j];
+        var hasAtk = String(v["repeating_ultimates_" + rid + "_ult_has_attack"] || "") === "1";
+        var type   = (v["repeating_ultimates_" + rid + "_ult_acc_type"] || "none").trim().toLowerCase();
+        var desired = "0";
+        if (hasAtk) {
+          if (type === "acc") desired = "@{acc}";
+          else if (type === "macc") desired = "@{macc}";
+          else if (type === "custom") desired = normalizeExpr(v["repeating_ultimates_" + rid + "_ult_acc_custom"]);
+        }
+        var current = (v["repeating_ultimates_" + rid + "_ult_acc_val"] || "").toString().trim();
+        if (current !== desired) update["repeating_ultimates_" + rid + "_ult_acc_val"] = desired;
+      }
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  });
+}
+
+on(
+  "change:acc change:macc " +
+  "change:repeating_ultimates:ult_has_attack " +
+  "change:repeating_ultimates:ult_acc_type change:repeating_ultimates:ult_acc_custom " +
+  "remove:repeating_ultimates sheet:opened",
+  function() { syncUltAccVals(); }
+);
 
 
 // ===== Equipment rank display =====
