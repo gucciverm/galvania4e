@@ -207,54 +207,7 @@
 }
  
 
-/* NPC button Settings */
- 
- div.sheet-npcinfo {
-	display: none;
-}
- 
- input.sheet-is-npc:checked ~ div.sheet-npcinfo {
-	display: block;
-}
- 
- input.sheet-is-npc {
-	width: 5%;
-	height: 16px;
-	cursor: pointer;
-	position: relative;
-	opacity: 0;
-	z-index: 9999;
-}
- 
- span.sheet-is-npc-tab::before {
-	content: "PC";
-}
- 
- span.sheet-is-npc-tab {
-	text-align: center;
-	display: inline-block;
-	width: 5%;
-	height: 16px;
-	font-size: 9px;
-	background: #65763c;
-	color: white;
-	font-weight: bold;
-	border-radius: 4px;
-	margin-left: -5%
-}
- 
- input.sheet-is-npc:checked + span.sheet-is-npc-tab {
-	background: #93537c;
-	color: white;
-	border-radius: 4px;
-}
- 
- input.sheet-is-npc:checked + span.sheet-is-npc-tab::before {
-	content: "NPC"
-}
- 
-/* END pc/npc button Settings */
- 
+
 /* Main Sheet Tabs */
  div[class^="sheet-section"] {
 	display: none;
@@ -314,66 +267,7 @@ input.sheet-tab99:checked + span.sheet-tab99 {
  
 /* END Main sheet tabs */
  
-/* Spell Page Settings */
- div[class^="sheet-spell-page"] {
-	display: none;
-}
- 
- input.sheet-spelltab0:checked ~ div.sheet-spell-page0,
- input.sheet-spelltab1:checked ~ div.sheet-spell-page1,
- input.sheet-spelltab2:checked ~ div.sheet-spell-page2,
- input.sheet-spelltab3:checked ~ div.sheet-spell-page3,
- input.sheet-spelltab4:checked ~ div.sheet-spell-page4,
- input.sheet-spelltab5:checked ~ div.sheet-spell-page5,
- input.sheet-spelltab6:checked ~ div.sheet-spell-page6,
- input.sheet-spelltab7:checked ~ div.sheet-spell-page7 {
-	display: block;
-}
- 
- input.sheet-spelltab99:checked ~ div[class^="sheet-spell-page"] {
-	display: block;
-}
- 
- input.sheet-spelltab0:checked ~ span.sheet-spelltab0,
- input.sheet-spelltab1:checked ~ span.sheet-spelltab1,
- input.sheet-spelltab2:checked ~ span.sheet-spelltab2,
- input.sheet-spelltab3:checked ~ span.sheet-spelltab3,
- input.sheet-spelltab4:checked ~ span.sheet-spelltab4,
- input.sheet-spelltab5:checked ~ span.sheet-spelltab5,
- input.sheet-spelltab6:checked ~ span.sheet-spelltab6,
- input.sheet-spelltab7:checked ~ span.sheet-spelltab7,
- input.sheet-spelltab99:checked ~ span.sheet-spelltab99
- {
-	background: rgb(0,158,115);
-	color: white;
-	border-radius: 4px;
-}
- 
- input.sheet-spellpagetab {
-	width: 70px;
-	height: 20px;
-	cursor: pointer;
-	position: relative;
-	opacity: 0;
-	z-index: 9999;
-}
- 
- span.sheet-spellpagetab {
-	text-align: center;
-	display: inline-block;
-	font-size: 13px;
-	background: rgb(86,180,233);
-	color: white;
-	font-weight: bold;
-	border-radius: 4px;
- 
-	width: 70px;
-	height: 20px;
-	cursor: pointer;
-	position: relative;
-	margin-left: -73px;
-}
- 
+
 .sheet-spell-macro-output-options,
 .sheet-classaction-output-options,
 .sheet-npc-output-options
@@ -396,120 +290,6 @@ div[class^="sheet-classaction-row"] {
 	margin-bottom: 5px;
 	background: #eee;
 }
- 
-/* spell type tab Settings */
- 
- div[class^="sheet-spell-type"] {
-	display: none;
-}
- 
- input.sheet-spelltypeadvanced:checked ~ div.sheet-spell-type-advanced,
- input.sheet-spelltypeattack:checked ~ div.sheet-spell-type-attack,
- input.sheet-spelltypesave:checked ~ div.sheet-spell-type-save,
- input.sheet-spelltypedamage:checked ~ div.sheet-spell-type-damage,
- input.sheet-spelltypeheal:checked ~ div.sheet-spell-type-heal,
- input.sheet-spelltypeeffects:checked ~ div.sheet-spell-type-effects {
-	display: block;
-}
- 
- input.sheet-spelltypeadvanced:checked ~ span.sheet-spelltypeadvanced,
- input.sheet-spelltypeattack:checked ~ span.sheet-spelltypeattack,
- input.sheet-spelltypesave:checked ~ span.sheet-spelltypesave,
- input.sheet-spelltypedamage:checked ~ span.sheet-spelltypedamage,
- input.sheet-spelltypeheal:checked ~ span.sheet-spelltypeheal,
- input.sheet-spelltypeeffects:checked ~ span.sheet-spelltypeeffects
- {
-	background: #879a6a;
-	color: white;
-	border-radius: 4px;
-}
- 
- input.sheet-spelltypetab {
-	width: 119px;
-	height: 20px;
-	cursor: pointer;
-	position: relative;
-	opacity: 0;
-	z-index: 999;
-}
- 
- span.sheet-spelltypetab {
-	text-align: center;
-	display: inline-block;
-	font-size: 13px;
-	background: #8c6075;
-	color: white;
-	font-weight: bold;
-	border-radius: 4px;
- 
-	width: 119px;
-	height: 20px;
-	cursor: pointer;
-	position: relative;
-	margin-left: -121px;
-}
- 
-/* END spell type tab Settings */
- 
-/* Inventory Page Settings */
- div[class^="sheet-inventory-page"] {
-	display: none;
-}
- 
- input.sheet-inventorytab1:checked ~ div.sheet-inventory-page1,
- input.sheet-inventorytab2:checked ~ div.sheet-inventory-page2,
- input.sheet-inventorytab3:checked ~ div.sheet-inventory-page3,
- input.sheet-inventorytab4:checked ~ div.sheet-inventory-page4,
- input.sheet-inventorytab5:checked ~ div.sheet-inventory-page5,
- input.sheet-inventorytab6:checked ~ div.sheet-inventory-page6,
- input.sheet-inventorytab7:checked ~ div.sheet-inventory-page7 {
-	display: block;
-}
- 
- input.sheet-inventorytab99:checked ~ div[class^="sheet-inventory-page"]{
-	display: block;
-}
- 
- input.sheet-inventorytab1:checked ~ span.sheet-inventorytab1,
- input.sheet-inventorytab2:checked ~ span.sheet-inventorytab2,
- input.sheet-inventorytab3:checked ~ span.sheet-inventorytab3,
- input.sheet-inventorytab4:checked ~ span.sheet-inventorytab4,
- input.sheet-inventorytab5:checked ~ span.sheet-inventorytab5,
- input.sheet-inventorytab6:checked ~ span.sheet-inventorytab6,
- input.sheet-inventorytab7:checked ~ span.sheet-inventorytab7,
- input.sheet-inventorytab99:checked ~ span.sheet-inventorytab99
- {
-	background: rgb(0,158,115);
-	color: white;
-	border-radius: 4px;
-}
- 
- input.sheet-inventorytab {
-	width: 95px;
-	height: 20px;
-	cursor: pointer;
-	position: relative;
-	opacity: 0;
-	z-index: 9999;
-}
- 
- span.sheet-inventorytab {
-	text-align: center;
-	display: inline-block;
-	font-size: 13px;
-	background: rgb(86,180,233);
-	color: white;
-	font-weight: bold;
-	border-radius: 4px;
- 
-	width: 95px;
-	height: 20px;
-	cursor: pointer;
-	position: relative;
-	margin-left: -98px;
-}
- 
-/* END Inventory Page Settings */
  
 /* General sheet/rolltemplate wide Styles */
  button, input, select, textarea,
@@ -891,10 +671,6 @@ div[class^="sheet-classaction-row"] {
 	font-size: 11px!important;
 }
  .sheet-skill-checkbox {
-	margin-top: 5px;
-}
- 
- .sheet-margin-top {
 	margin-top: 5px;
 }
  
@@ -3049,36 +2825,9 @@ input.sheet-details-toggle:checked ~ div.sheet-job-details {
     display: block;
 }
  
-select.sheet-underlined {
-    border: none;
-    border-bottom: 1px solid black;
-    background: transparent;
-    width: 90%;
-    height: 24px;
-    appearance: none; /* Removes the default clunky arrow in some browsers */
-}
- 
 /* Ensure the Header Grid stays compact */
 .sheet-header-grid .sheet-row {
     margin-bottom: 0px !important;
-}
- 
-/* Force Select elements to match Input boxes */
-select.sheet-underlined {
-    width: 100%;
-    height: 28px;
-    padding: 2px;
-    background-color: white;
-    /* This matches the Basic Fantasy template's input style */
-    border: 1px solid #ccc; 
-    border-bottom: 2px solid #000;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    box-sizing: border-box;
-}
- 
-/* Fix for the Height label position */
-.sheet-header-grid .sheet-small-label {
-    padding-top: 5px;
 }
  
 /* Remove the gap between rows in the header */
@@ -3098,12 +2847,7 @@ select.sheet-underlined {
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     box-sizing: border-box;
     display: inline-block;
-}
- 
-/* Tighten the label text under the boxes */
-.sheet-header-grid .sheet-small-label {
-    padding-top: 2px;
-    line-height: 1.2em;
+    appearance: none;
 }
  
 /* Tighten the header container */
@@ -3122,6 +2866,7 @@ select.sheet-underlined {
 .sheet-header-grid .sheet-small-label {
     line-height: 12px;
     margin-top: 2px;
+    padding-top: 2px;
 }
  
 /* Styling for the Title inputs in the header */
@@ -3199,17 +2944,6 @@ span.sheet-title-info {
 }
 
 
-/* Damage Dashboard (Modern Flexbox) */
-.sheet-damage-panel {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: #f4f4f4;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
 /* Button Styling */
 .sheet-block-btn, .sheet-take-btn {
     width: 90%;
@@ -3228,7 +2962,6 @@ span.sheet-title-info {
 .sheet-take-btn:hover { background-color: #e74c3c; }
 
 /* Utilities */
-.sheet-margin-top { margin-top: 15px !important; }
 .sheet-center { text-align: center; }
 
 /* Bulletproof Header Bar */
@@ -3294,12 +3027,18 @@ span.sheet-title-info {
 }
 
 .sheet-skill-btn {
-    background-color: #6a4a7b; /* Unique purple for skills */
-    color: white;
+    background-color: transparent;
+    color: black;
     font-size: 11px;
     font-weight: bold;
     padding: 5px;
     border-radius: 4px;
+}
+
+.sheet-skill-btn:hover {
+    background-color: #6a4a7b;
+    background-image: none;
+    color: white;
 }
 
 /* Hide the custom formula wrapper by default */
@@ -3338,6 +3077,10 @@ span.sheet-title-info {
   background: #fdfdfd;
   padding: 8px;
   margin-bottom: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .sheet-defense-row { display: flex; gap: 8px; }
@@ -3353,14 +3096,6 @@ span.sheet-title-info {
   opacity: 0.9;
 }
 
-/* === COMBAT GRID === */
-.sheet-combat-grid {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-  align-items: stretch;
-}
-
 .sheet-combat-column {
   flex: 1;
   min-width: 0;
@@ -3369,7 +3104,7 @@ span.sheet-title-info {
 }
 
 /* === Normalize Combat buttons === */
-.sheet-combat-column button {
+.sheet-combat-column button.sheet-defense-btn {
   border: none;
   box-shadow: none;
   background-image: none;
@@ -3550,9 +3285,20 @@ button.sheet-attack-btn[type="roll"]::before{
 .sheet-skill-attack-wrap { display: none; }
 .sheet-skill-damage-wrap { display: none; }
 
-/* show when toggle attr is 1 */
 .sheet-skill-attack-toggle[value="1"] + .sheet-skill-attack-wrap { display: block; }
 .sheet-skill-damage-toggle[value="1"] + .sheet-skill-damage-wrap { display: block; }
+
+.sheet-ult-attack-wrap { display: none; }
+.sheet-ult-damage-wrap { display: none; }
+
+.sheet-ult-attack-toggle[value="1"] + .sheet-ult-attack-wrap { display: block; }
+.sheet-ult-damage-toggle[value="1"] + .sheet-ult-damage-wrap { display: block; }
+
+.sheet-ult-custom-accuracy-wrap { display: none; }
+.sheet-ult-accuracy-toggle[value="custom"] + .sheet-ult-custom-accuracy-wrap { display: block; }
+
+.sheet-ult-custom-stat-wrap { display: none; }
+input.sheet-ult-stat-toggle[value="custom"] + .sheet-ult-custom-stat-wrap { display: block; }
 
 /* custom ACC only when Accuracy Type = custom */
 .sheet-skill-custom-accuracy-wrap { display: none; }
@@ -3669,34 +3415,6 @@ button.sheet-attack-btn[type="roll"]::before{
   z-index: 2;
 }
 
-/* Status Effects top row layout */
-.sheet-status-toprow{
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-}
-
-/* Make combat columns equal height */
-.sheet-combat-grid {
-  display: flex;
-  gap: 12px;
-}
-
-.sheet-combat-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.sheet-defense-card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 /* Status top row: controlled flex without global input stretching */
 .sheet-status-toprow{
   display: flex;
@@ -3717,6 +3435,7 @@ button.sheet-attack-btn[type="roll"]::before{
   display:flex;
   gap:16px;
   align-items:stretch;
+  margin-bottom:12px;
 }
 
 .sheet-combat-grid > .sheet-combat-column{
@@ -3740,28 +3459,6 @@ button.sheet-attack-btn[type="roll"]::before{
 /* Stop template "row input width:100%" rules from affecting CRT */
 .sheet-status-card .sheet-status-extras input{
   width:auto !important;
-}
-
-/* CRT box */
-.sheet-status-crt-wrap{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  min-width:60px;
-}
-
-.sheet-status-crt{
-  width:52px !important;
-  height:24px;
-  text-align:center;
-}
-
-/* CRT label: don't squish */
-.sheet-status-crt-wrap .sheet-mini-label{
-  font-size:11px;
-  margin-top:3px;
-  white-space:nowrap;
 }
 
 /* MP button spacing */
@@ -4062,11 +3759,6 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
   opacity: 0.85;
 }
 
-/* ===== Ultimates summary row layout ===== */
-.sheet-ult-summary{
-  grid-template-columns: 46px 1fr 140px 140px;
-}
-
 /* ===== Nuclear option: unsquish Has Skill text everywhere ===== */
 .sheet-has-skill-text{
   display: inline-block !important;
@@ -4255,6 +3947,13 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
   min-width: 0 !important;
 }
 
+.sheet-ult-summary input[name="attr_ult_name"] {
+  height: 26px !important;
+  font-size: 13px !important;
+  line-height: 18px !important;
+  padding: 3px 6px !important;
+}
+
 .sheet-ult-summary select[name="attr_ult_type"]{
   max-width: 110px;
 }
@@ -4264,9 +3963,9 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
    ========================================================= */
 .sheet-weapon-summary{
   display: grid !important;
-  grid-template-columns: 34px minmax(120px, 1fr) 44px 58px 96px !important;
-  gap: 8px !important;
-  align-items: end !important;
+  grid-template-columns: 34px 1fr 44px 58px 80px !important;
+  gap: 6px !important;
+  align-items: start !important;
 }
 
 .sheet-weapon-summary > *{
@@ -4311,13 +4010,15 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
   flex-direction: column !important;
   gap: 4px !important;
   align-items: stretch !important;
-  min-width: 96px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
 }
 
 /* buttons */
-.sheet-weapon-summary > .sheet-center:last-child .sheet-attack-btn{
+.sheet-weapon-summary > .sheet-center:last-child button {
   width: 100% !important;
   max-width: 100% !important;
+  box-sizing: border-box !important;
   height: auto !important;
   min-height: 28px !important;
   padding: 3px 4px !important;
