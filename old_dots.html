@@ -1,0 +1,17 @@
+<!-- BURN -->
+      <button type="roll" class="sheet-skill-btn" name="roll_status_burning"
+        value="&{template:5eDefault}{{title=@{character_name} — Burning}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source} → vs @{status_defense_target}}}{{Damage=[[10 + @{status_scaling}]] vs @{status_defense_target}}}{{Duration=[[1d2+1]]}}{{Effect=On apply + start of target’s turns. Drops by 1 when target is hit or their turn comes up.}}">
+        BURN
+      </button>
+
+      <!-- POISON -->
+      <button type="roll" class="sheet-skill-btn" name="roll_status_poison"
+        value="&{template:5eDefault}{{title=@{character_name} — Poison}}{{outputall=1}}{{Scaling=Uses @{status_scaling_source}}}{{Damage=[[5 + @{status_scaling}]] true damage per turn}}{{Duration=[[1d2+3]] turns}}{{Effect=Deals true damage at the start of each affected turn.}}">
+        POISON
+      </button>
+
+      <!-- BLEED -->
+      <button type="roll" class="sheet-skill-btn" name="roll_status_bleed"
+        value="&{template:5eDefault}{{title=@{character_name} — Bleed}}{{outputall=1}}{{Damage=[[2d4]] HP loss per turn}}{{Duration=[[1d4]] turns}}{{Effect=Stacks infinitely. Applying Bleed again adds damage and resets duration.}}">
+        BLEED
+      </button>
