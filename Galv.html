@@ -2444,7 +2444,7 @@ var uncap = (parseInt(v.uncap_stats, 10) || 0);
 
       var base = parseInt(v[s + "_base"], 10);
       if (isNaN(base) || base < 1) base = 1;
-      uncap = (parseInt(v.uncap_stats, 10) || 0);
+      if (!uncap && base > cap) base = cap;
 
       finalAttrs[s + "_base"] = base;
       spentSP += Math.max(0, base - 1);
@@ -2505,7 +2505,7 @@ else if (height === "Giant") evaHeightMod = -2;
 finalAttrs.eva_base = Math.floor(((finalAttrs.agility_total / 2) + (finalAttrs.reflex / 2)) / 2) + evaHeightMod;
 finalAttrs.eva      = finalAttrs.eva_base + (parseInt(v.eva_mod, 10) || 0) + (parseInt(v.eva_bonus, 10) || 0);
 
-    var rawMov = ((finalAttrs.finesse + finalAttrs.reflex) / 2) + 5;
+    var rawMov = ((finalAttrs.finesse / 2) + finalAttrs.reflex) / 2 + 5;
     finalAttrs.mov_base = Math.round(rawMov / 5) * 5;
     finalAttrs.mov      = finalAttrs.mov_base + (parseInt(v.mov_mod, 10) || 0) + (parseInt(v.mov_bonus, 10) || 0);
 
