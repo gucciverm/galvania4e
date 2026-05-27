@@ -697,7 +697,7 @@
 
       <!-- Damage -->
       <div class="sheet-small-label">
-        <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_base_dmg" value="0">
+        <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_base_dmg" value="0">
         <div class="sheet-mini-label">DMG</div>
       </div>
 
@@ -718,7 +718,7 @@
   <span class="sheet-defense-sub">1d20 + To-Hit</span>
 </button>
 <button type="roll" class="sheet-skill-btn" name="roll_weapon_crit"
-    value="&{template:5eDefault}{{title=@{character_name} — CRIT}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{CritMult=?{Crit Scaling|2}}}{{CritDamage=[[ ( @{weapon_base_dmg} * ?{Crit Scaling|2} ) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
+    value="&{template:5eDefault}{{title=@{character_name} — CRIT}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{CritMult=?{Crit Scaling|2}}}{{CritDamage=[[ ( (@{weapon_base_dmg}) * ?{Crit Scaling|2} ) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
     CRIT
     <span class="sheet-defense-sub">(DMG×Crit)+Stat</span>
   </button>
@@ -728,13 +728,12 @@
       <input type="hidden" name="attr_weapon_scaling_expr" value="0">
       <input type="hidden" name="attr_weapon_tohit_expr" value="@{acc}">
       <input type="hidden" name="attr_weapon_attack_bonus_expr" value="@{acc}">
-      <input type="hidden" name="attr_weapon_attack_bonus_flat" value="0">
     </div>
 
     <!-- DETAILS -->
     <div class="sheet-collapsible-details">
 
-      <div class="sheet-collapsible-grid3">
+      <div class="sheet-collapsible-grid4">
         <!-- Type -->
         <div class="sheet-small-label">
           <input class="sheet-underlined sheet-center" type="text" name="attr_weapon_type" placeholder="Type">
@@ -745,6 +744,12 @@
         <div class="sheet-small-label">
           <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_weight" value="0" step="0.1">
           <div class="sheet-mini-label">Weight</div>
+        </div>
+
+        <!-- ACC Bonus -->
+        <div class="sheet-small-label">
+          <input class="sheet-underlined sheet-center" type="number" name="attr_weapon_attack_bonus_flat" value="0">
+          <div class="sheet-mini-label">Bonus</div>
         </div>
 
         <!-- Req -->
@@ -1015,11 +1020,11 @@
   
  <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_skill_post"
-  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+@{skill_weapon_add}+@{skill_stat_val}]]}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
+  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+(@{skill_weapon_add})+@{skill_stat_val}]]}}{{Weapon=@{skill_weapon_effects}}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
   USE
 </button>
             <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
-              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + @{skill_weapon_add} + @{skill_stat_val} ]]}}">
+              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + (@{skill_weapon_add}) + @{skill_stat_val} ]]}}{{Weapon=@{skill_weapon_effects}}}">
               CRIT
             </button>
           </div>
@@ -1107,6 +1112,7 @@
   </div>
 
   <input type="hidden" name="attr_skill_weapon_add" value="0">
+  <input type="hidden" name="attr_skill_weapon_effects" value="">
 <input type="hidden" name="attr_skill_weapon_hit_bonus" value="0">
 <input type="hidden" name="attr_skill_stat_val" value="0">
 
@@ -1173,11 +1179,11 @@
 
         <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_ult_use"
-            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{Effect=Attack: [[1d20+@{ult_acc_val}+@{ult_weapon_hit_bonus}]] | Damage: [[@{ult_base_dmg}+@{ult_weapon_add}+@{ult_stat_val}]]}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{Effect=Attack: [[1d20+@{ult_acc_val}+@{ult_weapon_hit_bonus}]] | Damage: [[@{ult_base_dmg}+(@{ult_weapon_add})+@{ult_stat_val}]]}}{{Weapon=@{ult_weapon_effects}}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
             USE
           </button>
           <button type="roll" class="sheet-skill-btn" name="roll_ult_crit"
-            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{ult_base_dmg}]] * ?{Crit Scaling|2} + @{ult_weapon_add} + @{ult_stat_val} ]]}}">
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{ult_base_dmg}]] * ?{Crit Scaling|2} + (@{ult_weapon_add}) + @{ult_stat_val} ]]}}{{Weapon=@{ult_weapon_effects}}}">
             CRIT
           </button>
         </div>
@@ -1251,6 +1257,7 @@
             </div>
           </div>
           <input type="hidden" name="attr_ult_weapon_add" value="0">
+          <input type="hidden" name="attr_ult_weapon_effects" value="">
           <input type="hidden" name="attr_ult_weapon_hit_bonus" value="0">
           <input type="hidden" name="attr_ult_stat_val" value="0">
         </div>
@@ -1714,11 +1721,11 @@
       "notes": "Base Weight: 0.5 unless Unarmed, Unarmed is 0",
       "defaultScaling": "str",
       "ranks": {
-        "1": { "req": { "str": 2, "dex": 2 }, "dmg": 3, "acc": 0, "effects": "1d2+1 Punches" },
-        "2": { "req": { "str": 4, "dex": 4 }, "dmg": 4, "acc": 0, "effects": "1d2+1 Punches" },
-        "3": { "req": { "str": 6, "dex": 4 }, "dmg": 5, "acc": 0, "effects": "1d2+1 Punches" },
-        "4": { "req": { "str": 8, "dex": 6 }, "dmg": 5, "acc": 0, "effects": "1d2+2 Punches" },
-        "5": { "req": { "str": 10, "dex": 6 }, "dmg": 6, "acc": 0, "effects": "1d2+2 Punches" }
+        "1": { "req": { "str": 2, "dex": 2 }, "dmg": "3*(1d2+1)", "acc": 0, "effects": "1d2+1 Punches" },
+        "2": { "req": { "str": 4, "dex": 4 }, "dmg": "4*(1d2+1)", "acc": 0, "effects": "1d2+1 Punches" },
+        "3": { "req": { "str": 6, "dex": 4 }, "dmg": "5*(1d2+1)", "acc": 0, "effects": "1d2+1 Punches" },
+        "4": { "req": { "str": 8, "dex": 6 }, "dmg": "5*(1d2+2)", "acc": 0, "effects": "1d2+2 Punches" },
+        "5": { "req": { "str": 10, "dex": 6 }, "dmg": "6*(1d2+2)", "acc": 0, "effects": "1d2+2 Punches" }
       }
     },
 
@@ -1897,11 +1904,11 @@
       "baseWeight": 0.5,
       "defaultScaling": "dex",
       "ranks": {
-        "1": { "req": { "dex": 3, "str": 2 }, "dmg": 3, "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
-        "2": { "req": { "dex": 6, "str": 4 }, "dmg": 4, "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
-        "3": { "req": { "dex": 9, "str": 6 }, "dmg": 5, "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
-        "4": { "req": { "dex": 12, "str": 8 }, "dmg": 6, "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
-        "5": { "req": { "dex": 16, "str": 10 }, "dmg": 7, "acc": 0, "effects": "20 Range | 1d2+1 Multiplier" }
+        "1": { "req": { "dex": 3, "str": 2 }, "dmg": "3*1d2", "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
+        "2": { "req": { "dex": 6, "str": 4 }, "dmg": "4*1d2", "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
+        "3": { "req": { "dex": 9, "str": 6 }, "dmg": "4*1d3", "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
+        "4": { "req": { "dex": 12, "str": 8 }, "dmg": "5*1d3", "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
+        "5": { "req": { "dex": 16, "str": 10 }, "dmg": "6*(1d2+1)", "acc": 0, "effects": "20 Range | 1d2+1 Multiplier" }
       }
     },
 
@@ -1943,11 +1950,11 @@
       "baseWeight": 0,
       "defaultScaling": "dex",
       "ranks": {
-        "1": { "req": { "dex": 3 }, "dmg": 2, "acc": 0, "effects": "1d3 Daggers" },
-        "2": { "req": { "dex": 6 }, "dmg": 3, "acc": 0, "effects": "1d2+1 Daggers" },
-        "3": { "req": { "dex": 12 }, "dmg": 4, "acc": 0, "effects": "1d2+1 Daggers" },
-        "4": { "req": { "dex": 16 }, "dmg": 5, "acc": 0, "effects": "1d3+1 Daggers" },
-        "5": { "req": { "dex": 20 }, "dmg": 6, "acc": 0, "effects": "1d2+2 Daggers" }
+        "1": { "req": { "dex": 3 }, "dmg": "2*1d3", "acc": 0, "effects": "1d3 Daggers" },
+        "2": { "req": { "dex": 6 }, "dmg": "3*(1d2+1)", "acc": 0, "effects": "1d2+1 Daggers" },
+        "3": { "req": { "dex": 12 }, "dmg": "4*(1d2+1)", "acc": 0, "effects": "1d2+1 Daggers" },
+        "4": { "req": { "dex": 16 }, "dmg": "5*(1d3+1)", "acc": 0, "effects": "1d3+1 Daggers" },
+        "5": { "req": { "dex": 20 }, "dmg": "6*(1d3+1)", "acc": 0, "effects": "1d2+2 Daggers" }
       }
     },
 
@@ -1973,11 +1980,11 @@
       "baseWeight": 1.5,
       "defaultScaling": "str",
       "ranks": {
-        "1": { "req": { "str": 4 }, "dmg": 5, "acc": 0, "effects": "1d2 Axes" },
-        "2": { "req": { "str": 8 }, "dmg": 6, "acc": 0, "effects": "1d2 Axes" },
-        "3": { "req": { "str": 12 }, "dmg": 7, "acc": 0, "effects": "1d3 Axes" },
-        "4": { "req": { "str": 16 }, "dmg": 8, "acc": 0, "effects": "1d3 Axes" },
-        "5": { "req": { "str": 20 }, "dmg": 9, "acc": 0, "effects": "1d2+1" }
+        "1": { "req": { "str": 4 }, "dmg": "4*1d2", "acc": 0, "effects": "1d2 Axes" },
+        "2": { "req": { "str": 8 }, "dmg": "5*1d3", "acc": 0, "effects": "1d2 Axes" },
+        "3": { "req": { "str": 12 }, "dmg": "6*1d3", "acc": 0, "effects": "1d3 Axes" },
+        "4": { "req": { "str": 16 }, "dmg": "7*1d3", "acc": 0, "effects": "1d3 Axes" },
+        "5": { "req": { "str": 20 }, "dmg": "8*(1d2+1)", "acc": 0, "effects": "1d2+1" }
       }
     },
 
@@ -2021,11 +2028,11 @@
       "defaultScaling": "none",
       "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
       "ranks": {
-        "1": { "req": { "dex": 5, "fin": 5 }, "dmg": 6, "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo" },
-        "2": { "req": { "dex": 5, "fin": 5 }, "dmg": 7, "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo | [1 Mod]" },
-        "3": { "req": { "dex": 7, "fin": 7 }, "dmg": 8, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 5 Ammo | [2 Mods]" },
-        "4": { "req": { "dex": 7, "fin": 7 }, "dmg": 9, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 6 Ammo | [3 Mods]" },
-        "5": { "req": { "dex": 9, "fin": 9 }, "dmg": 10, "acc": 0, "effects": "8 Range | 1d2+1 Shots | 7 Ammo | [4 Mods]" }
+        "1": { "req": { "dex": 5, "fin": 5 }, "dmg": "6*1d3", "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo" },
+        "2": { "req": { "dex": 5, "fin": 5 }, "dmg": "7*1d3", "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo | [1 Mod]" },
+        "3": { "req": { "dex": 7, "fin": 7 }, "dmg": "8*(1d2+1)", "acc": 0, "effects": "8 Range | 1d2+1 Shots | 5 Ammo | [2 Mods]" },
+        "4": { "req": { "dex": 7, "fin": 7 }, "dmg": "9*(1d2+1)", "acc": 0, "effects": "8 Range | 1d2+1 Shots | 6 Ammo | [3 Mods]" },
+        "5": { "req": { "dex": 9, "fin": 9 }, "dmg": "10*(1d2+1)", "acc": 0, "effects": "8 Range | 1d2+1 Shots | 7 Ammo | [4 Mods]" }
       }
     },
 
@@ -3177,7 +3184,8 @@ function syncActiveWeapon(evt) {
         "repeating_weapons_" + id + "_weapon_name",
         "repeating_weapons_" + id + "_weapon_base_dmg",
         "repeating_weapons_" + id + "_weapon_rank",
-        "repeating_weapons_" + id + "_weapon_attack_bonus_flat"
+        "repeating_weapons_" + id + "_weapon_attack_bonus_flat",
+        "repeating_weapons_" + id + "_weapon_effects_base"
       );
     }
 
@@ -3224,14 +3232,16 @@ function syncActiveWeapon(evt) {
       if (activeIDs.length === 1) {
         var a = activeIDs[0];
         update["active_weapon_name"] = v["repeating_weapons_" + a + "_weapon_name"] || "";
-        update["active_weapon_base_dmg"] = parseInt(v["repeating_weapons_" + a + "_weapon_base_dmg"], 10) || 0;
+        update["active_weapon_base_dmg"] = v["repeating_weapons_" + a + "_weapon_base_dmg"] || "0";
         update["active_weapon_rank"] = parseInt(v["repeating_weapons_" + a + "_weapon_rank"], 10) || 0;
         update["active_weapon_attack_bonus_flat"] = parseInt(v["repeating_weapons_" + a + "_weapon_attack_bonus_flat"], 10) || 0;
+        update["weapon_effects_base"] = v["repeating_weapons_" + a + "_weapon_effects_base"] || "";
       } else {
         update["active_weapon_name"] = "";
-        update["active_weapon_base_dmg"] = 0;
+        update["active_weapon_base_dmg"] = "0";
         update["active_weapon_rank"] = 0;
         update["active_weapon_attack_bonus_flat"] = 0;
+        update["weapon_effects_base"] = "";
       }
 
       setAttrs(update);
@@ -3331,9 +3341,9 @@ on("change:repeating_skills:skill_stat_add remove:repeating_skills sheet:opened"
 
 // ===== Skills: if "Add Active Weapon" checked, copy active weapon dmg + hit bonus =====
 function syncSkillWeaponAdds() {
-  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat"], function(root) {
-    var awDmg = parseInt(root.active_weapon_base_dmg, 10);
-    if (isNaN(awDmg)) awDmg = 0;
+  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat", "weapon_effects_base"], function(root) {
+    var awDmg = root.active_weapon_base_dmg || "0";
+    var awFX  = root.weapon_effects_base || "";
 
     var awHit = parseInt(root.active_weapon_attack_bonus_flat, 10);
     if (isNaN(awHit)) awHit = 0;
@@ -3347,7 +3357,8 @@ function syncSkillWeaponAdds() {
         fields.push(
           "repeating_skills_" + id + "_skill_uses_weapon",
           "repeating_skills_" + id + "_skill_weapon_add",
-          "repeating_skills_" + id + "_skill_weapon_hit_bonus"
+          "repeating_skills_" + id + "_skill_weapon_hit_bonus",
+          "repeating_skills_" + id + "_skill_weapon_effects"
         );
       }
 
@@ -3357,11 +3368,12 @@ function syncSkillWeaponAdds() {
           var rid = ids[j];
           var useW = String(v["repeating_skills_" + rid + "_skill_uses_weapon"] || "") === "1";
 
-          var desiredDmg = useW ? awDmg : 0;
+          var desiredDmg = useW ? awDmg : "0";
           var desiredHit = useW ? awHit : 0;
+          var desiredFX  = useW ? awFX  : "";
 
-          var currentDmg = parseInt(v["repeating_skills_" + rid + "_skill_weapon_add"], 10);
-          if (isNaN(currentDmg)) currentDmg = 0;
+          var currentDmg = v["repeating_skills_" + rid + "_skill_weapon_add"] || "0";
+          var currentFX  = v["repeating_skills_" + rid + "_skill_weapon_effects"] || "";
 
           var currentHit = parseInt(v["repeating_skills_" + rid + "_skill_weapon_hit_bonus"], 10);
           if (isNaN(currentHit)) currentHit = 0;
@@ -3372,6 +3384,9 @@ function syncSkillWeaponAdds() {
           if (currentHit !== desiredHit) {
             update["repeating_skills_" + rid + "_skill_weapon_hit_bonus"] = desiredHit;
           }
+          if (currentFX !== desiredFX) {
+            update["repeating_skills_" + rid + "_skill_weapon_effects"] = desiredFX;
+          }
         }
 
         if (Object.keys(update).length) setAttrs(update);
@@ -3381,7 +3396,7 @@ function syncSkillWeaponAdds() {
 }
 
 on(
-  "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat " +
+  "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat change:weapon_effects_base " +
   "change:repeating_skills:skill_uses_weapon remove:repeating_skills sheet:opened",
   function() {
     syncSkillWeaponAdds();
@@ -3670,9 +3685,10 @@ on("change:repeating_ultimates:ult_stat_add remove:repeating_ultimates sheet:ope
 
 // ===== Ultimates: weapon adds =====
 function syncUltWeaponAdds() {
-  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat"], function(root) {
-    var awDmg = parseInt(root.active_weapon_base_dmg, 10) || 0;
+  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat", "weapon_effects_base"], function(root) {
+    var awDmg = root.active_weapon_base_dmg || "0";
     var awHit = parseInt(root.active_weapon_attack_bonus_flat, 10) || 0;
+    var awFX  = root.weapon_effects_base || "";
     getSectionIDs("repeating_ultimates", function(ids) {
       if (!ids || !ids.length) return;
       var fields = [];
@@ -3680,7 +3696,8 @@ function syncUltWeaponAdds() {
         fields.push(
           "repeating_ultimates_" + ids[i] + "_ult_uses_weapon",
           "repeating_ultimates_" + ids[i] + "_ult_weapon_add",
-          "repeating_ultimates_" + ids[i] + "_ult_weapon_hit_bonus"
+          "repeating_ultimates_" + ids[i] + "_ult_weapon_hit_bonus",
+          "repeating_ultimates_" + ids[i] + "_ult_weapon_effects"
         );
       }
       getAttrs(fields, function(v) {
@@ -3688,12 +3705,15 @@ function syncUltWeaponAdds() {
         for (var j = 0; j < ids.length; j++) {
           var rid = ids[j];
           var useW = String(v["repeating_ultimates_" + rid + "_ult_uses_weapon"] || "") === "1";
-          var desiredDmg = useW ? awDmg : 0;
+          var desiredDmg = useW ? awDmg : "0";
           var desiredHit = useW ? awHit : 0;
-          if ((parseInt(v["repeating_ultimates_" + rid + "_ult_weapon_add"], 10) || 0) !== desiredDmg)
+          var desiredFX  = useW ? awFX  : "";
+          if ((v["repeating_ultimates_" + rid + "_ult_weapon_add"] || "0") !== desiredDmg)
             update["repeating_ultimates_" + rid + "_ult_weapon_add"] = desiredDmg;
           if ((parseInt(v["repeating_ultimates_" + rid + "_ult_weapon_hit_bonus"], 10) || 0) !== desiredHit)
             update["repeating_ultimates_" + rid + "_ult_weapon_hit_bonus"] = desiredHit;
+          if ((v["repeating_ultimates_" + rid + "_ult_weapon_effects"] || "") !== desiredFX)
+            update["repeating_ultimates_" + rid + "_ult_weapon_effects"] = desiredFX;
         }
         if (Object.keys(update).length) setAttrs(update);
       });
@@ -3702,7 +3722,7 @@ function syncUltWeaponAdds() {
 }
 
 on(
-  "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat " +
+  "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat change:weapon_effects_base " +
   "change:repeating_ultimates:ult_uses_weapon remove:repeating_ultimates sheet:opened",
   function() { syncUltWeaponAdds(); }
 );
