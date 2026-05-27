@@ -3225,6 +3225,12 @@ button.sheet-defense-btn[type="roll"]::before {
   gap: 8px;
   align-items: end;
 }
+.sheet-collapsible-grid4{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
 
 /* skill row layout */
 .sheet-collapsible-skillrow{
@@ -3993,8 +3999,8 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
 
 /* dmg */
 .sheet-weapon-summary input[name="attr_weapon_base_dmg"]{
-  width: 44px !important;
-  min-width: 44px !important;
+  width: 80px !important;
+  min-width: 80px !important;
   text-align: center !important;
 }
 
