@@ -2,13 +2,15 @@
  
  
 <!-- Sheet code -->
- 
+
+<input type="checkbox" name="attr_takeout_mode" class="sheet-takeout-toggle" value="1">
 <div class="sheet-overall-wrapper">
 <div class="sheet-character">
 <div class="sheet-header-grid" style="position: relative;">
     <!-- ABSOLUTE POSITIONED LOGO: This won't push the rows down -->
     <div style="position: absolute; left: 0; top: 0; width: 25%; text-align: center;">
-        <img src="https://i.imgur.com/ogVmOFj.png" alt="Logo" width="130">
+        <span class="sheet-mode-galv"><img src="https://files.d20.io/images/474438152/BoQ62joyuxLvkesD7kO93A/original.png" alt="Logo" width="130"></span>
+        <span class="sheet-mode-takeout"><img src="https://i.imgur.com/ogVmOFj.png" alt="Logo" width="130"></span>
     </div>
  
     <!-- Row 1 -->
@@ -87,7 +89,7 @@
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab6" value="6" />
 		<span class="sheet-tab sheet-tab6">Traits</span> <!--line -->
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab8" value="8" />
-		<span class="sheet-tab sheet-tab8">Releases</span>
+		<span class="sheet-tab sheet-tab8 sheet-mode-takeout">Releases</span>
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab99" value="99" />
 		<span class="sheet-tab sheet-tab99">Show All</span>
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab7" value="7" />
@@ -409,18 +411,18 @@
     <div class="sheet-main-stats-container">
         <!-- LEFT COLUMN: RACE -->
         <div class="sheet-stat-column">
-            <div class="sheet-sub-header">Clan Information</div>
+            <div class="sheet-sub-header"><span class="sheet-mode-galv">Race</span><span class="sheet-mode-takeout">Clan</span> Information</div>
             <div class="sheet-stat-row">
-                <div class="sheet-stat-name">Clan Name</div>
+                <div class="sheet-stat-name"><span class="sheet-mode-galv">Race</span><span class="sheet-mode-takeout">Clan</span> Name</div>
                 <div class="sheet-stat-num" style="flex:3;"><input type="text" name="attr_race_name" class="sheet-underlined"></div>
                 <div class="sheet-stat-num">Rank</div>
                 <div class="sheet-stat-num"><input type="number" name="attr_race_rank" value="1" class="sheet-underlined sheet-center"></div>
             </div>
  
-            <div class="sheet-sub-header">Clan Perks</div>
+            <div class="sheet-sub-header"><span class="sheet-mode-galv">Race</span><span class="sheet-mode-takeout">Clan</span> Perks</div>
             <textarea name="attr_race_perks" placeholder="Unique Strengths..."></textarea>
- 
-            <div class="sheet-sub-header">Clan Flaws</div>
+
+            <div class="sheet-sub-header"><span class="sheet-mode-galv">Race</span><span class="sheet-mode-takeout">Clan</span> Flaws</div>
             <textarea name="attr_race_flaws" placeholder="Unique Weaknesses..."></textarea>
         </div>
  
@@ -1653,7 +1655,7 @@
 
 
 
-<!-- RELEASES -->
+			
 <div class="sheet-section-releases">
   <div class="sheet-sub-header">Releases</div>
 
@@ -1840,17 +1842,26 @@
 
 </div>
 
-
-
 			<div class="sheet-section-settings">
   <h3 class="sheet-center">Settings</h3>
+  
   <label class="sheet-checkbox-row">
   <input type="checkbox" name="attr_uncap_stats" value="1">
   <span>Uncap Stats</span>
 </label>
 
-  <!-- Weapon library JSON goes here later -->
-  <div class="sheet-row">
+  <label class="sheet-checkbox-row">
+  <input type="checkbox" name="attr_takeout_mode" value="1">
+  <span>Takeout Mode</span>
+</label>
+
+  <div class="sheet-row sheet-margin-top-sm">
+    <button type="action" name="act_sync_json">↺ Reapply All Presets</button>
+    <div class="sheet-mini-label" style="margin-top:4px;"></div>
+  </div>
+
+  <!-- Library JSON textareas hidden — data is now baked into the sheet worker JS -->
+  <div class="sheet-row" style="display:none">
     <div class="sheet-col-1">
       <div class="sheet-sub-header">Weapon Library (JSON)</div>
       <textarea name="attr_weapon_library_json" style="height: 220px;">
@@ -2246,7 +2257,7 @@
   </div>
  
  
-  <div class="sheet-row sheet-margin-top">
+  <div class="sheet-row sheet-margin-top" style="display:none">
   <div class="sheet-col-1">
     <div class="sheet-sub-header">Shield Library (JSON)</div>
     <textarea name="attr_shield_library_json" style="height: 220px;">
@@ -2310,7 +2321,7 @@
   </div>
 </div>
 
-<div class="sheet-row">
+<div class="sheet-row" style="display:none">
   <div class="sheet-col-1">
     <div class="sheet-sub-header">Armor Library (JSON)</div>
     <textarea name="attr_armor_library_json" style="height: 220px;">
@@ -3106,6 +3117,16 @@ on("change:repeating_equipped:item_slot sheet:opened", function (evt) {
   });
 });
 
+// ===== Built-in Library Data =====
+// Weapon, shield, and armor data is stored here in the sheet code.
+// Update these constants when library data changes — no textarea editing needed.
+
+const WEAPON_LIBRARY = {"version":1,"weapons":{"greatsword":{"name":"Greatsword","category":"STR","type":"Greatsword","baseWeight":2.5,"defaultScaling":"str","ranks":{"1":{"req":{"str":4,"dex":2},"dmg":10,"acc":0,"effects":"Cleave 2"},"2":{"req":{"str":6,"dex":4},"dmg":12,"acc":0,"effects":"Cleave 4"},"3":{"req":{"str":8,"dex":6},"dmg":14,"acc":0,"effects":"Cleave 6"},"4":{"req":{"str":10,"dex":8},"dmg":16,"acc":0,"effects":"Cleave 40% or 8"},"5":{"req":{"str":12,"dex":10},"dmg":18,"acc":0,"effects":"Cleave 50% or 10"}}},"greataxe":{"name":"Greataxe","category":"STR","type":"Greataxe","baseWeight":3.5,"defaultScaling":"str","ranks":{"1":{"req":{"str":3,"dex":2},"dmg":8,"acc":0,"effects":"Shred 2"},"2":{"req":{"str":6,"dex":4},"dmg":10,"acc":0,"effects":"Shred 4"},"3":{"req":{"str":12,"dex":4},"dmg":12,"acc":0,"effects":"Shred 6"},"4":{"req":{"str":16,"dex":6},"dmg":14,"acc":0,"effects":"Shred 8"},"5":{"req":{"str":20,"dex":6},"dmg":16,"acc":0,"effects":"Shred 10"}}},"greathammer":{"name":"Greathammer","category":"STR","type":"Greathammer","baseWeight":7,"defaultScaling":"str","ranks":{"1":{"req":{"str":5,"dex":2},"dmg":12,"acc":0,"effects":"DC5 Knockdown"},"2":{"req":{"str":10,"dex":4},"dmg":14,"acc":0,"effects":"DC5 Knockdown"},"3":{"req":{"str":15,"dex":4},"dmg":16,"acc":0,"effects":"DC8 Knockdown"},"4":{"req":{"str":20,"dex":6},"dmg":18,"acc":0,"effects":"DC10 Knockdown"},"5":{"req":{"str":25,"dex":6},"dmg":20,"acc":0,"effects":"DC10 Knockdown"}}},"gauntlet":{"name":"Gauntlet","category":"STR","type":"Gauntlet","baseWeight":0.5,"notes":"Base Weight: 0.5 unless Unarmed, Unarmed is 0","defaultScaling":"str","ranks":{"1":{"req":{"str":2,"dex":2},"dmg":"3*(1d2+1)","acc":0,"effects":"1d2+1 Punches"},"2":{"req":{"str":4,"dex":4},"dmg":"4*(1d2+1)","acc":0,"effects":"1d2+1 Punches"},"3":{"req":{"str":6,"dex":4},"dmg":"5*(1d2+1)","acc":0,"effects":"1d2+1 Punches"},"4":{"req":{"str":8,"dex":6},"dmg":"5*(1d2+2)","acc":0,"effects":"1d2+2 Punches"},"5":{"req":{"str":10,"dex":6},"dmg":"6*(1d2+2)","acc":0,"effects":"1d2+2 Punches"}}},"mace":{"name":"Mace","category":"STR","type":"Mace","baseWeight":2,"defaultScaling":"str","ranks":{"1":{"req":{"str":3,"dex":2},"dmg":7,"acc":0,"effects":"Daze DC 5"},"2":{"req":{"str":5,"dex":2},"dmg":8,"acc":0,"effects":"Daze DC 8"},"3":{"req":{"str":7,"dex":2},"dmg":9,"acc":0,"effects":"Daze DC 10"},"4":{"req":{"str":9,"dex":4},"dmg":10,"acc":0,"effects":"Daze DC 10"},"5":{"req":{"str":10,"dex":4},"dmg":12,"acc":0,"effects":"Daze DC 12"}}},"sword":{"name":"Sword","category":"DEX","type":"Sword","baseWeight":0.5,"defaultScaling":"dex","ranks":{"1":{"req":{"dex":2},"dmg":5,"acc":1,"effects":"+1 ACC"},"2":{"req":{"dex":4},"dmg":6,"acc":2,"effects":"+2 ACC"},"3":{"req":{"dex":6},"dmg":7,"acc":3,"effects":"+3 ACC"},"4":{"req":{"dex":8},"dmg":8,"acc":4,"effects":"+4 ACC or 25%"},"5":{"req":{"dex":10},"dmg":9,"acc":5,"effects":"+5 ACC or 50%"}}},"hand_axe":{"name":"Hand-Axe","category":"DEX","type":"Hand-Axe","baseWeight":1,"defaultScaling":"dex","ranks":{"1":{"req":{"dex":2,"str":2},"dmg":6,"acc":0,"effects":"Cleave 2"},"2":{"req":{"dex":4,"str":3},"dmg":7,"acc":0,"effects":"Cleave 2"},"3":{"req":{"dex":6,"str":4},"dmg":8,"acc":0,"effects":"Cleave 3"},"4":{"req":{"dex":8,"str":6},"dmg":9,"acc":0,"effects":"Cleave 4 or 20%"},"5":{"req":{"dex":10,"str":8},"dmg":10,"acc":0,"effects":"Cleave 5 or 30%"}}},"dagger":{"name":"Dagger","category":"DEX","type":"Dagger","baseWeight":0,"notes":"CRT lowers crit requirement. When dual wielded, crits begin at 3x.","defaultScaling":"dex","ranks":{"1":{"req":{"dex":2},"dmg":4,"acc":0,"effects":"+1 CRT"},"2":{"req":{"dex":3},"dmg":5,"acc":0,"effects":"+1 CRT"},"3":{"req":{"dex":4},"dmg":6,"acc":0,"effects":"+2 CRT"},"4":{"req":{"dex":5},"dmg":7,"acc":0,"effects":"+2 CRT"},"5":{"req":{"dex":6},"dmg":8,"acc":0,"effects":"+3 CRT"}}},"whip":{"name":"Whip","category":"DEX","type":"Whip","baseWeight":1,"defaultScaling":"dex","ranks":{"1":{"req":{"dex":3},"dmg":4,"acc":0,"effects":"DC5 Bleed"},"2":{"req":{"dex":6},"dmg":6,"acc":0,"effects":"DC10 Bleed"},"3":{"req":{"dex":12},"dmg":8,"acc":0,"effects":"DC10 Bleed"},"4":{"req":{"dex":18},"dmg":10,"acc":0,"effects":"DC10 Bleed"},"5":{"req":{"dex":22},"dmg":10,"acc":0,"effects":"DC12 Bleed"}}},"polearm":{"name":"Polearm","category":"DEX","type":"Polearm","baseWeight":2,"notes":"Works with Bucklers/Kite Shields.","defaultScaling":"dex","ranks":{"1":{"req":{"dex":3,"str":2},"dmg":8,"acc":0,"effects":"2 Square Range"},"2":{"req":{"dex":6,"str":4},"dmg":10,"acc":0,"effects":"2 Square Range"},"3":{"req":{"dex":12,"str":4},"dmg":12,"acc":0,"effects":"2 Square Range"},"4":{"req":{"dex":16,"str":6},"dmg":14,"acc":0,"effects":"2 Square Range"},"5":{"req":{"dex":20,"str":6},"dmg":16,"acc":0,"effects":"2 Square Range"}}},"focus_1h":{"name":"Focus (1 Handed)","category":"INT","type":"Focus","baseWeight":0.5,"defaultScaling":"spl","ranks":{"1":{"req":{"int":2},"dmg":3,"acc":1,"effects":"+1 Mag. ACC"},"2":{"req":{"int":4},"dmg":6,"acc":1,"effects":"+1 Mag. ACC"},"3":{"req":{"int":8},"dmg":9,"acc":2,"effects":"+2 Mag. ACC"},"4":{"req":{"int":12},"dmg":12,"acc":3,"effects":"+3 Mag. ACC"},"5":{"req":{"int":16},"dmg":16,"acc":4,"effects":"+4 Mag. ACC"}}},"staff_2h":{"name":"Staff (2 Handed)","category":"INT","type":"Staff","baseWeight":1,"defaultScaling":"spl","ranks":{"1":{"req":{"int":3},"dmg":6,"acc":0,"effects":""},"2":{"req":{"int":6},"dmg":8,"acc":0,"effects":""},"3":{"req":{"int":12},"dmg":12,"acc":0,"effects":""},"4":{"req":{"int":16},"dmg":16,"acc":0,"effects":""},"5":{"req":{"int":20},"dmg":20,"acc":0,"effects":""}}},"prayer_beads_1h":{"name":"Prayer Beads (1 Handed)","category":"INT","type":"Prayer Beads","baseWeight":0,"defaultScaling":"spl","ranks":{"1":{"req":{"int":2},"dmg":4,"acc":0,"effects":"+3 Healing"},"2":{"req":{"int":4},"dmg":6,"acc":0,"effects":"+5 Healing"},"3":{"req":{"int":8},"dmg":8,"acc":0,"effects":"+5 Healing"},"4":{"req":{"int":12},"dmg":10,"acc":0,"effects":"+10 Healing"},"5":{"req":{"int":16},"dmg":12,"acc":0,"effects":"+10 Healing"}}},"spellbook_varies":{"name":"Spellbook (Varies)","category":"INT","type":"Spellbook","baseWeight":null,"defaultScaling":"spl","ranks":{"1":{"req":{"int":4},"dmg":3,"acc":0,"effects":"+1 Skill","weight":0,"notes":"1 Handed"},"2":{"req":{"int":8},"dmg":5,"acc":0,"effects":"+2 Skill","weight":0.5,"notes":"1 Handed"},"3":{"req":{"int":16},"dmg":7,"acc":0,"effects":"+3 Skill","weight":1,"notes":"1 Handed"},"4":{"req":{"int":20},"dmg":9,"acc":0,"effects":"+3 Skill","weight":1,"notes":"2 Handed"},"5":{"req":{"int":24},"dmg":10,"acc":0,"effects":"+4 Skill","weight":1.5,"notes":"2 Handed"}}},"consumable_scroll":{"name":"Consumable Scroll","category":"INT","type":"Consumable Scroll","baseWeight":0,"defaultScaling":"spl","ranks":{"1":{"req":{"int":2},"dmg":3,"acc":0,"effects":"2 Uses"},"2":{"req":{"int":3},"dmg":6,"acc":1,"effects":"2 Uses | +1 Mag. ACC"},"3":{"req":{"int":4},"dmg":9,"acc":2,"effects":"3 Uses | +2 Mag. ACC"},"4":{"req":{"int":5},"dmg":12,"acc":2,"effects":"3 Uses | +2 Mag. ACC"},"5":{"req":{"int":6},"dmg":16,"acc":3,"effects":"4 Uses | +3 Mag. ACC"}}},"shortbow":{"name":"Shortbow","category":"RANGED","type":"Shortbow","baseWeight":0.5,"defaultScaling":"dex","ranks":{"1":{"req":{"dex":3,"str":2},"dmg":"3*1d2","acc":0,"effects":"10 Range | 1d2 Multiplier"},"2":{"req":{"dex":6,"str":4},"dmg":"4*1d2","acc":0,"effects":"10 Range | 1d2 Multiplier"},"3":{"req":{"dex":9,"str":6},"dmg":"4*1d3","acc":0,"effects":"15 Range | 1d3 Multiplier"},"4":{"req":{"dex":12,"str":8},"dmg":"5*1d3","acc":0,"effects":"15 Range | 1d3 Multiplier"},"5":{"req":{"dex":16,"str":10},"dmg":"6*(1d2+1)","acc":0,"effects":"20 Range | 1d2+1 Multiplier"}}},"longbow":{"name":"Longbow","category":"RANGED","type":"Longbow","baseWeight":1.5,"defaultScaling":"custom","notes":"STR OR DEX scaling (player choice).","ranks":{"1":{"req":{"dex":5,"str":5},"dmg":6,"acc":0,"effects":"15 Range"},"2":{"req":{"dex":7,"str":7},"dmg":9,"acc":0,"effects":"15 Range | CRT +1"},"3":{"req":{"dex":9,"str":9},"dmg":12,"acc":0,"effects":"20 Range | CRT +1"},"4":{"req":{"dex":11,"str":11},"dmg":15,"acc":0,"effects":"20 Range | CRT +2"},"5":{"req":{"dex":13,"str":13},"dmg":18,"acc":0,"effects":"25 Range | CRT +3"}}},"crossbow":{"name":"Crossbow","category":"RANGED","type":"Crossbow","baseWeight":1.5,"defaultScaling":"dex","ranks":{"1":{"req":{"str":3,"dex":4},"dmg":5,"acc":0,"effects":"15 Range | Cleave 2"},"2":{"req":{"str":5,"dex":8},"dmg":8,"acc":0,"effects":"15 Range | Cleave 4"},"3":{"req":{"str":7,"dex":12},"dmg":11,"acc":0,"effects":"20 Range | Cleave 6"},"4":{"req":{"str":9,"dex":16},"dmg":14,"acc":0,"effects":"20 Range | Cleave 8 or 30%"},"5":{"req":{"str":11,"dex":20},"dmg":17,"acc":0,"effects":"25 Range | Cleave 10 or 40% Cleave"}}},"throwing_daggers":{"name":"Throwing Daggers","category":"RANGED","type":"Throwing Daggers","baseWeight":0,"defaultScaling":"dex","ranks":{"1":{"req":{"dex":3},"dmg":"2*1d3","acc":0,"effects":"1d3 Daggers"},"2":{"req":{"dex":6},"dmg":"3*(1d2+1)","acc":0,"effects":"1d2+1 Daggers"},"3":{"req":{"dex":12},"dmg":"4*(1d2+1)","acc":0,"effects":"1d2+1 Daggers"},"4":{"req":{"dex":16},"dmg":"5*(1d3+1)","acc":0,"effects":"1d3+1 Daggers"},"5":{"req":{"dex":20},"dmg":"6*(1d3+1)","acc":0,"effects":"1d2+2 Daggers"}}},"chakrams":{"name":"Chakrams","category":"RANGED","type":"Chakrams","baseWeight":0.5,"defaultScaling":"dex","ranks":{"1":{"req":{"dex":4},"dmg":5,"acc":0,"effects":"DC10 Bleed"},"2":{"req":{"dex":8},"dmg":8,"acc":0,"effects":"DC10 Bleed"},"3":{"req":{"dex":12},"dmg":11,"acc":0,"effects":"DC12 Bleed"},"4":{"req":{"dex":16},"dmg":14,"acc":0,"effects":"DC12 Bleed"},"5":{"req":{"dex":20},"dmg":17,"acc":0,"effects":"DC14 Bleed"}}},"throwing_axe":{"name":"Throwing Axe","category":"RANGED","type":"Throwing Axe","baseWeight":1.5,"defaultScaling":"str","ranks":{"1":{"req":{"str":4},"dmg":"4*1d2","acc":0,"effects":"1d2 Axes"},"2":{"req":{"str":8},"dmg":"5*1d3","acc":0,"effects":"1d2 Axes"},"3":{"req":{"str":12},"dmg":"6*1d3","acc":0,"effects":"1d3 Axes"},"4":{"req":{"str":16},"dmg":"7*1d3","acc":0,"effects":"1d3 Axes"},"5":{"req":{"str":20},"dmg":"8*(1d2+1)","acc":0,"effects":"1d2+1"}}},"handgun":{"name":"Handgun","category":"GUNS","type":"Handgun","baseWeight":1,"defaultScaling":"none","notes":"Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.","ranks":{"1":{"req":{"dex":5},"dmg":12,"acc":0,"effects":"10 Range | 3 Ammo | Movement Reload"},"2":{"req":{"dex":5},"dmg":14,"acc":0,"effects":"10 Range | 3 Ammo | Movement Reload | [Mod]"},"3":{"req":{"dex":7},"dmg":16,"acc":0,"effects":"10 Range | 3 Ammo | Movement Reload | [Mod 1] | [Mod 2]"},"4":{"req":{"dex":7},"dmg":18,"acc":0,"effects":"10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3]"},"5":{"req":{"dex":9},"dmg":20,"acc":0,"effects":"10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]"}}},"shotgun":{"name":"Shotgun","category":"GUNS","type":"Shotgun","baseWeight":2,"defaultScaling":"none","notes":"Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.","ranks":{"1":{"req":{"dex":5,"str":5},"dmg":21,"acc":0,"effects":"3 Range | 2 Square Spread | 2 Ammo"},"2":{"req":{"dex":5,"str":5},"dmg":23,"acc":0,"effects":"3 Range | 2 Square Spread | 2 Ammo | [Mod 1]"},"3":{"req":{"dex":7,"str":7},"dmg":25,"acc":0,"effects":"3 Range | 2 Square Spread | 2 Ammo | [Mod 1] | [Mod 2]"},"4":{"req":{"dex":7,"str":7},"dmg":27,"acc":0,"effects":"3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3]"},"5":{"req":{"dex":9,"str":9},"dmg":30,"acc":0,"effects":"3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]"}}},"submachine_gun":{"name":"Submachine Gun","category":"GUNS","type":"Submachine Gun","baseWeight":1.5,"defaultScaling":"none","notes":"Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.","ranks":{"1":{"req":{"dex":5,"fin":5},"dmg":"6*1d3","acc":0,"effects":"8 Range | 1d3 Shots | 4 Ammo"},"2":{"req":{"dex":5,"fin":5},"dmg":"7*1d3","acc":0,"effects":"8 Range | 1d3 Shots | 4 Ammo | [1 Mod]"},"3":{"req":{"dex":7,"fin":7},"dmg":"8*(1d2+1)","acc":0,"effects":"8 Range | 1d2+1 Shots | 5 Ammo | [2 Mods]"},"4":{"req":{"dex":7,"fin":7},"dmg":"9*(1d2+1)","acc":0,"effects":"8 Range | 1d2+1 Shots | 6 Ammo | [3 Mods]"},"5":{"req":{"dex":9,"fin":9},"dmg":"10*(1d2+1)","acc":0,"effects":"8 Range | 1d2+1 Shots | 7 Ammo | [4 Mods]"}}},"rifle":{"name":"Rifle","category":"GUNS","type":"Rifle","baseWeight":2,"defaultScaling":"none","notes":"Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.","ranks":{"1":{"req":{"fin":5,"str":5},"dmg":17,"acc":0,"effects":"15 Range | 2 Ammo"},"2":{"req":{"fin":5,"str":5},"dmg":19,"acc":0,"effects":"15 Range | x2.5 Crit | 2 Ammo | [1 Mod]"},"3":{"req":{"fin":7,"str":7},"dmg":21,"acc":0,"effects":"15 Range | x2.5 Crit | 3 Ammo | [2 Mods]"},"4":{"req":{"fin":7,"str":7},"dmg":23,"acc":0,"effects":"15 Range | x2.5 Crit | 3 Ammo | [3 Mods]"},"5":{"req":{"fin":9,"str":9},"dmg":25,"acc":0,"effects":"15 Range | x3 Crit | 4 Ammo | [4 Mods]"}}}}};
+
+const SHIELD_LIBRARY = {"version":1,"shields":{"buckler":{"name":"Buckler","baseWeight":0.5,"ranks":{"1":{"res":3,"con":0,"req":{"str":0},"effects":"19 Parry\nParry: Deal Minicrit (1.5x) Clash. Negates DMG."},"2":{"res":5,"con":0,"req":{"str":0},"effects":"19 Parry"},"3":{"res":7,"con":0,"req":{"str":0},"effects":"18 Parry"},"4":{"res":9,"con":0,"req":{"str":0},"effects":"18 Parry"},"5":{"res":10,"con":0,"req":{"str":0},"effects":"17 Parry"}}},"kite_shield":{"name":"Kite Shield","baseWeight":1.5,"ranks":{"1":{"res":6,"con":0,"req":{"str":2},"effects":"19 Trade\nTrade: Take DMG and Block, deal Clash DMG."},"2":{"res":8,"con":0,"req":{"str":3},"effects":"18 Trade"},"3":{"res":10,"con":0,"req":{"str":4},"effects":"17 Trade"},"4":{"res":12,"con":0,"req":{"str":5},"effects":"16 Trade"},"5":{"res":15,"con":0,"req":{"str":6},"effects":"15 Trade"}}},"tower_shield":{"name":"Tower Shield","baseWeight":6,"ranks":{"1":{"res":8,"con":0,"req":{"str":6},"effects":"19 Bash\nBash: Take DMG and Block. Deal Full RES as DMG. Dazes on Crit."},"2":{"res":12,"con":0,"req":{"str":8},"effects":"19 Bash"},"3":{"res":16,"con":0,"req":{"str":10},"effects":"18 Bash"},"4":{"res":20,"con":0,"req":{"str":12},"effects":"18 Bash"},"5":{"res":24,"con":0,"req":{"str":14},"effects":"17 Bash"}}}}};
+
+const ARMOR_LIBRARY = {"version":1,"armors":{"clothing":{"name":"Clothing","class":"Light","baseWeight":0,"ranks":{"1":{"effects":"1 RES | +1 EVA | +1 MOV"},"2":{"effects":"2 RES | +2 EVA | +2 MOV"},"3":{"effects":"4 RES | 2 CON | +3 EVA | +3 MOV"},"4":{"effects":"6 RES | 4 CON | +4 EVA | +4 MOV"},"5":{"effects":"8 RES | 6 CON | +50% (Base) EVA or +5 | +5 MOV"}}},"gambeson":{"name":"Gambeson","class":"Light","baseWeight":1,"ranks":{"1":{"effects":"4 RES | +1 MOV"},"2":{"effects":"6 RES | +1 MOV"},"3":{"effects":"8 RES | 4 CON | +2 MOV | +2 EVA"},"4":{"effects":"10 RES | 6 CON | +2 MOV | +2 EVA"},"5":{"effects":"12 RES | 8 CON | +3 MOV | +3 EVA"}}},"chainmail":{"name":"Chainmail","class":"Medium","baseWeight":6,"ranks":{"1":{"effects":"5 RES"},"2":{"effects":"7 RES | 5 CON"},"3":{"effects":"10 RES | 7 CON"},"4":{"effects":"12 RES | 10 CON"},"5":{"effects":"14 RES | 12 CON"}}},"half-plate":{"name":"Half-Plate","class":"Medium","baseWeight":9.5,"ranks":{"1":{"effects":"7 RES | -2 EVA"},"2":{"effects":"9 RES | 7 CON | -2 EVA"},"3":{"effects":"12 RES | 9 CON | -1 EVA"},"4":{"effects":"14 RES | 12 CON | -1 EVA"},"5":{"effects":"16 RES | 14 CON"}}},"full-plate":{"name":"Full-Plate","class":"Heavy","baseWeight":10,"ranks":{"1":{"effects":"9 RES | -4 EVA"},"2":{"effects":"11 RES | 9 CON | -4 EVA"},"3":{"effects":"14 RES | 11 CON | -3 EVA"},"4":{"effects":"16 RES | 14 CON | -3 EVA"},"5":{"effects":"18 RES | 16 CON | -2 EVA"}}}}};
+
 // ===== Armor Library (Equipped tab helper) =====
 on(
   "change:repeating_equipped:item_armor_preset change:repeating_equipped:item_rank_mode change:repeating_equipped:item_slot sheet:opened",
@@ -3116,7 +3137,6 @@ on(
 
     getAttrs(
       [
-        "armor_library_json",
         `${prefix}_item_slot`,
         `${prefix}_item_armor_preset`,
         `${prefix}_item_rank_mode`
@@ -3134,7 +3154,7 @@ on(
         // RankMode is "R1".."R5" -> "1".."5"
         const rank = String(rankMode).replace(/^R/, "");
 
-        const lib = safeParseJSON(v.armor_library_json);
+        const lib = ARMOR_LIBRARY;
         if (!lib || !lib.armors || !lib.armors[preset]) return;
 
         const armor = lib.armors[preset];
@@ -3179,7 +3199,6 @@ on(
 
     getAttrs(
       [
-        "weapon_library_json",
         `${prefix}_weapon_preset`,
         `${prefix}_weapon_rank`,
       ],
@@ -3189,7 +3208,7 @@ on(
 
         if (preset === "custom") return;
 
-        const lib = safeParseJSON(v.weapon_library_json);
+        const lib = WEAPON_LIBRARY;
         if (!lib || !lib.weapons || !lib.weapons[preset]) {
           // If the library isn't loaded yet, do nothing (prevents overwriting)
           return;
@@ -3239,7 +3258,6 @@ on(
 
     getAttrs(
       [
-        "shield_library_json",
         `${prefix}_shield_preset`,
         `${prefix}_shield_rank`
       ],
@@ -3249,7 +3267,7 @@ on(
 
         if (preset === "custom") return;
 
-        const lib = safeParseJSON(v.shield_library_json);
+        const lib = SHIELD_LIBRARY;
         if (!lib || !lib.shields || !lib.shields[preset]) return;
 
         const shield = lib.shields[preset];
@@ -4031,23 +4049,22 @@ on("change:repeating_equipped:item_rank_mode change:repeating_equipped:item_rank
   syncEquippedRankDisplay();
 });
 
-// Release Formula — resolve aliases then evaluate the arithmetic against real stat
-// values so the roll shows "1d20+5" instead of "1d20+10/2".
-// Falls back to leaving dice-notation expressions (kh1 etc.) as-is.
+// ===== Release Formula Workers =====
+// Resolves stat aliases ("wil", "wil/2", etc.) into numeric expressions
+// so the roll shows the actual value. Dice notation (kh1 etc.) is left as-is.
 const RELEASE_STAT_FIELDS = [
   "willpower","wisdom","finesse","vitality","reflex","strength",
   "dexterity","intelligence","charisma","agility","resistance","constitution",
   "acc","macc","eva","mov","spl","str_atk","dex_atk","hp","mp","icw","ecw"
 ];
 function resolveReleaseExpr(expr, v) {
-  // Substitute real values for every @{attr} token
   const s = expr.replace(/@\{([^}]+)\}/g, (_, name) => parseFloat(v[name] || 0));
-  // If letters or braces remain it's dice notation — leave it for Roll20 to handle
   if (/[a-zA-Z{}\[\]]/.test(s)) return expr;
   try { return String(Math.floor(Function('"use strict";return(' + s + ')')())); }
   catch(e) { return expr; }
 }
 
+// Change handlers — repeating rel sections
 on("change:repeating_rel1:release_formula", (eventInfo) => {
   const expr = normalizeExpr((eventInfo.newValue || "").trim()) || "0";
   getAttrs(RELEASE_STAT_FIELDS, (v) => {
@@ -4067,7 +4084,7 @@ on("change:repeating_rel3:release_formula", (eventInfo) => {
   });
 });
 
-// Change handlers for the 7 hardcoded Rank 1 defaults
+// Change handlers — 7 hardcoded Rank 1 defaults
 const R1_STATICS = ["fire","water","wind","earth","lightning","yin","yang"];
 R1_STATICS.forEach(rel => {
   on(`change:rel1_${rel}_formula`, (eventInfo) => {
@@ -4078,9 +4095,8 @@ R1_STATICS.forEach(rel => {
   });
 });
 
-// Rebuild all release exprs on sheet open AND whenever a stat changes.
+// Rebuild all release exprs on sheet open and whenever a relevant stat changes
 function rebuildAllReleaseExprs() {
-  // Repeating sections (Rank 1 extras, Rank 2, Rank 3)
   ["repeating_rel1", "repeating_rel2", "repeating_rel3"].forEach(section => {
     getSectionIDs(section, (ids) => {
       if (!ids.length) return;
@@ -4094,7 +4110,6 @@ function rebuildAllReleaseExprs() {
       });
     });
   });
-  // Hardcoded Rank 1 defaults
   getAttrs([...R1_STATICS.map(r => `rel1_${r}_formula`), ...RELEASE_STAT_FIELDS], (v) => {
     const out = {};
     R1_STATICS.forEach(r => {
@@ -4110,7 +4125,105 @@ on("change:willpower change:wisdom change:finesse change:vitality change:reflex 
    "change:agility change:resistance change:constitution change:acc change:macc " +
    "change:eva change:mov change:spl", rebuildAllReleaseExprs);
 
+// ===== Reapply All Presets =====
+// Iterates every weapon, shield, and armor row and re-reads its preset
+// from the built-in library constants so stats stay current after a sheet update.
+on("clicked:sync_json", function() {
+  // Weapons
+  getSectionIDs("repeating_weapons", function(ids) {
+    if (!ids.length) return;
+    var fields = [];
+    ids.forEach(function(id) {
+      fields.push("repeating_weapons_" + id + "_weapon_preset",
+                  "repeating_weapons_" + id + "_weapon_rank");
+    });
+    getAttrs(fields, function(v) {
+      var update = {};
+      ids.forEach(function(id) {
+        var pre = "repeating_weapons_" + id;
+        var preset = (v[pre + "_weapon_preset"] || "custom").toLowerCase();
+        var rank = String(v[pre + "_weapon_rank"] || "1");
+        if (preset === "custom") return;
+        var w = WEAPON_LIBRARY.weapons && WEAPON_LIBRARY.weapons[preset];
+        if (!w) return;
+        var r = w.ranks && w.ranks[rank];
+        if (!r) return;
+        update[pre + "_weapon_name"]              = w.name || preset;
+        update[pre + "_weapon_type"]              = w.type || w.category || "";
+        update[pre + "_weapon_weight"]            = r.weight != null ? r.weight : (w.baseWeight != null ? w.baseWeight : 0);
+        update[pre + "_weapon_base_dmg"]          = r.dmg != null ? r.dmg : 0;
+        update[pre + "_weapon_attack_bonus_flat"] = r.acc != null ? r.acc : 0;
+        update[pre + "_weapon_effects_base"]      = r.effects || "";
+        update[pre + "_weapon_effects_alt"]       = (r.alts && r.alts.length) ? r.alts.map(function(a){return a.label;}).join(" / ") : "";
+        update[pre + "_weapon_req_text"]          = fmtReq(r.req);
+        if (w.defaultScaling) update[pre + "_weapon_scaling_type"] = w.defaultScaling;
+      });
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  });
+
+  // Shields
+  getSectionIDs("repeating_shields", function(ids) {
+    if (!ids.length) return;
+    var fields = [];
+    ids.forEach(function(id) {
+      fields.push("repeating_shields_" + id + "_shield_preset",
+                  "repeating_shields_" + id + "_shield_rank");
+    });
+    getAttrs(fields, function(v) {
+      var update = {};
+      ids.forEach(function(id) {
+        var pre = "repeating_shields_" + id;
+        var preset = (v[pre + "_shield_preset"] || "custom").toLowerCase();
+        var rank = String(v[pre + "_shield_rank"] || "1");
+        if (preset === "custom") return;
+        var s = SHIELD_LIBRARY.shields && SHIELD_LIBRARY.shields[preset];
+        if (!s) return;
+        var r = s.ranks && s.ranks[rank];
+        if (!r) return;
+        update[pre + "_shield_name"]      = s.name || preset;
+        update[pre + "_shield_weight"]    = r.weight != null ? r.weight : (s.baseWeight != null ? s.baseWeight : 0);
+        update[pre + "_shield_res_bonus"] = r.res != null ? r.res : 0;
+        update[pre + "_shield_con_bonus"] = r.con != null ? r.con : 0;
+        update[pre + "_shield_req_text"]  = r.req ? fmtReq(r.req) : "";
+        update[pre + "_shield_effect"]    = r.effects || "";
+        update[pre + "_shield_skill_desc"]= r.skill || "";
+      });
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  });
+
+  // Armor (Equipped rows with slot=Armor)
+  getSectionIDs("repeating_equipped", function(ids) {
+    if (!ids.length) return;
+    var fields = [];
+    ids.forEach(function(id) {
+      fields.push("repeating_equipped_" + id + "_item_slot",
+                  "repeating_equipped_" + id + "_item_armor_preset",
+                  "repeating_equipped_" + id + "_item_rank_mode");
+    });
+    getAttrs(fields, function(v) {
+      var update = {};
+      ids.forEach(function(id) {
+        var pre = "repeating_equipped_" + id;
+        if ((v[pre + "_item_slot"] || "Other") !== "Armor") return;
+        var preset = (v[pre + "_item_armor_preset"] || "custom").toLowerCase();
+        var rankMode = v[pre + "_item_rank_mode"] || "R1";
+        if (preset === "custom" || rankMode === "Custom") return;
+        var rank = String(rankMode).replace(/^R/, "");
+        var a = ARMOR_LIBRARY.armors && ARMOR_LIBRARY.armors[preset];
+        if (!a) return;
+        var r = a.ranks && a.ranks[rank];
+        if (!r) return;
+        update[pre + "_item_name"]   = a.name || preset;
+        update[pre + "_item_weight"] = r.weight != null ? r.weight : (a.baseWeight != null ? a.baseWeight : 0);
+        update[pre + "_item_stats"]  = r.effects || "";
+      });
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  });
+});
+
 
 </script>
  
-
