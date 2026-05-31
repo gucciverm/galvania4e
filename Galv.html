@@ -8,7 +8,7 @@
 <div class="sheet-header-grid" style="position: relative;">
     <!-- ABSOLUTE POSITIONED LOGO: This won't push the rows down -->
     <div style="position: absolute; left: 0; top: 0; width: 25%; text-align: center;">
-        <img src="https://files.d20.io/images/474438152/BoQ62joyuxLvkesD7kO93A/original.png" alt="Logo" width="130">
+        <img src="https://i.imgur.com/ogVmOFj.png" alt="Logo" width="130">
     </div>
  
     <!-- Row 1 -->
@@ -86,6 +86,8 @@
 		<span class="sheet-tab sheet-tab5">Equipment</span> <!--line -->
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab6" value="6" />
 		<span class="sheet-tab sheet-tab6">Traits</span> <!--line -->
+		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab8" value="8" />
+		<span class="sheet-tab sheet-tab8">Releases</span>
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab99" value="99" />
 		<span class="sheet-tab sheet-tab99">Show All</span>
 		    <input type="radio" name="attr_tab" class="sheet-tab sheet-tab7" value="7" />
@@ -407,18 +409,18 @@
     <div class="sheet-main-stats-container">
         <!-- LEFT COLUMN: RACE -->
         <div class="sheet-stat-column">
-            <div class="sheet-sub-header">Race Information</div>
+            <div class="sheet-sub-header">Clan Information</div>
             <div class="sheet-stat-row">
-                <div class="sheet-stat-name">Race Name</div>
+                <div class="sheet-stat-name">Clan Name</div>
                 <div class="sheet-stat-num" style="flex:3;"><input type="text" name="attr_race_name" class="sheet-underlined"></div>
                 <div class="sheet-stat-num">Rank</div>
                 <div class="sheet-stat-num"><input type="number" name="attr_race_rank" value="1" class="sheet-underlined sheet-center"></div>
             </div>
  
-            <div class="sheet-sub-header">Race Perks</div>
+            <div class="sheet-sub-header">Clan Perks</div>
             <textarea name="attr_race_perks" placeholder="Unique Strengths..."></textarea>
  
-            <div class="sheet-sub-header">Race Flaws</div>
+            <div class="sheet-sub-header">Clan Flaws</div>
             <textarea name="attr_race_flaws" placeholder="Unique Weaknesses..."></textarea>
         </div>
  
@@ -1651,10 +1653,197 @@
 
 
 
-			
+<!-- RELEASES -->
+<div class="sheet-section-releases">
+  <div class="sheet-sub-header">Releases</div>
+
+  <div class="sheet-releases-grid">
+
+    <!-- RANK 1 — 7 hardcoded defaults + repeating section for extras -->
+    <div class="sheet-release-column">
+      <div class="sheet-sub-header">Rank 1</div>
+
+      <!-- Fire -->
+      <div class="sheet-collapsible">
+        <input type="checkbox" class="sheet-collapse" name="attr_rel1_fire_open">
+        <div class="sheet-collapsible-summary sheet-release-summary">
+          <input type="text" name="attr_rel1_fire_name" class="sheet-underlined" value="Fire">
+          <input type="text" name="attr_rel1_fire_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…" value="wil">
+          <button type="roll" class="sheet-skill-btn" name="roll_rel1_fire"
+            value="&{template:5eDefault}{{title=@{character_name} — @{rel1_fire_name}}}{{outputall=1}}{{Roll=[[1d20 + @{rel1_fire_formula_expr}]]}}{{Effect=@{rel1_fire_desc}}}">▶</button>
+          <input type="hidden" name="attr_rel1_fire_formula_expr" value="0">
+        </div>
+        <div class="sheet-collapsible-details sheet-release-details">
+          <div class="sheet-small-label">Description</div>
+          <textarea name="attr_rel1_fire_desc" placeholder="Effect or notes"></textarea>
+        </div>
+      </div>
+
+      <!-- Water -->
+      <div class="sheet-collapsible">
+        <input type="checkbox" class="sheet-collapse" name="attr_rel1_water_open">
+        <div class="sheet-collapsible-summary sheet-release-summary">
+          <input type="text" name="attr_rel1_water_name" class="sheet-underlined" value="Water">
+          <input type="text" name="attr_rel1_water_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…" value="wis">
+          <button type="roll" class="sheet-skill-btn" name="roll_rel1_water"
+            value="&{template:5eDefault}{{title=@{character_name} — @{rel1_water_name}}}{{outputall=1}}{{Roll=[[1d20 + @{rel1_water_formula_expr}]]}}{{Effect=@{rel1_water_desc}}}">▶</button>
+          <input type="hidden" name="attr_rel1_water_formula_expr" value="0">
+        </div>
+        <div class="sheet-collapsible-details sheet-release-details">
+          <div class="sheet-small-label">Description</div>
+          <textarea name="attr_rel1_water_desc" placeholder="Effect or notes"></textarea>
+        </div>
+      </div>
+
+      <!-- Wind -->
+      <div class="sheet-collapsible">
+        <input type="checkbox" class="sheet-collapse" name="attr_rel1_wind_open">
+        <div class="sheet-collapsible-summary sheet-release-summary">
+          <input type="text" name="attr_rel1_wind_name" class="sheet-underlined" value="Wind">
+          <input type="text" name="attr_rel1_wind_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…" value="fin">
+          <button type="roll" class="sheet-skill-btn" name="roll_rel1_wind"
+            value="&{template:5eDefault}{{title=@{character_name} — @{rel1_wind_name}}}{{outputall=1}}{{Roll=[[1d20 + @{rel1_wind_formula_expr}]]}}{{Effect=@{rel1_wind_desc}}}">▶</button>
+          <input type="hidden" name="attr_rel1_wind_formula_expr" value="0">
+        </div>
+        <div class="sheet-collapsible-details sheet-release-details">
+          <div class="sheet-small-label">Description</div>
+          <textarea name="attr_rel1_wind_desc" placeholder="Effect or notes"></textarea>
+        </div>
+      </div>
+
+      <!-- Earth -->
+      <div class="sheet-collapsible">
+        <input type="checkbox" class="sheet-collapse" name="attr_rel1_earth_open">
+        <div class="sheet-collapsible-summary sheet-release-summary">
+          <input type="text" name="attr_rel1_earth_name" class="sheet-underlined" value="Earth">
+          <input type="text" name="attr_rel1_earth_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…" value="vit">
+          <button type="roll" class="sheet-skill-btn" name="roll_rel1_earth"
+            value="&{template:5eDefault}{{title=@{character_name} — @{rel1_earth_name}}}{{outputall=1}}{{Roll=[[1d20 + @{rel1_earth_formula_expr}]]}}{{Effect=@{rel1_earth_desc}}}">▶</button>
+          <input type="hidden" name="attr_rel1_earth_formula_expr" value="0">
+        </div>
+        <div class="sheet-collapsible-details sheet-release-details">
+          <div class="sheet-small-label">Description</div>
+          <textarea name="attr_rel1_earth_desc" placeholder="Effect or notes"></textarea>
+        </div>
+      </div>
+
+      <!-- Lightning -->
+      <div class="sheet-collapsible">
+        <input type="checkbox" class="sheet-collapse" name="attr_rel1_lightning_open">
+        <div class="sheet-collapsible-summary sheet-release-summary">
+          <input type="text" name="attr_rel1_lightning_name" class="sheet-underlined" value="Lightning">
+          <input type="text" name="attr_rel1_lightning_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…" value="ref">
+          <button type="roll" class="sheet-skill-btn" name="roll_rel1_lightning"
+            value="&{template:5eDefault}{{title=@{character_name} — @{rel1_lightning_name}}}{{outputall=1}}{{Roll=[[1d20 + @{rel1_lightning_formula_expr}]]}}{{Effect=@{rel1_lightning_desc}}}">▶</button>
+          <input type="hidden" name="attr_rel1_lightning_formula_expr" value="0">
+        </div>
+        <div class="sheet-collapsible-details sheet-release-details">
+          <div class="sheet-small-label">Description</div>
+          <textarea name="attr_rel1_lightning_desc" placeholder="Effect or notes"></textarea>
+        </div>
+      </div>
+
+      <!-- Yin -->
+      <div class="sheet-collapsible">
+        <input type="checkbox" class="sheet-collapse" name="attr_rel1_yin_open">
+        <div class="sheet-collapsible-summary sheet-release-summary">
+          <input type="text" name="attr_rel1_yin_name" class="sheet-underlined" value="Yin">
+          <input type="text" name="attr_rel1_yin_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…" value="{wis,fin}kh1">
+          <button type="roll" class="sheet-skill-btn" name="roll_rel1_yin"
+            value="&{template:5eDefault}{{title=@{character_name} — @{rel1_yin_name}}}{{outputall=1}}{{Roll=[[1d20 + @{rel1_yin_formula_expr}]]}}{{Effect=@{rel1_yin_desc}}}">▶</button>
+          <input type="hidden" name="attr_rel1_yin_formula_expr" value="0">
+        </div>
+        <div class="sheet-collapsible-details sheet-release-details">
+          <div class="sheet-small-label">Description</div>
+          <textarea name="attr_rel1_yin_desc" placeholder="Effect or notes"></textarea>
+        </div>
+      </div>
+
+      <!-- Yang -->
+      <div class="sheet-collapsible">
+        <input type="checkbox" class="sheet-collapse" name="attr_rel1_yang_open">
+        <div class="sheet-collapsible-summary sheet-release-summary">
+          <input type="text" name="attr_rel1_yang_name" class="sheet-underlined" value="Yang">
+          <input type="text" name="attr_rel1_yang_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…" value="{wil,vit}kh1">
+          <button type="roll" class="sheet-skill-btn" name="roll_rel1_yang"
+            value="&{template:5eDefault}{{title=@{character_name} — @{rel1_yang_name}}}{{outputall=1}}{{Roll=[[1d20 + @{rel1_yang_formula_expr}]]}}{{Effect=@{rel1_yang_desc}}}">▶</button>
+          <input type="hidden" name="attr_rel1_yang_formula_expr" value="0">
+        </div>
+        <div class="sheet-collapsible-details sheet-release-details">
+          <div class="sheet-small-label">Description</div>
+          <textarea name="attr_rel1_yang_desc" placeholder="Effect or notes"></textarea>
+        </div>
+      </div>
+
+      <!-- Extra custom Rank 1 releases -->
+      <fieldset class="repeating_rel1">
+        <div class="sheet-collapsible">
+          <input type="checkbox" class="sheet-collapse" name="attr_release_open">
+          <div class="sheet-collapsible-summary sheet-release-summary">
+            <input type="text" name="attr_release_name" class="sheet-underlined" placeholder="Release Name">
+            <input type="text" name="attr_release_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…">
+            <button type="roll" class="sheet-skill-btn" name="roll_release"
+              value="&{template:5eDefault}{{title=@{character_name} — @{release_name}}}{{outputall=1}}{{Roll=[[1d20 + @{release_formula_expr}]]}}{{Effect=@{release_desc}}}">▶</button>
+            <input type="hidden" name="attr_release_formula_expr" value="0">
+          </div>
+          <div class="sheet-collapsible-details sheet-release-details">
+            <div class="sheet-small-label">Description</div>
+            <textarea name="attr_release_desc" placeholder="Effect or notes"></textarea>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- RANK 2 -->
+    <div class="sheet-release-column">
+      <div class="sheet-sub-header">Rank 2</div>
+      <fieldset class="repeating_rel2">
+        <div class="sheet-collapsible">
+          <input type="checkbox" class="sheet-collapse" name="attr_release_open">
+          <div class="sheet-collapsible-summary sheet-release-summary">
+            <input type="text" name="attr_release_name" class="sheet-underlined" placeholder="Release Name">
+            <input type="text" name="attr_release_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wis, wis/2…">
+            <button type="roll" class="sheet-skill-btn" name="roll_release"
+              value="&{template:5eDefault}{{title=@{character_name} — @{release_name}}}{{outputall=1}}{{Roll=[[1d20 + @{release_formula_expr}]]}}{{Effect=@{release_desc}}}">▶</button>
+            <input type="hidden" name="attr_release_formula_expr" value="0">
+          </div>
+          <div class="sheet-collapsible-details sheet-release-details">
+            <div class="sheet-small-label">Description</div>
+            <textarea name="attr_release_desc" placeholder="Effect or notes"></textarea>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- RANK 3 -->
+    <div class="sheet-release-column">
+      <div class="sheet-sub-header">Rank 3</div>
+      <fieldset class="repeating_rel3">
+        <div class="sheet-collapsible">
+          <input type="checkbox" class="sheet-collapse" name="attr_release_open">
+          <div class="sheet-collapsible-summary sheet-release-summary">
+            <input type="text" name="attr_release_name" class="sheet-underlined" placeholder="Release Name">
+            <input type="text" name="attr_release_formula" class="sheet-underlined sheet-release-formula-inline" placeholder="wil, wil/2…">
+            <button type="roll" class="sheet-skill-btn" name="roll_release"
+              value="&{template:5eDefault}{{title=@{character_name} — @{release_name}}}{{outputall=1}}{{Roll=[[1d20 + @{release_formula_expr}]]}}{{Effect=@{release_desc}}}">▶</button>
+            <input type="hidden" name="attr_release_formula_expr" value="0">
+          </div>
+          <div class="sheet-collapsible-details sheet-release-details">
+            <div class="sheet-small-label">Description</div>
+            <textarea name="attr_release_desc" placeholder="Effect or notes"></textarea>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+  </div>
+
+</div>
+
+
+
 			<div class="sheet-section-settings">
   <h3 class="sheet-center">Settings</h3>
-  
   <label class="sheet-checkbox-row">
   <input type="checkbox" name="attr_uncap_stats" value="1">
   <span>Uncap Stats</span>
@@ -3842,6 +4031,86 @@ on("change:repeating_equipped:item_rank_mode change:repeating_equipped:item_rank
   syncEquippedRankDisplay();
 });
 
+// Release Formula — resolve aliases then evaluate the arithmetic against real stat
+// values so the roll shows "1d20+5" instead of "1d20+10/2".
+// Falls back to leaving dice-notation expressions (kh1 etc.) as-is.
+const RELEASE_STAT_FIELDS = [
+  "willpower","wisdom","finesse","vitality","reflex","strength",
+  "dexterity","intelligence","charisma","agility","resistance","constitution",
+  "acc","macc","eva","mov","spl","str_atk","dex_atk","hp","mp","icw","ecw"
+];
+function resolveReleaseExpr(expr, v) {
+  // Substitute real values for every @{attr} token
+  const s = expr.replace(/@\{([^}]+)\}/g, (_, name) => parseFloat(v[name] || 0));
+  // If letters or braces remain it's dice notation — leave it for Roll20 to handle
+  if (/[a-zA-Z{}\[\]]/.test(s)) return expr;
+  try { return String(Math.floor(Function('"use strict";return(' + s + ')')())); }
+  catch(e) { return expr; }
+}
+
+on("change:repeating_rel1:release_formula", (eventInfo) => {
+  const expr = normalizeExpr((eventInfo.newValue || "").trim()) || "0";
+  getAttrs(RELEASE_STAT_FIELDS, (v) => {
+    setAttrs({ [eventInfo.sourceAttribute.replace("_release_formula", "_release_formula_expr")]: resolveReleaseExpr(expr, v) });
+  });
+});
+on("change:repeating_rel2:release_formula", (eventInfo) => {
+  const expr = normalizeExpr((eventInfo.newValue || "").trim()) || "0";
+  getAttrs(RELEASE_STAT_FIELDS, (v) => {
+    setAttrs({ [eventInfo.sourceAttribute.replace("_release_formula", "_release_formula_expr")]: resolveReleaseExpr(expr, v) });
+  });
+});
+on("change:repeating_rel3:release_formula", (eventInfo) => {
+  const expr = normalizeExpr((eventInfo.newValue || "").trim()) || "0";
+  getAttrs(RELEASE_STAT_FIELDS, (v) => {
+    setAttrs({ [eventInfo.sourceAttribute.replace("_release_formula", "_release_formula_expr")]: resolveReleaseExpr(expr, v) });
+  });
+});
+
+// Change handlers for the 7 hardcoded Rank 1 defaults
+const R1_STATICS = ["fire","water","wind","earth","lightning","yin","yang"];
+R1_STATICS.forEach(rel => {
+  on(`change:rel1_${rel}_formula`, (eventInfo) => {
+    const expr = normalizeExpr((eventInfo.newValue || "").trim()) || "0";
+    getAttrs(RELEASE_STAT_FIELDS, (v) => {
+      setAttrs({ [`rel1_${rel}_formula_expr`]: resolveReleaseExpr(expr, v) });
+    });
+  });
+});
+
+// Rebuild all release exprs on sheet open AND whenever a stat changes.
+function rebuildAllReleaseExprs() {
+  // Repeating sections (Rank 1 extras, Rank 2, Rank 3)
+  ["repeating_rel1", "repeating_rel2", "repeating_rel3"].forEach(section => {
+    getSectionIDs(section, (ids) => {
+      if (!ids.length) return;
+      getAttrs([...ids.map(id => `${section}_${id}_release_formula`), ...RELEASE_STAT_FIELDS], (v) => {
+        const out = {};
+        ids.forEach(id => {
+          const raw = (v[`${section}_${id}_release_formula`] || "").trim();
+          out[`${section}_${id}_release_formula_expr`] = resolveReleaseExpr(normalizeExpr(raw) || "0", v);
+        });
+        setAttrs(out);
+      });
+    });
+  });
+  // Hardcoded Rank 1 defaults
+  getAttrs([...R1_STATICS.map(r => `rel1_${r}_formula`), ...RELEASE_STAT_FIELDS], (v) => {
+    const out = {};
+    R1_STATICS.forEach(r => {
+      const raw = (v[`rel1_${r}_formula`] || "").trim();
+      out[`rel1_${r}_formula_expr`] = resolveReleaseExpr(normalizeExpr(raw) || "0", v);
+    });
+    setAttrs(out);
+  });
+}
+on("sheet:opened", rebuildAllReleaseExprs);
+on("change:willpower change:wisdom change:finesse change:vitality change:reflex " +
+   "change:strength change:dexterity change:intelligence change:charisma " +
+   "change:agility change:resistance change:constitution change:acc change:macc " +
+   "change:eva change:mov change:spl", rebuildAllReleaseExprs);
+
 
 </script>
  
+
