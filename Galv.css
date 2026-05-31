@@ -222,9 +222,23 @@ input.sheet-tab6:checked ~ div.sheet-section-traits,
 input.sheet-tab7:checked ~ div.sheet-section-settings {
   display: block;
 }
- 
- input.sheet-tab99:checked ~ div[class^="sheet-section"] {
-	display: block;
+
+input.sheet-tab8:checked ~ div.sheet-section-releases {
+  display: block;
+}
+
+input.sheet-tab99:checked ~ div.sheet-section-main,
+input.sheet-tab99:checked ~ div.sheet-section-class,
+input.sheet-tab99:checked ~ div.sheet-section-combat,
+input.sheet-tab99:checked ~ div.sheet-section-spellbook,
+input.sheet-tab99:checked ~ div.sheet-section-inventory,
+input.sheet-tab99:checked ~ div.sheet-section-traits,
+input.sheet-tab99:checked ~ div.sheet-section-settings {
+  display: block;
+}
+
+input.sheet-takeout-toggle:checked ~ .sheet-overall-wrapper input.sheet-tab99:checked ~ div.sheet-section-releases {
+  display: block;
 }
  
  input.sheet-tab {
@@ -259,6 +273,7 @@ input.sheet-tab4:checked + span.sheet-tab4,
 input.sheet-tab5:checked + span.sheet-tab5,
 input.sheet-tab6:checked + span.sheet-tab6,
 input.sheet-tab7:checked + span.sheet-tab7,
+input.sheet-tab8:checked + span.sheet-tab8,
 input.sheet-tab99:checked + span.sheet-tab99 {
   background: #ab8b57;
   color: white;
@@ -3041,6 +3056,23 @@ span.sheet-title-info {
     color: white;
 }
 
+/* Settings action buttons */
+button[type="action"] {
+    background-color: #4a6486;
+    background-image: none;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+button[type="action"]:hover {
+    background-color: #5a7499;
+    background-image: none;
+}
+
 /* Hide the custom formula wrapper by default */
 .sheet-custom-formula-wrap {
     display: none;
@@ -3969,7 +4001,7 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
    ========================================================= */
 .sheet-weapon-summary{
   display: grid !important;
-  grid-template-columns: 34px 1fr 44px 58px 80px !important;
+  grid-template-columns: 34px 1fr 80px 58px 80px !important;
   gap: 6px !important;
   align-items: start !important;
 }
@@ -4046,4 +4078,184 @@ select[name="attr_item_slot"][value="Custom"] ~ .sheet-item-slot-custom { displa
   color: #555 !important;
   text-align: center !important;
   font-weight: normal !important;
+}
+
+/* ===== Takeout Mode Toggle ===== */
+
+/* Hide the root driver checkbox — it's only used for CSS state */
+input.sheet-takeout-toggle {
+  display: none !important;
+}
+
+/* Takeout-only elements hidden by default — !important beats span.sheet-tab's inline-block */
+.sheet-mode-takeout {
+  display: none !important;
+}
+
+/* Galv-only elements shown by default */
+.sheet-mode-galv {
+  display: inline;
+}
+
+/* When Takeout Mode is on: show takeout elements, hide galv elements */
+input.sheet-takeout-toggle:checked ~ .sheet-overall-wrapper .sheet-mode-takeout {
+  display: inline !important;
+}
+/* Tab spans need inline-block specifically to match the other tabs */
+input.sheet-takeout-toggle:checked ~ .sheet-overall-wrapper span.sheet-tab.sheet-mode-takeout {
+  display: inline-block !important;
+}
+input.sheet-takeout-toggle:checked ~ .sheet-overall-wrapper .sheet-mode-galv {
+  display: none;
+}
+
+/* Tab 8 input: hidden/inert by default, restored in takeout mode */
+input.sheet-tab8 {
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+}
+input.sheet-takeout-toggle:checked ~ .sheet-overall-wrapper input.sheet-tab8 {
+  width: 87px !important;
+  height: 20px !important;
+  pointer-events: auto !important;
+}
+
+/* Releases section: always hidden unless tab8 is active */
+div.sheet-section-releases {
+  display: none !important;
+}
+input.sheet-takeout-toggle:checked ~ .sheet-overall-wrapper input.sheet-tab8:checked ~ div.sheet-section-releases {
+  display: block !important;
+}
+input.sheet-takeout-toggle:checked ~ .sheet-overall-wrapper input.sheet-tab99:checked ~ div.sheet-section-releases {
+  display: block !important;
+}
+
+/* ===== Releases Tab Layout ===== */
+.sheet-releases-grid {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.sheet-release-column {
+  flex: 1;
+  min-width: 0;
+}
+
+.sheet-release-summary {
+  display: grid !important;
+  grid-template-columns: 1fr 90px auto !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.sheet-release-summary > * {
+  min-width: 0 !important;
+}
+
+.sheet-release-formula-inline {
+  width: 100% !important;
+  min-width: 0;
+  text-align: center;
+  font-size: 11px;
+  box-sizing: border-box;
+}
+
+.sheet-release-summary button,
+.sheet-release-summary > span > button,
+.sheet-release-summary > div > button {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.sheet-release-details input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+
+.sheet-release-details textarea {
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  margin-top: 2px;
+}
+
+/* ===== Dark Mode ===== */
+
+.charsheet {
+  background-color: white;
+  color: black;
+}
+
+body.sheet-darkmode input,
+body.sheet-darkmode optgroup,
+body.sheet-darkmode select,
+body.sheet-darkmode textarea,
+body.sheet-darkmode .charsheet {
+  background: #1f1f1f;
+  color: #eee;
+}
+
+body.sheet-darkmode button[type="roll"]::before {
+  color: #ab8b57;
+}
+
+body.sheet-darkmode .sheet-defense-card,
+body.sheet-darkmode .sheet-status-card,
+body.sheet-darkmode .sheet-status-card .sheet-status-toprow,
+body.sheet-darkmode .sheet-status-crt,
+body.sheet-darkmode .sheet-collapsible {
+  background: #1f1f1f;
+  color: #eee;
+  border: 1px solid #55606c;
+}
+
+body.sheet-darkmode .charsheet {
+  background-color: #1f1f1f;
+  color: #eee;
+}
+
+body.sheet-darkmode .sheet-take-btn {
+  background-color: #ab8b57;
+}
+body.sheet-darkmode .sheet-take-btn:hover {
+  background-color: #b39665;
+}
+
+body.sheet-darkmode select[name="attr_height_class"],
+body.sheet-darkmode select[name="attr_height_class"] option {
+  background: #1f1f1f;
+  color: #eee;
+}
+
+body.sheet-darkmode .btn,
+body.sheet-darkmode .btn.btn-default {
+  color: #c8c3bc;
+  text-shadow: rgba(24,26,27,.75) 0px 1px 1px;
+  background-color: #1e2021;
+  background-image: linear-gradient(#181a1b, #26292b);
+  border-color: #3e4446 #3e4446 #43494c;
+  box-shadow: rgba(24,26,27,.2) 0px 1px 0px inset, rgba(0,0,0,.05) 0px 1px 2px;
+}
+
+.sheet-rolltemplate-darkmode.sheet-rolltemplate-5eDefault .sheet-rt-card {
+  background: #1f1f1f;
+  color: #eee;
+  border: 1px solid #55606c;
+}
+.sheet-rolltemplate-darkmode.sheet-rolltemplate-5eDefault .sheet-row:nth-child(even) {
+  background: #2a2a2a;
+}
+
+body.sheet-darkmode input[name="attr_sp_total"] {
+  color: #ab8b57 !important;
+}
+
+body.sheet-darkmode input[name="attr_stat_cap"] {
+  color: rgb(227, 0, 0) !important;
 }
