@@ -642,6 +642,9 @@
   
   </div>
 
+      <!-- remembers what the preset last wrote, so custom edits are never overwritten -->
+      <input type="hidden" name="attr_shield_applied" value="">
+
       <!-- Effects -->
       <div class="sheet-small-label sheet-margin-top-sm">
         <textarea name="attr_shield_effect" placeholder="Shield Special Effects." class="sheet-collapsible-textarea"></textarea>
@@ -689,7 +692,7 @@
         
         <!-- Active (mirrors shields) -->
 <div class="sheet-small-label sheet-center">
-  <input type="checkbox" name="attr_weapon_active" value="1" title="Active Weapon">
+  <input type="checkbox" name="attr_weapon_active" value="1" title="Active Weapon (any number can be active)">
   <div class="sheet-mini-label">Active</div>
 </div>
 
@@ -732,6 +735,8 @@
       <input type="hidden" name="attr_weapon_scaling_expr" value="0">
       <input type="hidden" name="attr_weapon_tohit_expr" value="@{acc}">
       <input type="hidden" name="attr_weapon_attack_bonus_expr" value="@{acc}">
+      <!-- remembers what the preset last wrote, so custom edits are never overwritten -->
+      <input type="hidden" name="attr_weapon_applied" value="">
     </div>
 
     <!-- DETAILS -->
@@ -1024,17 +1029,17 @@
   
  <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_skill_post"
-  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+(@{skill_weapon_add})+@{skill_stat_val}]]}}{{Weapon=@{skill_weapon_effects}}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
+  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+(@{skill_weapon_add})+(@{skill_weapon_scaling})+@{skill_stat_val}]]}}{{Weapon=@{skill_weapon_effects}}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
   USE
 </button>
             <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
-              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + (@{skill_weapon_add}) + @{skill_stat_val} ]]}}{{Weapon=@{skill_weapon_effects}}}">
+              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + (@{skill_weapon_add}) + (@{skill_weapon_scaling}) + @{skill_stat_val} ]]}}{{Weapon=@{skill_weapon_effects}}}">
               CRIT
             </button>
           </div>
 
           <!-- AUTOMATION TOGGLES -->
-          <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+          <div class="sheet-collapsible-grid4 sheet-margin-top-sm">
             <div class="sheet-small-label sheet-center">
               <input type="checkbox" name="attr_skill_has_attack" value="1">
               <div class="sheet-mini-label">Attack Roll</div>
@@ -1048,6 +1053,11 @@
             <div class="sheet-small-label sheet-center">
               <input type="checkbox" name="attr_skill_uses_weapon" value="1">
               <div class="sheet-mini-label">Add Active Weapon</div>
+            </div>
+
+            <div class="sheet-small-label sheet-center">
+              <input type="checkbox" name="attr_skill_healing" value="1" title="Healing: halves the active weapons' damage (scaling and the skill's own Damage Stat are not changed)">
+              <div class="sheet-mini-label">Healing</div>
             </div>
           </div>
 
@@ -1116,6 +1126,7 @@
   </div>
 
   <input type="hidden" name="attr_skill_weapon_add" value="0">
+  <input type="hidden" name="attr_skill_weapon_scaling" value="0">
   <input type="hidden" name="attr_skill_weapon_effects" value="">
 <input type="hidden" name="attr_skill_weapon_hit_bonus" value="0">
 <input type="hidden" name="attr_skill_stat_val" value="0">
@@ -1183,17 +1194,17 @@
 
         <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_ult_use"
-            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{Effect=Attack: [[1d20+@{ult_acc_val}+@{ult_weapon_hit_bonus}]] | Damage: [[@{ult_base_dmg}+(@{ult_weapon_add})+@{ult_stat_val}]]}}{{Weapon=@{ult_weapon_effects}}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{Effect=Attack: [[1d20+@{ult_acc_val}+@{ult_weapon_hit_bonus}]] | Damage: [[@{ult_base_dmg}+(@{ult_weapon_add})+(@{ult_weapon_scaling})+@{ult_stat_val}]]}}{{Weapon=@{ult_weapon_effects}}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
             USE
           </button>
           <button type="roll" class="sheet-skill-btn" name="roll_ult_crit"
-            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{ult_base_dmg}]] * ?{Crit Scaling|2} + (@{ult_weapon_add}) + @{ult_stat_val} ]]}}{{Weapon=@{ult_weapon_effects}}}">
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{ult_base_dmg}]] * ?{Crit Scaling|2} + (@{ult_weapon_add}) + (@{ult_weapon_scaling}) + @{ult_stat_val} ]]}}{{Weapon=@{ult_weapon_effects}}}">
             CRIT
           </button>
         </div>
 
         <!-- AUTOMATION TOGGLES -->
-        <div class="sheet-collapsible-grid3 sheet-margin-top-sm">
+        <div class="sheet-collapsible-grid4 sheet-margin-top-sm">
           <div class="sheet-small-label sheet-center">
             <input type="checkbox" name="attr_ult_has_attack" value="1">
             <div class="sheet-mini-label">Attack Roll</div>
@@ -1205,6 +1216,10 @@
           <div class="sheet-small-label sheet-center">
             <input type="checkbox" name="attr_ult_uses_weapon" value="1">
             <div class="sheet-mini-label">Add Active Weapon</div>
+          </div>
+          <div class="sheet-small-label sheet-center">
+            <input type="checkbox" name="attr_ult_healing" value="1" title="Healing: halves the active weapons' damage (scaling and the ultimate's own Damage Stat are not changed)">
+            <div class="sheet-mini-label">Healing</div>
           </div>
         </div>
 
@@ -1261,6 +1276,7 @@
             </div>
           </div>
           <input type="hidden" name="attr_ult_weapon_add" value="0">
+          <input type="hidden" name="attr_ult_weapon_scaling" value="0">
           <input type="hidden" name="attr_ult_weapon_effects" value="">
           <input type="hidden" name="attr_ult_weapon_hit_bonus" value="0">
           <input type="hidden" name="attr_ult_stat_val" value="0">
@@ -1365,6 +1381,8 @@
          min="0">
   <div class="sheet-mini-label">Wgt</div>
 </div>
+            <!-- remembers what the armor preset last wrote, so custom edits are never overwritten -->
+            <input type="hidden" name="attr_item_applied" value="">
             
             <!-- Post -->
             <div class="sheet-center">
@@ -1860,539 +1878,6 @@
     <div class="sheet-mini-label" style="margin-top:4px;"></div>
   </div>
 
-  <!-- Library JSON textareas hidden — data is now baked into the sheet worker JS -->
-  <div class="sheet-row" style="display:none">
-    <div class="sheet-col-1">
-      <div class="sheet-sub-header">Weapon Library (JSON)</div>
-      <textarea name="attr_weapon_library_json" style="height: 220px;">
-          {
-  "version": 1,
-  "weapons": {
-    "greatsword": {
-      "name": "Greatsword",
-      "category": "STR",
-      "type": "Greatsword",
-      "baseWeight": 2.5,
-      "defaultScaling": "str",
-      "ranks": {
-        "1": { "req": { "str": 4, "dex": 2 }, "dmg": 10, "acc": 0, "effects": "Cleave 2" },
-        "2": { "req": { "str": 6, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Cleave 4" },
-        "3": { "req": { "str": 8, "dex": 6 }, "dmg": 14, "acc": 0, "effects": "Cleave 6" },
-        "4": { "req": { "str": 10, "dex": 8 }, "dmg": 16, "acc": 0, "effects": "Cleave 40% or 8" },
-        "5": { "req": { "str": 12, "dex": 10 }, "dmg": 18, "acc": 0, "effects": "Cleave 50% or 10" }
-      }
-    },
-
-    "greataxe": {
-      "name": "Greataxe",
-      "category": "STR",
-      "type": "Greataxe",
-      "baseWeight": 3.5,
-      "defaultScaling": "str",
-      "ranks": {
-        "1": { "req": { "str": 3, "dex": 2 }, "dmg": 8, "acc": 0, "effects": "Shred 2" },
-        "2": { "req": { "str": 6, "dex": 4 }, "dmg": 10, "acc": 0, "effects": "Shred 4" },
-        "3": { "req": { "str": 12, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Shred 6" },
-        "4": { "req": { "str": 16, "dex": 6 }, "dmg": 14, "acc": 0, "effects": "Shred 8" },
-        "5": { "req": { "str": 20, "dex": 6 }, "dmg": 16, "acc": 0, "effects": "Shred 10" }
-      }
-    },
-
-    "greathammer": {
-      "name": "Greathammer",
-      "category": "STR",
-      "type": "Greathammer",
-      "baseWeight": 7,
-      "defaultScaling": "str",
-      "ranks": {
-        "1": { "req": { "str": 5, "dex": 2 }, "dmg": 12, "acc": 0, "effects": "DC5 Knockdown" },
-        "2": { "req": { "str": 10, "dex": 4 }, "dmg": 14, "acc": 0, "effects": "DC5 Knockdown" },
-        "3": { "req": { "str": 15, "dex": 4 }, "dmg": 16, "acc": 0, "effects": "DC8 Knockdown" },
-        "4": { "req": { "str": 20, "dex": 6 }, "dmg": 18, "acc": 0, "effects": "DC10 Knockdown" },
-        "5": { "req": { "str": 25, "dex": 6 }, "dmg": 20, "acc": 0, "effects": "DC10 Knockdown" }
-      }
-    },
-
-    "gauntlet": {
-      "name": "Gauntlet",
-      "category": "STR",
-      "type": "Gauntlet",
-      "baseWeight": 0.5,
-      "notes": "Base Weight: 0.5 unless Unarmed, Unarmed is 0",
-      "defaultScaling": "str",
-      "ranks": {
-        "1": { "req": { "str": 2, "dex": 2 }, "dmg": "3*(1d2+1)", "acc": 0, "effects": "1d2+1 Punches" },
-        "2": { "req": { "str": 4, "dex": 4 }, "dmg": "4*(1d2+1)", "acc": 0, "effects": "1d2+1 Punches" },
-        "3": { "req": { "str": 6, "dex": 4 }, "dmg": "5*(1d2+1)", "acc": 0, "effects": "1d2+1 Punches" },
-        "4": { "req": { "str": 8, "dex": 6 }, "dmg": "5*(1d2+2)", "acc": 0, "effects": "1d2+2 Punches" },
-        "5": { "req": { "str": 10, "dex": 6 }, "dmg": "6*(1d2+2)", "acc": 0, "effects": "1d2+2 Punches" }
-      }
-    },
-
-    "mace": {
-      "name": "Mace",
-      "category": "STR",
-      "type": "Mace",
-      "baseWeight": 2,
-      "defaultScaling": "str",
-      "ranks": {
-        "1": { "req": { "str": 3, "dex": 2 }, "dmg": 7, "acc": 0, "effects": "Daze DC 5" },
-        "2": { "req": { "str": 5, "dex": 2 }, "dmg": 8, "acc": 0, "effects": "Daze DC 8" },
-        "3": { "req": { "str": 7, "dex": 2 }, "dmg": 9, "acc": 0, "effects": "Daze DC 10" },
-        "4": { "req": { "str": 9, "dex": 4 }, "dmg": 10, "acc": 0, "effects": "Daze DC 10" },
-        "5": { "req": { "str": 10, "dex": 4 }, "dmg": 12, "acc": 0, "effects": "Daze DC 12" }
-      }
-    },
-
-    "sword": {
-      "name": "Sword",
-      "category": "DEX",
-      "type": "Sword",
-      "baseWeight": 0.5,
-      "defaultScaling": "dex",
-      "ranks": {
-        "1": { "req": { "dex": 2 }, "dmg": 5, "acc": 1, "effects": "+1 ACC" },
-        "2": { "req": { "dex": 4 }, "dmg": 6, "acc": 2, "effects": "+2 ACC" },
-        "3": { "req": { "dex": 6 }, "dmg": 7, "acc": 3, "effects": "+3 ACC" },
-        "4": { "req": { "dex": 8 }, "dmg": 8, "acc": 4, "effects": "+4 ACC or 25%" },
-        "5": { "req": { "dex": 10 }, "dmg": 9, "acc": 5, "effects": "+5 ACC or 50%" }
-      }
-    },
-
-    "hand_axe": {
-      "name": "Hand-Axe",
-      "category": "DEX",
-      "type": "Hand-Axe",
-      "baseWeight": 1,
-      "defaultScaling": "dex",
-      "ranks": {
-        "1": { "req": { "dex": 2, "str": 2 }, "dmg": 6, "acc": 0, "effects": "Cleave 2" },
-        "2": { "req": { "dex": 4, "str": 3 }, "dmg": 7, "acc": 0, "effects": "Cleave 2" },
-        "3": { "req": { "dex": 6, "str": 4 }, "dmg": 8, "acc": 0, "effects": "Cleave 3" },
-        "4": { "req": { "dex": 8, "str": 6 }, "dmg": 9, "acc": 0, "effects": "Cleave 4 or 20%" },
-        "5": { "req": { "dex": 10, "str": 8 }, "dmg": 10, "acc": 0, "effects": "Cleave 5 or 30%" }
-      }
-    },
-
-    "dagger": {
-      "name": "Dagger",
-      "category": "DEX",
-      "type": "Dagger",
-      "baseWeight": 0,
-      "defaultScaling": "dex",
-      "notes": "CRT lowers crit requirement. When dual wielded, crits begin at 3x.",
-      "ranks": {
-        "1": { "req": { "dex": 2 }, "dmg": 4, "acc": 0, "effects": "+1 CRT" },
-        "2": { "req": { "dex": 3 }, "dmg": 5, "acc": 0, "effects": "+1 CRT" },
-        "3": { "req": { "dex": 4 }, "dmg": 6, "acc": 0, "effects": "+2 CRT" },
-        "4": { "req": { "dex": 5 }, "dmg": 7, "acc": 0, "effects": "+2 CRT" },
-        "5": { "req": { "dex": 6 }, "dmg": 8, "acc": 0, "effects": "+3 CRT" }
-      }
-    },
-
-    "whip": {
-      "name": "Whip",
-      "category": "DEX",
-      "type": "Whip",
-      "baseWeight": 1,
-      "defaultScaling": "dex",
-      "ranks": {
-        "1": { "req": { "dex": 3 }, "dmg": 4, "acc": 0, "effects": "DC5 Bleed" },
-        "2": { "req": { "dex": 6 }, "dmg": 6, "acc": 0, "effects": "DC10 Bleed" },
-        "3": { "req": { "dex": 12 }, "dmg": 8, "acc": 0, "effects": "DC10 Bleed" },
-        "4": { "req": { "dex": 18 }, "dmg": 10, "acc": 0, "effects": "DC10 Bleed" },
-        "5": { "req": { "dex": 22 }, "dmg": 10, "acc": 0, "effects": "DC12 Bleed" }
-      }
-    },
-
-    "polearm": {
-      "name": "Polearm",
-      "category": "DEX",
-      "type": "Polearm",
-      "baseWeight": 2,
-      "defaultScaling": "dex",
-      "notes": "Works with Bucklers/Kite Shields.",
-      "ranks": {
-        "1": { "req": { "dex": 3, "str": 2 }, "dmg": 8, "acc": 0, "effects": "2 Square Range" },
-        "2": { "req": { "dex": 6, "str": 4 }, "dmg": 10, "acc": 0, "effects": "2 Square Range" },
-        "3": { "req": { "dex": 12, "str": 4 }, "dmg": 12, "acc": 0, "effects": "2 Square Range" },
-        "4": { "req": { "dex": 16, "str": 6 }, "dmg": 14, "acc": 0, "effects": "2 Square Range" },
-        "5": { "req": { "dex": 20, "str": 6 }, "dmg": 16, "acc": 0, "effects": "2 Square Range" }
-      }
-    },
-
-    "focus_1h": {
-      "name": "Focus (1 Handed)",
-      "category": "INT",
-      "type": "Focus",
-      "baseWeight": 0.5,
-      "defaultScaling": "spl",
-      "ranks": {
-        "1": { "req": { "int": 2 }, "dmg": 3, "acc": 1, "effects": "+1 Mag. ACC" },
-        "2": { "req": { "int": 4 }, "dmg": 6, "acc": 1, "effects": "+1 Mag. ACC" },
-        "3": { "req": { "int": 8 }, "dmg": 9, "acc": 2, "effects": "+2 Mag. ACC" },
-        "4": { "req": { "int": 12 }, "dmg": 12, "acc": 3, "effects": "+3 Mag. ACC" },
-        "5": { "req": { "int": 16 }, "dmg": 16, "acc": 4, "effects": "+4 Mag. ACC" }
-      }
-    },
-
-    "staff_2h": {
-      "name": "Staff (2 Handed)",
-      "category": "INT",
-      "type": "Staff",
-      "baseWeight": 1,
-      "defaultScaling": "spl",
-      "ranks": {
-        "1": { "req": { "int": 3 }, "dmg": 6, "acc": 0, "effects": "" },
-        "2": { "req": { "int": 6 }, "dmg": 8, "acc": 0, "effects": "" },
-        "3": { "req": { "int": 12 }, "dmg": 12, "acc": 0, "effects": "" },
-        "4": { "req": { "int": 16 }, "dmg": 16, "acc": 0, "effects": "" },
-        "5": { "req": { "int": 20 }, "dmg": 20, "acc": 0, "effects": "" }
-      }
-    },
-
-    "prayer_beads_1h": {
-      "name": "Prayer Beads (1 Handed)",
-      "category": "INT",
-      "type": "Prayer Beads",
-      "baseWeight": 0,
-      "defaultScaling": "spl",
-      "ranks": {
-        "1": { "req": { "int": 2 }, "dmg": 4, "acc": 0, "effects": "+3 Healing" },
-        "2": { "req": { "int": 4 }, "dmg": 6, "acc": 0, "effects": "+5 Healing" },
-        "3": { "req": { "int": 8 }, "dmg": 8, "acc": 0, "effects": "+5 Healing" },
-        "4": { "req": { "int": 12 }, "dmg": 10, "acc": 0, "effects": "+10 Healing" },
-        "5": { "req": { "int": 16 }, "dmg": 12, "acc": 0, "effects": "+10 Healing" }
-      }
-    },
-
-    "spellbook_varies": {
-      "name": "Spellbook (Varies)",
-      "category": "INT",
-      "type": "Spellbook",
-      "baseWeight": null,
-      "defaultScaling": "spl",
-      "ranks": {
-        "1": { "req": { "int": 4 }, "dmg": 3, "acc": 0, "effects": "+1 Skill", "weight": 0, "notes": "1 Handed" },
-        "2": { "req": { "int": 8 }, "dmg": 5, "acc": 0, "effects": "+2 Skill", "weight": 0.5, "notes": "1 Handed" },
-        "3": { "req": { "int": 16 }, "dmg": 7, "acc": 0, "effects": "+3 Skill", "weight": 1, "notes": "1 Handed" },
-        "4": { "req": { "int": 20 }, "dmg": 9, "acc": 0, "effects": "+3 Skill", "weight": 1, "notes": "2 Handed" },
-        "5": { "req": { "int": 24 }, "dmg": 10, "acc": 0, "effects": "+4 Skill", "weight": 1.5, "notes": "2 Handed" }
-      }
-    },
-
-    "consumable_scroll": {
-      "name": "Consumable Scroll",
-      "category": "INT",
-      "type": "Consumable Scroll",
-      "baseWeight": 0,
-      "defaultScaling": "spl",
-      "notes": "Consumable Scrolls come with a spell and limited uses. Cheaper version of Scrolls; rank version available at half price.",
-      "ranks": {
-        "1": { "req": { "int": 2 }, "dmg": 3, "acc": 0, "effects": "2 Uses" },
-        "2": { "req": { "int": 3 }, "dmg": 6, "acc": 1, "effects": "2 Uses | +1 Mag. ACC" },
-        "3": { "req": { "int": 4 }, "dmg": 9, "acc": 2, "effects": "3 Uses | +2 Mag. ACC" },
-        "4": { "req": { "int": 5 }, "dmg": 12, "acc": 2, "effects": "3 Uses | +2 Mag. ACC" },
-        "5": { "req": { "int": 6 }, "dmg": 16, "acc": 3, "effects": "4 Uses | +3 Mag. ACC" }
-      }
-    },
-
-    "shortbow": {
-      "name": "Shortbow",
-      "category": "RANGED",
-      "type": "Shortbow",
-      "baseWeight": 0.5,
-      "defaultScaling": "dex",
-      "ranks": {
-        "1": { "req": { "dex": 3, "str": 2 }, "dmg": "3*1d2", "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
-        "2": { "req": { "dex": 6, "str": 4 }, "dmg": "4*1d2", "acc": 0, "effects": "10 Range | 1d2 Multiplier" },
-        "3": { "req": { "dex": 9, "str": 6 }, "dmg": "4*1d3", "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
-        "4": { "req": { "dex": 12, "str": 8 }, "dmg": "5*1d3", "acc": 0, "effects": "15 Range | 1d3 Multiplier" },
-        "5": { "req": { "dex": 16, "str": 10 }, "dmg": "6*(1d2+1)", "acc": 0, "effects": "20 Range | 1d2+1 Multiplier" }
-      }
-    },
-
-    "longbow": {
-      "name": "Longbow",
-      "category": "RANGED",
-      "type": "Longbow",
-      "baseWeight": 1.5,
-      "defaultScaling": "custom",
-      "notes": "STR OR DEX scaling (player choice).",
-      "ranks": {
-        "1": { "req": { "dex": 5, "str": 5 }, "dmg": 6, "acc": 0, "effects": "15 Range" },
-        "2": { "req": { "dex": 7, "str": 7 }, "dmg": 9, "acc": 0, "effects": "15 Range | CRT +1" },
-        "3": { "req": { "dex": 9, "str": 9 }, "dmg": 12, "acc": 0, "effects": "20 Range | CRT +1" },
-        "4": { "req": { "dex": 11, "str": 11 }, "dmg": 15, "acc": 0, "effects": "20 Range | CRT +2" },
-        "5": { "req": { "dex": 13, "str": 13 }, "dmg": 18, "acc": 0, "effects": "25 Range | CRT +3" }
-      }
-    },
-
-    "crossbow": {
-      "name": "Crossbow",
-      "category": "RANGED",
-      "type": "Crossbow",
-      "baseWeight": 1.5,
-      "defaultScaling": "dex",
-      "ranks": {
-        "1": { "req": { "str": 3, "dex": 4 }, "dmg": 5, "acc": 0, "effects": "15 Range | Cleave 2" },
-        "2": { "req": { "str": 5, "dex": 8 }, "dmg": 8, "acc": 0, "effects": "15 Range | Cleave 4" },
-        "3": { "req": { "str": 7, "dex": 12 }, "dmg": 11, "acc": 0, "effects": "20 Range | Cleave 6" },
-        "4": { "req": { "str": 9, "dex": 16 }, "dmg": 14, "acc": 0, "effects": "20 Range | Cleave 8 or 30%" },
-        "5": { "req": { "str": 11, "dex": 20 }, "dmg": 17, "acc": 0, "effects": "25 Range | Cleave 10 or 40% Cleave" }
-      }
-    },
-
-    "throwing_daggers": {
-      "name": "Throwing Daggers",
-      "category": "RANGED",
-      "type": "Throwing Daggers",
-      "baseWeight": 0,
-      "defaultScaling": "dex",
-      "ranks": {
-        "1": { "req": { "dex": 3 }, "dmg": "2*1d3", "acc": 0, "effects": "1d3 Daggers" },
-        "2": { "req": { "dex": 6 }, "dmg": "3*(1d2+1)", "acc": 0, "effects": "1d2+1 Daggers" },
-        "3": { "req": { "dex": 12 }, "dmg": "4*(1d2+1)", "acc": 0, "effects": "1d2+1 Daggers" },
-        "4": { "req": { "dex": 16 }, "dmg": "5*(1d3+1)", "acc": 0, "effects": "1d3+1 Daggers" },
-        "5": { "req": { "dex": 20 }, "dmg": "6*(1d3+1)", "acc": 0, "effects": "1d2+2 Daggers" }
-      }
-    },
-
-    "chakrams": {
-      "name": "Chakrams",
-      "category": "RANGED",
-      "type": "Chakrams",
-      "baseWeight": 0.5,
-      "defaultScaling": "dex",
-      "ranks": {
-        "1": { "req": { "dex": 4 }, "dmg": 5, "acc": 0, "effects": "DC10 Bleed" },
-        "2": { "req": { "dex": 8 }, "dmg": 8, "acc": 0, "effects": "DC10 Bleed" },
-        "3": { "req": { "dex": 12 }, "dmg": 11, "acc": 0, "effects": "DC12 Bleed" },
-        "4": { "req": { "dex": 16 }, "dmg": 14, "acc": 0, "effects": "DC12 Bleed" },
-        "5": { "req": { "dex": 20 }, "dmg": 17, "acc": 0, "effects": "DC14 Bleed" }
-      }
-    },
-
-    "throwing_axe": {
-      "name": "Throwing Axe",
-      "category": "RANGED",
-      "type": "Throwing Axe",
-      "baseWeight": 1.5,
-      "defaultScaling": "str",
-      "ranks": {
-        "1": { "req": { "str": 4 }, "dmg": "4*1d2", "acc": 0, "effects": "1d2 Axes" },
-        "2": { "req": { "str": 8 }, "dmg": "5*1d3", "acc": 0, "effects": "1d2 Axes" },
-        "3": { "req": { "str": 12 }, "dmg": "6*1d3", "acc": 0, "effects": "1d3 Axes" },
-        "4": { "req": { "str": 16 }, "dmg": "7*1d3", "acc": 0, "effects": "1d3 Axes" },
-        "5": { "req": { "str": 20 }, "dmg": "8*(1d2+1)", "acc": 0, "effects": "1d2+1" }
-      }
-    },
-
-    "handgun": {
-      "name": "Handgun",
-      "category": "GUNS",
-      "type": "Handgun",
-      "baseWeight": 1,
-      "defaultScaling": "none",
-      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
-      "ranks": {
-        "1": { "req": { "dex": 5 }, "dmg": 12, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload" },
-        "2": { "req": { "dex": 5 }, "dmg": 14, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload | [Mod]" },
-        "3": { "req": { "dex": 7 }, "dmg": 16, "acc": 0, "effects": "10 Range | 3 Ammo | Movement Reload | [Mod 1] | [Mod 2]" },
-        "4": { "req": { "dex": 7 }, "dmg": 18, "acc": 0, "effects": "10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3]" },
-        "5": { "req": { "dex": 9 }, "dmg": 20, "acc": 0, "effects": "10 Range | 3 Ammo | Minor Reload | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]" }
-      }
-    },
-
-    "shotgun": {
-      "name": "Shotgun",
-      "category": "GUNS",
-      "type": "Shotgun",
-      "baseWeight": 2,
-      "defaultScaling": "none",
-      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
-      "ranks": {
-        "1": { "req": { "dex": 5, "str": 5 }, "dmg": 21, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo" },
-        "2": { "req": { "dex": 5, "str": 5 }, "dmg": 23, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo | [Mod 1]" },
-        "3": { "req": { "dex": 7, "str": 7 }, "dmg": 25, "acc": 0, "effects": "3 Range | 2 Square Spread | 2 Ammo | [Mod 1] | [Mod 2]" },
-        "4": { "req": { "dex": 7, "str": 7 }, "dmg": 27, "acc": 0, "effects": "3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3]" },
-        "5": { "req": { "dex": 9, "str": 9 }, "dmg": 30, "acc": 0, "effects": "3 Range | 3 Square Spread | 3 Ammo | [Mod 1] | [Mod 2] | [Mod 3] | [Mod 4]" }
-      }
-    },
-
-    "submachine_gun": {
-      "name": "Submachine Gun",
-      "category": "GUNS",
-      "type": "Submachine Gun",
-      "baseWeight": 1.5,
-      "defaultScaling": "none",
-      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
-      "ranks": {
-        "1": { "req": { "dex": 5, "fin": 5 }, "dmg": "6*1d3", "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo" },
-        "2": { "req": { "dex": 5, "fin": 5 }, "dmg": "7*1d3", "acc": 0, "effects": "8 Range | 1d3 Shots | 4 Ammo | [1 Mod]" },
-        "3": { "req": { "dex": 7, "fin": 7 }, "dmg": "8*(1d2+1)", "acc": 0, "effects": "8 Range | 1d2+1 Shots | 5 Ammo | [2 Mods]" },
-        "4": { "req": { "dex": 7, "fin": 7 }, "dmg": "9*(1d2+1)", "acc": 0, "effects": "8 Range | 1d2+1 Shots | 6 Ammo | [3 Mods]" },
-        "5": { "req": { "dex": 9, "fin": 9 }, "dmg": "10*(1d2+1)", "acc": 0, "effects": "8 Range | 1d2+1 Shots | 7 Ammo | [4 Mods]" }
-      }
-    },
-
-    "rifle": {
-      "name": "Rifle",
-      "category": "GUNS",
-      "type": "Rifle",
-      "baseWeight": 2,
-      "defaultScaling": "none",
-      "notes": "Guns do NOT scale with Damage Stats. Mods = Rank-1 slots.",
-      "ranks": {
-        "1": { "req": { "fin": 5, "str": 5 }, "dmg": 17, "acc": 0, "effects": "15 Range | 2 Ammo" },
-        "2": { "req": { "fin": 5, "str": 5 }, "dmg": 19, "acc": 0, "effects": "15 Range | x2.5 Crit | 2 Ammo | [1 Mod]" },
-        "3": { "req": { "fin": 7, "str": 7 }, "dmg": 21, "acc": 0, "effects": "15 Range | x2.5 Crit | 3 Ammo | [2 Mods]" },
-        "4": { "req": { "fin": 7, "str": 7 }, "dmg": 23, "acc": 0, "effects": "15 Range | x2.5 Crit | 3 Ammo | [3 Mods]" },
-        "5": { "req": { "fin": 9, "str": 9 }, "dmg": 25, "acc": 0, "effects": "15 Range | x3 Crit | 4 Ammo | [4 Mods]" }
-      }
-    }
-  }
-}</textarea>
-    </div>
-  </div>
- 
- 
-  <div class="sheet-row sheet-margin-top" style="display:none">
-  <div class="sheet-col-1">
-    <div class="sheet-sub-header">Shield Library (JSON)</div>
-    <textarea name="attr_shield_library_json" style="height: 220px;">
-        {
-  "version": 1,
-  "shields": {
-    "buckler": {
-      "name": "Buckler",
-      "baseWeight": 0.5,
-      "ranks": {
-        "1": {
-          "res": 3,
-          "con": 0,
-          "req": { "str": 0 },
-          "effects": "19 Parry\nParry: Deal Minicrit (1.5x) Clash. Negates DMG."
-        },
-        "2": { "res": 5,  "con": 0, "req": { "str": 0 }, "effects": "19 Parry" },
-        "3": { "res": 7,  "con": 0, "req": { "str": 0 }, "effects": "18 Parry" },
-        "4": { "res": 9,  "con": 0, "req": { "str": 0 }, "effects": "18 Parry" },
-        "5": { "res": 10, "con": 0, "req": { "str": 0 }, "effects": "17 Parry" }
-      }
-    },
-
-    "kite_shield": {
-      "name": "Kite Shield",
-      "baseWeight": 1.5,
-      "ranks": {
-        "1": {
-          "res": 6,
-          "con": 0,
-          "req": { "str": 2 },
-          "effects": "19 Trade\nTrade: Take DMG and Block, deal Clash DMG."
-        },
-        "2": { "res": 8,  "con": 0, "req": { "str": 3 }, "effects": "18 Trade" },
-        "3": { "res": 10, "con": 0, "req": { "str": 4 }, "effects": "17 Trade" },
-        "4": { "res": 12, "con": 0, "req": { "str": 5 }, "effects": "16 Trade" },
-        "5": { "res": 15, "con": 0, "req": { "str": 6 }, "effects": "15 Trade" }
-      }
-    },
-
-    "tower_shield": {
-      "name": "Tower Shield",
-      "baseWeight": 6,
-      "ranks": {
-        "1": {
-          "res": 8,
-          "con": 0,
-          "req": { "str": 6 },
-          "effects": "19 Bash\nBash: Take DMG and Block. Deal Full RES as DMG. Dazes on Crit."
-        },
-        "2": { "res": 12, "con": 0, "req": { "str": 8 },  "effects": "19 Bash" },
-        "3": { "res": 16, "con": 0, "req": { "str": 10 }, "effects": "18 Bash" },
-        "4": { "res": 20, "con": 0, "req": { "str": 12 }, "effects": "18 Bash" },
-        "5": { "res": 24, "con": 0, "req": { "str": 14 }, "effects": "17 Bash" }
-      }
-    }
-  }
-}
-
-    </textarea>
-  </div>
-</div>
-
-<div class="sheet-row" style="display:none">
-  <div class="sheet-col-1">
-    <div class="sheet-sub-header">Armor Library (JSON)</div>
-    <textarea name="attr_armor_library_json" style="height: 220px;">
-{
-  "version": 1,
-  "armors": {
-    "clothing": {
-      "name": "Clothing",
-      "class": "Light",
-      "baseWeight": 0,
-      "ranks": {
-        "1": { "effects": "1 RES | +1 EVA | +1 MOV" },
-        "2": { "effects": "2 RES | +2 EVA | +2 MOV" },
-        "3": { "effects": "4 RES | 2 CON | +3 EVA | +3 MOV" },
-        "4": { "effects": "6 RES | 4 CON | +4 EVA | +4 MOV" },
-        "5": { "effects": "8 RES | 6 CON | +50% (Base) EVA or +5 | +5 MOV" }
-      }
-    },
-    "gambeson": {
-      "name": "Gambeson",
-      "class": "Light",
-      "baseWeight": 1,
-      "ranks": {
-        "1": { "effects": "4 RES | +1 MOV" },
-        "2": { "effects": "6 RES | +1 MOV" },
-        "3": { "effects": "8 RES | 4 CON | +2 MOV | +2 EVA" },
-        "4": { "effects": "10 RES | 6 CON | +2 MOV | +2 EVA" },
-        "5": { "effects": "12 RES | 8 CON | +3 MOV | +3 EVA" }
-      }
-    },
-    "chainmail": {
-      "name": "Chainmail",
-      "class": "Medium",
-      "baseWeight": 6,
-      "ranks": {
-        "1": { "effects": "5 RES" },
-        "2": { "effects": "7 RES | 5 CON" },
-        "3": { "effects": "10 RES | 7 CON" },
-        "4": { "effects": "12 RES | 10 CON" },
-        "5": { "effects": "14 RES | 12 CON" }
-      }
-    },
-    "half-plate": {
-      "name": "Half-Plate",
-      "class": "Medium",
-      "baseWeight": 9.5,
-      "ranks": {
-        "1": { "effects": "7 RES | -2 EVA" },
-        "2": { "effects": "9 RES | 7 CON | -2 EVA" },
-        "3": { "effects": "12 RES | 9 CON | -1 EVA" },
-        "4": { "effects": "14 RES | 12 CON | -1 EVA" },
-        "5": { "effects": "16 RES | 14 CON" }
-      }
-    },
-    "full-plate": {
-      "name": "Full-Plate",
-      "class": "Heavy",
-      "baseWeight": 10,
-      "ranks": {
-        "1": { "effects": "9 RES | -4 EVA" },
-        "2": { "effects": "11 RES | 9 CON | -4 EVA" },
-        "3": { "effects": "14 RES | 11 CON | -3 EVA" },
-        "4": { "effects": "16 RES | 14 CON | -3 EVA" },
-        "5": { "effects": "18 RES | 16 CON | -2 EVA" }
-      }
-    }
-  }
-}
-    </textarea>
-  </div>
-</div>
 
 </div>
 
@@ -2883,48 +2368,58 @@ function normalizeExpr(input) {
   return s || "0";
 }
  
-    /* --- SCRIPT 2: TITLE LIBRARY ENFORCER --- */
-    on("change:repeating_titles:title_active", function(eventInfo) {
+    /* --- SCRIPT 2: TITLE LIBRARY ENFORCER ---
+       The two header titles (title_1 / title_2) mirror the first two ACTIVE rows of the Titles list
+       in Traits. They refresh on ANY edit there: ticking Active, editing a title's name or effect,
+       deleting a row, or opening the sheet. */
+    function syncHeaderTitles(eventInfo) {
         getSectionIDs("repeating_titles", function(idarray) {
             const fields = [];
             idarray.forEach(id => {
                 fields.push(`repeating_titles_${id}_title_active`, `repeating_titles_${id}_library_title_name`, `repeating_titles_${id}_library_title_effect`);
             });
- 
+
             getAttrs(fields, function(v) {
                 let activeIDs = idarray.filter(id => parseInt(v[`repeating_titles_${id}_title_active`]) === 1);
                 let update = {};
- 
-                // Limit to 2: If user checks a 3rd, uncheck it immediately
+
+                // Limit to 2: if the user just ticked Active on a 3rd title, uncheck it immediately.
+                // (For any other kind of edit, just use the first two active titles.)
                 if (activeIDs.length > 2) {
-                    const sourceID = eventInfo.sourceAttribute.split("_")[2];
-                    update[`repeating_titles_${sourceID}_title_active`] = 0;
-                    activeIDs = activeIDs.filter(id => id !== sourceID);
+                    const src = (eventInfo && eventInfo.sourceAttribute) || "";
+                    if (/_title_active$/.test(src)) {
+                        const sourceID = src.split("_")[2];
+                        update[`repeating_titles_${sourceID}_title_active`] = 0;
+                        activeIDs = activeIDs.filter(id => id !== sourceID);
+                    }
+                    activeIDs = activeIDs.slice(0, 2);
                 }
- 
+
                 // Sync Header Title 1
                 if (activeIDs[0]) {
-                    update["title_1"] = v[`repeating_titles_${activeIDs[0]}_library_title_name`];
-                    update["title_1_effect"] = v[`repeating_titles_${activeIDs[0]}_library_title_effect`];
+                    update["title_1"] = v[`repeating_titles_${activeIDs[0]}_library_title_name`] || "";
+                    update["title_1_effect"] = v[`repeating_titles_${activeIDs[0]}_library_title_effect`] || "No effect described.";
                 } else {
                     update["title_1"] = "";
                     update["title_1_effect"] = "No title equipped.";
                 }
- 
+
                 // Sync Header Title 2
                 if (activeIDs[1]) {
-                    update["title_2"] = v[`repeating_titles_${activeIDs[1]}_library_title_name`];
-                    update["title_2_effect"] = v[`repeating_titles_${activeIDs[1]}_library_title_effect`];
+                    update["title_2"] = v[`repeating_titles_${activeIDs[1]}_library_title_name`] || "";
+                    update["title_2_effect"] = v[`repeating_titles_${activeIDs[1]}_library_title_effect`] || "No effect described.";
                 } else {
                     update["title_2"] = "";
                     update["title_2_effect"] = "No title equipped.";
                 }
- 
+
                 setAttrs(update);
             });
         });
-    });
-    
+    }
+    on("change:repeating_titles:title_active change:repeating_titles:library_title_name " +
+       "change:repeating_titles:library_title_effect remove:repeating_titles sheet:opened", syncHeaderTitles);
+
 const toInt = (v) => parseInt(v, 10) || 0;
 
 function handleDamage(isBlocking, info) {
@@ -3127,48 +2622,104 @@ const SHIELD_LIBRARY = {"version":1,"shields":{"buckler":{"name":"Buckler","base
 
 const ARMOR_LIBRARY = {"version":1,"armors":{"clothing":{"name":"Clothing","class":"Light","baseWeight":0,"ranks":{"1":{"effects":"1 RES | +1 EVA | +1 MOV"},"2":{"effects":"2 RES | +2 EVA | +2 MOV"},"3":{"effects":"4 RES | 2 CON | +3 EVA | +3 MOV"},"4":{"effects":"6 RES | 4 CON | +4 EVA | +4 MOV"},"5":{"effects":"8 RES | 6 CON | +50% (Base) EVA or +5 | +5 MOV"}}},"gambeson":{"name":"Gambeson","class":"Light","baseWeight":1,"ranks":{"1":{"effects":"4 RES | +1 MOV"},"2":{"effects":"6 RES | +1 MOV"},"3":{"effects":"8 RES | 4 CON | +2 MOV | +2 EVA"},"4":{"effects":"10 RES | 6 CON | +2 MOV | +2 EVA"},"5":{"effects":"12 RES | 8 CON | +3 MOV | +3 EVA"}}},"chainmail":{"name":"Chainmail","class":"Medium","baseWeight":6,"ranks":{"1":{"effects":"5 RES"},"2":{"effects":"7 RES | 5 CON"},"3":{"effects":"10 RES | 7 CON"},"4":{"effects":"12 RES | 10 CON"},"5":{"effects":"14 RES | 12 CON"}}},"half-plate":{"name":"Half-Plate","class":"Medium","baseWeight":9.5,"ranks":{"1":{"effects":"7 RES | -2 EVA"},"2":{"effects":"9 RES | 7 CON | -2 EVA"},"3":{"effects":"12 RES | 9 CON | -1 EVA"},"4":{"effects":"14 RES | 12 CON | -1 EVA"},"5":{"effects":"16 RES | 14 CON"}}},"full-plate":{"name":"Full-Plate","class":"Heavy","baseWeight":10,"ranks":{"1":{"effects":"9 RES | -4 EVA"},"2":{"effects":"11 RES | 9 CON | -4 EVA"},"3":{"effects":"14 RES | 11 CON | -3 EVA"},"4":{"effects":"16 RES | 14 CON | -3 EVA"},"5":{"effects":"18 RES | 16 CON | -2 EVA"}}}}};
 
+// ===== Preset merge helpers (shared by armor / weapon / shield) =====
+// Changing a Preset or Rank only overwrites fields the player has NOT customized.
+// Each gear row keeps a hidden "_applied" snapshot (JSON) of what its preset last wrote.
+// A field is "untouched" if it is empty or still equals that snapshot value; anything
+// else is treated as custom text and is left alone (name, effects, skill, etc.).
+const presetStr = (x) => String(x == null ? "" : x).trim();
+const presetIsBlank = (x) => { const s = presetStr(x); return s === "" || s === "0" || s === "none"; };
+const presetParseSnap = (s) => {
+  try { const o = JSON.parse(s || ""); return (o && typeof o === "object") ? o : null; }
+  catch (e) { return null; }
+};
+// cur: row values keyed by full attr name. newVals/oldVals: keyed by field suffix.
+// legacy: oldVals was rebuilt from the library (row predates snapshots), so also accept
+// untouched defaults like "0" / "none" as replaceable.
+const presetMerge = (prefix, cur, newVals, oldVals, legacy) => {
+  const update = {};
+  const snap = {};
+  Object.keys(newVals).forEach((k) => {
+    const s = presetStr(cur[`${prefix}_${k}`]);
+    const known = !!oldVals && Object.prototype.hasOwnProperty.call(oldVals, k);
+    let untouched = (s === "");
+    if (!untouched && known) untouched = (s === presetStr(oldVals[k])) || (!!legacy && presetIsBlank(s));
+    if (!untouched && !known) untouched = presetIsBlank(s);
+    if (untouched) {
+      update[`${prefix}_${k}`] = newVals[k];
+      snap[k] = newVals[k];
+    } else if (known) {
+      snap[k] = oldVals[k]; // keep remembering what the preset last wrote here
+    }
+  });
+  return { update, snap };
+};
+
 // ===== Armor Library (Equipped tab helper) =====
+const ARMOR_PRESET_FIELDS = ["item_name", "item_weight", "item_stats"];
+
+const buildArmorPreset = (preset, rankMode) => {
+  if (!preset || preset === "custom") return null;
+  if (rankMode === "Custom") return null; // custom rank text: don't overwrite
+  const rank = String(rankMode).replace(/^R/, ""); // "R1".."R5" -> "1".."5"
+  const lib = ARMOR_LIBRARY;
+  if (!lib || !lib.armors || !lib.armors[preset]) return null;
+  const armor = lib.armors[preset];
+  const r = (armor.ranks && armor.ranks[rank]) ? armor.ranks[rank] : null;
+  if (!r) return null;
+  return {
+    item_name: armor.name || preset,
+    item_weight: (r.weight != null) ? r.weight : (armor.baseWeight != null ? armor.baseWeight : 0),
+    item_stats: r.effects || ""
+  };
+};
+
+// prev (optional): { preset, rank } previous selection, used only for rows that have no snapshot yet.
+const applyArmorPreset = (prefix, prev) => {
+  prev = prev || {};
+  getAttrs(
+    [
+      `${prefix}_item_slot`,
+      `${prefix}_item_armor_preset`,
+      `${prefix}_item_rank_mode`,
+      `${prefix}_item_applied`
+    ].concat(ARMOR_PRESET_FIELDS.map((f) => `${prefix}_${f}`)),
+    (v) => {
+      const slot = v[`${prefix}_item_slot`] || "Other";
+      if (slot !== "Armor") return; // only run for armor slot
+
+      const preset = (v[`${prefix}_item_armor_preset`] || "custom").toLowerCase();
+      const rankMode = v[`${prefix}_item_rank_mode`] || "R1";
+
+      const newVals = buildArmorPreset(preset, rankMode);
+      if (!newVals) return;
+
+      let oldVals = presetParseSnap(v[`${prefix}_item_applied`]);
+      let legacy = false;
+      if (!oldVals) {
+        legacy = true;
+        const pp = (prev.preset != null) ? String(prev.preset || "custom").toLowerCase() : preset;
+        const pr = (prev.rank != null) ? (prev.rank || "R1") : rankMode;
+        oldVals = buildArmorPreset(pp, pr);
+      }
+
+      const out = presetMerge(prefix, v, newVals, oldVals, legacy);
+      out.update[`${prefix}_item_applied`] = JSON.stringify(out.snap);
+      setAttrs(out.update);
+    }
+  );
+};
+
 on(
   "change:repeating_equipped:item_armor_preset change:repeating_equipped:item_rank_mode change:repeating_equipped:item_slot sheet:opened",
   (evt) => {
     // Find the row prefix
     if (!evt || !evt.sourceAttribute || !evt.sourceAttribute.startsWith("repeating_equipped_")) return;
     const prefix = evt.sourceAttribute.replace(/_(item_armor_preset|item_rank_mode|item_slot)$/, "");
-
-    getAttrs(
-      [
-        `${prefix}_item_slot`,
-        `${prefix}_item_armor_preset`,
-        `${prefix}_item_rank_mode`
-      ],
-      (v) => {
-        const slot = v[`${prefix}_item_slot`] || "Other";
-        if (slot !== "Armor") return; // only run for armor slot
-
-        const preset = (v[`${prefix}_item_armor_preset`] || "custom").toLowerCase();
-        const rankMode = v[`${prefix}_item_rank_mode`] || "R1";
-
-        if (preset === "custom") return;
-        if (rankMode === "Custom") return; // custom rank text: don't overwrite
-
-        // RankMode is "R1".."R5" -> "1".."5"
-        const rank = String(rankMode).replace(/^R/, "");
-
-        const lib = ARMOR_LIBRARY;
-        if (!lib || !lib.armors || !lib.armors[preset]) return;
-
-        const armor = lib.armors[preset];
-        const r = (armor.ranks && armor.ranks[rank]) ? armor.ranks[rank] : null;
-        if (!r) return;
-
-        const update = {};
-        update[`${prefix}_item_name`] = armor.name || preset;
-        update[`${prefix}_item_weight`] = (r.weight != null) ? r.weight : (armor.baseWeight != null ? armor.baseWeight : 0);
-        update[`${prefix}_item_stats`] = r.effects || "";
-
-        setAttrs(update);
-      }
-    );
+    const prev = {};
+    if (/_item_armor_preset$/.test(evt.sourceAttribute)) prev.preset = evt.previousValue;
+    else if (/_item_rank_mode$/.test(evt.sourceAttribute)) prev.rank = evt.previousValue;
+    applyArmorPreset(prefix, prev);
   }
 );
 
@@ -3192,104 +2743,150 @@ const fmtReq = (reqObj) => {
   return parts.join(" | ");
 };
 
+const WEAPON_PRESET_FIELDS = [
+  "weapon_name", "weapon_type", "weapon_weight", "weapon_base_dmg", "weapon_attack_bonus_flat",
+  "weapon_effects_base", "weapon_effects_alt", "weapon_req_text", "weapon_scaling_type"
+];
+
+const buildWeaponPreset = (preset, rank) => {
+  if (!preset || preset === "custom") return null;
+  const lib = WEAPON_LIBRARY;
+  // If the library isn't loaded yet, do nothing (prevents overwriting)
+  if (!lib || !lib.weapons || !lib.weapons[preset]) return null;
+  const weapon = lib.weapons[preset];
+  const r = (weapon.ranks && weapon.ranks[rank]) ? weapon.ranks[rank] : null;
+  if (!r) return null;
+
+  const o = {
+    weapon_name: weapon.name || preset,
+    weapon_type: weapon.type || weapon.category || "",
+    // Weight/damage (rank can override baseWeight if you want later)
+    weapon_weight: (r.weight != null) ? r.weight : (weapon.baseWeight != null ? weapon.baseWeight : 0),
+    weapon_base_dmg: r.dmg != null ? r.dmg : 0,
+    // Flat accuracy bonus (0 if absent)
+    weapon_attack_bonus_flat: r.acc != null ? r.acc : 0,
+    // Effects split into two fields
+    weapon_effects_base: r.effects || "",
+    weapon_effects_alt: (r.alts && r.alts.length) ? r.alts.map(a => a.label).join(" / ") : "",
+    // Requirements text (display-only)
+    weapon_req_text: fmtReq(r.req)
+  };
+  // Default scaling type if supplied (so your scaling worker can populate expr/tohit)
+  if (weapon.defaultScaling) o.weapon_scaling_type = weapon.defaultScaling;
+  return o;
+};
+
+// prev (optional): { preset, rank } previous selection, used only for rows that have no snapshot yet.
+const applyWeaponPreset = (prefix, prev) => {
+  prev = prev || {};
+  getAttrs(
+    [
+      `${prefix}_weapon_preset`,
+      `${prefix}_weapon_rank`,
+      `${prefix}_weapon_applied`
+    ].concat(WEAPON_PRESET_FIELDS.map((f) => `${prefix}_${f}`)),
+    (v) => {
+      const preset = (v[`${prefix}_weapon_preset`] || "custom").toLowerCase();
+      const rank = String(v[`${prefix}_weapon_rank`] || "1");
+
+      const newVals = buildWeaponPreset(preset, rank);
+      if (!newVals) return;
+
+      let oldVals = presetParseSnap(v[`${prefix}_weapon_applied`]);
+      let legacy = false;
+      if (!oldVals) {
+        legacy = true;
+        const pp = (prev.preset != null) ? String(prev.preset || "custom").toLowerCase() : preset;
+        const pr = (prev.rank != null) ? String(prev.rank || "1") : rank;
+        oldVals = buildWeaponPreset(pp, pr);
+      }
+
+      const out = presetMerge(prefix, v, newVals, oldVals, legacy);
+      out.update[`${prefix}_weapon_rank`] = rank;
+      out.update[`${prefix}_weapon_applied`] = JSON.stringify(out.snap);
+      setAttrs(out.update);
+    }
+  );
+};
+
 on(
   "change:repeating_weapons:weapon_preset change:repeating_weapons:weapon_rank sheet:opened",
   (evt) => {
+    if (!evt || !evt.sourceAttribute || !evt.sourceAttribute.startsWith("repeating_weapons_")) return;
     const prefix = evt.sourceAttribute.replace(/_(weapon_preset|weapon_rank)$/, "");
-
-    getAttrs(
-      [
-        `${prefix}_weapon_preset`,
-        `${prefix}_weapon_rank`,
-      ],
-      (v) => {
-        const preset = (v[`${prefix}_weapon_preset`] || "custom").toLowerCase();
-        const rank = String(v[`${prefix}_weapon_rank`] || "1");
-
-        if (preset === "custom") return;
-
-        const lib = WEAPON_LIBRARY;
-        if (!lib || !lib.weapons || !lib.weapons[preset]) {
-          // If the library isn't loaded yet, do nothing (prevents overwriting)
-          return;
-        }
-
-        const weapon = lib.weapons[preset];
-        const r = (weapon.ranks && weapon.ranks[rank]) ? weapon.ranks[rank] : null;
-        if (!r) return;
-
-        const update = {};
-        update[`${prefix}_weapon_name`] = weapon.name || preset;
-        update[`${prefix}_weapon_type`] = weapon.type || weapon.category || "";
-        update[`${prefix}_weapon_rank`] = rank;
-
-        // Weight/damage (rank can override baseWeight if you want later)
-        update[`${prefix}_weapon_weight`] = (r.weight != null) ? r.weight : (weapon.baseWeight != null ? weapon.baseWeight : 0);
-        update[`${prefix}_weapon_base_dmg`] = r.dmg != null ? r.dmg : 0;
-
-        // Flat accuracy bonus (0 if absent)
-        update[`${prefix}_weapon_attack_bonus_flat`] = r.acc != null ? r.acc : 0;
-
-        // Effects split into two fields
-        update[`${prefix}_weapon_effects_base`] = r.effects || "";
-        update[`${prefix}_weapon_effects_alt`] = (r.alts && r.alts.length) ? r.alts.map(a => a.label).join(" / ") : "";
-
-        // Requirements text (display-only)
-        update[`${prefix}_weapon_req_text`] = fmtReq(r.req);
-
-        // Default scaling type if supplied (so your scaling worker can populate expr/tohit)
-        if (weapon.defaultScaling) {
-          update[`${prefix}_weapon_scaling_type`] = weapon.defaultScaling;
-        }
-
-        setAttrs(update);
-      }
-    );
+    const prev = {};
+    if (/_weapon_preset$/.test(evt.sourceAttribute)) prev.preset = evt.previousValue;
+    else if (/_weapon_rank$/.test(evt.sourceAttribute)) prev.rank = evt.previousValue;
+    applyWeaponPreset(prefix, prev);
   }
 );
 
 // Shield Library (REPEATING)
+const SHIELD_PRESET_FIELDS = [
+  "shield_name", "shield_weight", "shield_res_bonus", "shield_con_bonus",
+  "shield_req_text", "shield_effect", "shield_skill_desc"
+];
+
+const buildShieldPreset = (preset, rank) => {
+  if (!preset || preset === "custom") return null;
+  const lib = SHIELD_LIBRARY;
+  if (!lib || !lib.shields || !lib.shields[preset]) return null;
+  const shield = lib.shields[preset];
+  const r = (shield.ranks && shield.ranks[rank]) ? shield.ranks[rank] : null;
+  if (!r) return null;
+  return {
+    shield_name: shield.name || preset,
+    shield_weight: (r.weight != null) ? r.weight : (shield.baseWeight != null ? shield.baseWeight : 0),
+    shield_res_bonus: (r.res != null) ? r.res : 0,
+    shield_con_bonus: (r.con != null) ? r.con : 0,
+    shield_req_text: r.req ? fmtReq(r.req) : "",
+    shield_effect: r.effects || "",
+    shield_skill_desc: r.skill || ""
+  };
+};
+
+// prev (optional): { preset, rank } previous selection, used only for rows that have no snapshot yet.
+const applyShieldPreset = (prefix, prev) => {
+  prev = prev || {};
+  getAttrs(
+    [
+      `${prefix}_shield_preset`,
+      `${prefix}_shield_rank`,
+      `${prefix}_shield_applied`
+    ].concat(SHIELD_PRESET_FIELDS.map((f) => `${prefix}_${f}`)),
+    (v) => {
+      const preset = (v[`${prefix}_shield_preset`] || "custom").toLowerCase();
+      const rank = String(v[`${prefix}_shield_rank`] || "1");
+
+      const newVals = buildShieldPreset(preset, rank);
+      if (!newVals) return;
+
+      let oldVals = presetParseSnap(v[`${prefix}_shield_applied`]);
+      let legacy = false;
+      if (!oldVals) {
+        legacy = true;
+        const pp = (prev.preset != null) ? String(prev.preset || "custom").toLowerCase() : preset;
+        const pr = (prev.rank != null) ? String(prev.rank || "1") : rank;
+        oldVals = buildShieldPreset(pp, pr);
+      }
+
+      const out = presetMerge(prefix, v, newVals, oldVals, legacy);
+      out.update[`${prefix}_shield_rank`] = rank;
+      out.update[`${prefix}_shield_applied`] = JSON.stringify(out.snap);
+      setAttrs(out.update);
+    }
+  );
+};
+
 on(
   "change:repeating_shields:shield_preset change:repeating_shields:shield_rank sheet:opened",
   (evt) => {
-    if (!evt || !evt.sourceAttribute) return;
-
+    if (!evt || !evt.sourceAttribute || !evt.sourceAttribute.startsWith("repeating_shields_")) return;
     const prefix = evt.sourceAttribute.replace(/_(shield_preset|shield_rank)$/, "");
-
-    getAttrs(
-      [
-        `${prefix}_shield_preset`,
-        `${prefix}_shield_rank`
-      ],
-      (v) => {
-        const preset = (v[`${prefix}_shield_preset`] || "custom").toLowerCase();
-        const rank = String(v[`${prefix}_shield_rank`] || "1");
-
-        if (preset === "custom") return;
-
-        const lib = SHIELD_LIBRARY;
-        if (!lib || !lib.shields || !lib.shields[preset]) return;
-
-        const shield = lib.shields[preset];
-        const r = (shield.ranks && shield.ranks[rank]) ? shield.ranks[rank] : null;
-        if (!r) return;
-
-        const update = {};
-        update[`${prefix}_shield_name`] = shield.name || preset;
-        update[`${prefix}_shield_rank`] = rank;
-        update[`${prefix}_shield_weight`] =
-          (r.weight != null) ? r.weight :
-          (shield.baseWeight != null ? shield.baseWeight : 0);
-
-        update[`${prefix}_shield_res_bonus`] = (r.res != null) ? r.res : 0;
-        update[`${prefix}_shield_con_bonus`] = (r.con != null) ? r.con : 0;
-        update[`${prefix}_shield_req_text`] = r.req ? fmtReq(r.req) : "";
-        update[`${prefix}_shield_effect`] = r.effects || "";
-        update[`${prefix}_shield_skill_desc`] = r.skill || "";
-
-        setAttrs(update);
-      }
-    );
+    const prev = {};
+    if (/_shield_preset$/.test(evt.sourceAttribute)) prev.preset = evt.previousValue;
+    else if (/_shield_rank$/.test(evt.sourceAttribute)) prev.rank = evt.previousValue;
+    applyShieldPreset(prefix, prev);
   }
 );
 
@@ -3380,8 +2977,176 @@ on("change:str_atk_base change:dex_atk_base change:spl_base sheet:opened", () =>
   });
 });
 
-// ===== Active Weapon (mirrors Active Shield behavior) =====
-function syncActiveWeapon(evt) {
+// ===== Active Weapons (any number can be active at once) =====
+// Every active weapon contributes ONCE: its damage, flat hit bonus, effects text and scaling stat.
+// A stat only ever goes in ONCE, however it is written ("DEX ATK", "DEX ATK/2", "DEX ATK*2", "(DEX+STR)/2"...):
+//  - two DEX-scaling weapons add DEX ATK a single time; a STR weapon + a DEX weapon add both.
+//  - between weapons, the biggest version of a stat is kept (main-hand "DEX ATK" beats off-hand "DEX ATK/2").
+//  - a skill's own Damage Stat always wins over a weapon's copy of the same stat (own "SPL/2" beats weapon "SPL").
+//  - inside a mixed formula only the overlapping stat is removed ("SPL+DEX" -> "DEX" if SPL is already counted).
+const scalingKey = (e) => String(e == null ? "" : e).replace(/\s+/g, "");
+const scalingIsEmpty = (e) => { const k = scalingKey(e); return k === "" || k === "0"; };
+const scalingTerm = (e) => {
+  const s = String(e).trim();
+  // wrap anything with its own operators so it stays one term when joined with "+"
+  return /[+\-*\/]/.test(s.replace(/@\{[^}]*\}/g, "x")) ? "(" + s + ")" : s;
+};
+// ---- stat-once helpers -----------------------------------------------------------------------
+// A scaling expression is read as a plain sum of "stat * number" terms plus a constant, e.g.
+// "@{spl}/2+@{str_atk}*2+1", so the same stat is recognised however it is written: whole, "/2", "*2",
+// "/3", "0.5*x", "(a+b)/2", "floor(a/2)" or mixed into a longer custom formula (rounding functions are
+// ignored for this). Anything that is not that shape (two stats multiplied, dice, max()...) cannot be
+// split up, so it is only de-duplicated when written identically. Numbers are exact fractions.
+const fGcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) { const r = a % b; a = b; b = r; } return a || 1; };
+const fMake = (n, d) => { if (d < 0) { n = -n; d = -d; } const g = fGcd(n, d); return { n: n / g, d: d / g }; };
+const fMul = (a, b) => fMake(a.n * b.n, a.d * b.d);
+const fAdd = (a, b) => fMake(a.n * b.d + b.n * a.d, a.d * b.d);
+const fGt = (a, b) => a.n * b.d > b.n * a.d;
+const fFromStr = (s) => { const p = s.split("."); const fr = p[1] || ""; return fMake(parseInt((p[0] || "0") + fr, 10), Math.pow(10, fr.length)); };
+
+const linScale = (l, f) => {
+  const s = {};
+  Object.keys(l.s).forEach((k) => { const v = fMul(l.s[k], f); if (v.n !== 0) s[k] = v; });
+  return { c: fMul(l.c, f), s: s };
+};
+const linAdd = (a, b) => {
+  const s = {};
+  Object.keys(a.s).forEach((k) => { s[k] = a.s[k]; });
+  Object.keys(b.s).forEach((k) => { s[k] = s[k] ? fAdd(s[k], b.s[k]) : b.s[k]; if (s[k].n === 0) delete s[k]; });
+  return { c: fAdd(a.c, b.c), s: s };
+};
+// -> { c: constant, s: { statName: coefficient } } or null when the expression is not a plain sum.
+const linParse = (str) => {
+  const src = String(str == null ? "" : str).replace(/\s+/g, "");
+  if (!src) return null;
+  let i = 0;
+  const bad = () => { throw new Error("not linear"); };
+  const isConst = (l) => Object.keys(l.s).length === 0;
+  function parseExpr() {
+    let a = parseTerm();
+    while (src[i] === "+" || src[i] === "-") {
+      const op = src[i++];
+      const b = parseTerm();
+      a = linAdd(a, op === "+" ? b : linScale(b, fMake(-1, 1)));
+    }
+    return a;
+  }
+  function parseTerm() {
+    let a = parseFactor();
+    while (src[i] === "*" || src[i] === "/") {
+      const op = src[i++];
+      const b = parseFactor();
+      if (op === "*") {
+        if (isConst(a)) a = linScale(b, a.c);
+        else if (isConst(b)) a = linScale(a, b.c);
+        else bad();                                   // stat * stat
+      } else {
+        if (!isConst(b) || b.c.n === 0) bad();        // dividing by a stat or by zero
+        a = linScale(a, fMake(b.c.d, b.c.n));
+      }
+    }
+    return a;
+  }
+  function parseFactor() {
+    const rest = src.slice(i);
+    if (src[i] === "+") { i++; return parseFactor(); }
+    if (src[i] === "-") { i++; return linScale(parseFactor(), fMake(-1, 1)); }
+    if (src[i] === "(") { i++; const e = parseExpr(); if (src[i++] !== ")") bad(); return e; }
+    let m = /^@\{([^}]*)\}/.exec(rest);
+    if (m) { i += m[0].length; const s = {}; s[m[1].toLowerCase()] = fMake(1, 1); return { c: fMake(0, 1), s: s }; }
+    m = /^(\d+\.?\d*|\.\d+)/.exec(rest);
+    if (m) { i += m[0].length; return { c: fFromStr(m[0]), s: {} }; }
+    m = /^(floor|ceil|round)\(/i.exec(rest);
+    if (m) { i += m[0].length; const e = parseExpr(); if (src[i++] !== ")") bad(); return e; }
+    return bad();
+  }
+  try { const r = parseExpr(); return i === src.length ? r : null; } catch (e) { return null; }
+};
+// text for a (possibly pruned) linear form, e.g. { spl: 1/2, dex_atk: 3/2 } -> "@{spl}/2+@{dex_atk}*3/2"
+const linText = (l) => {
+  let out = "";
+  const add = (neg, body) => { out += (neg ? "-" : (out ? "+" : "")) + body; };
+  Object.keys(l.s).forEach((k) => {
+    const f = l.s[k]; const n = Math.abs(f.n);
+    add(f.n < 0, "@{" + k + "}" + (n !== 1 ? "*" + n : "") + (f.d !== 1 ? "/" + f.d : ""));
+  });
+  if (l.c.n !== 0) { const n = Math.abs(l.c.n); add(l.c.n < 0, l.c.d === 1 ? String(n) : n + "/" + l.c.d); }
+  return out;
+};
+const linStats = (l) => Object.keys(l.s).filter((k) => l.s[k].n > 0);   // added stats (penalties never count)
+
+// unique, non-empty scaling expressions, first-seen order. Each stat is kept once, as its biggest
+// version, and removed from any other expression that repeats it (main-hand "@{dex_atk}" +
+// off-hand "@{dex_atk}/2" -> just "@{dex_atk}"). The rest of a mixed expression is left intact.
+const uniqueScalings = (exprs) => {
+  const seen = {}; const items = [];
+  exprs.forEach((e) => {
+    if (scalingIsEmpty(e)) return;
+    const text = String(e).trim();
+    const k = scalingKey(text);
+    if (seen[k]) return;                       // written identically
+    seen[k] = true;
+    items.push({ text: text, lin: linParse(text) });
+  });
+  const best = {};                             // stat -> { idx, coef } of its biggest version
+  items.forEach((it, idx) => {
+    if (!it.lin) return;
+    linStats(it.lin).forEach((k) => {
+      if (!best[k] || fGt(it.lin.s[k], best[k].coef)) best[k] = { idx: idx, coef: it.lin.s[k] };
+    });
+  });
+  const out = [];
+  items.forEach((it, idx) => {
+    if (!it.lin) { out.push(it.text); return; }
+    const drop = linStats(it.lin).filter((k) => best[k].idx !== idx);
+    if (!drop.length) {
+      if (Object.keys(it.lin.s).length || it.lin.c.n !== 0) out.push(it.text);   // (all-cancelling exprs add nothing)
+      return;
+    }
+    drop.forEach((k) => { delete it.lin.s[k]; });
+    if (Object.keys(it.lin.s).length || it.lin.c.n !== 0) out.push(linText(it.lin));
+  });
+  return out;
+};
+// join a scaling list into one expression, leaving out every stat the skill's own Damage Stat
+// (`exclude`) already includes, whole, halved, multiplied or inside a longer formula. The skill's
+// own version is the one that counts.
+const joinScalings = (list, exclude) => {
+  const covered = {};
+  const own = scalingIsEmpty(exclude) ? null : linParse(exclude);
+  if (own) linStats(own).forEach((k) => { covered[k] = true; });
+  const out = [];
+  (list || []).forEach((e) => {
+    if (scalingIsEmpty(e)) return;
+    const text = String(e).trim();
+    if (!scalingIsEmpty(exclude) && scalingKey(text) === scalingKey(exclude)) return;   // identical to the skill's own stat
+    const lin = linParse(text);
+    if (!lin) { out.push(text); return; }
+    const drop = linStats(lin).filter((k) => covered[k]);
+    if (!drop.length) { out.push(text); return; }
+    drop.forEach((k) => { delete lin.s[k]; });
+    if (Object.keys(lin.s).length || lin.c.n !== 0) out.push(linText(lin));
+  });
+  return out.length ? out.map(scalingTerm).join("+") : "0";
+};
+// Healing skills: halve the combined active-weapon damage ("8" -> "(8)/2", "(5)+(7)" -> "((5)+(7))/2").
+// Every active weapon is halved because the whole sum is; Roll20 rounds once at the end of the roll.
+const halveDamage = (d) => {
+  const s = String(d == null ? "" : d).trim();
+  return (s === "" || s === "0") ? "0" : "(" + s + ")/2";
+};
+const parseScalingList = (s) => {
+  try { const a = JSON.parse(s || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+};
+// sum weapon damage expressions: one weapon -> as-is, several -> "(a)+(b)"
+const combineWeaponDamage = (dmgs) => {
+  const parts = dmgs.map((d) => String(d == null ? "" : d).trim()).filter((d) => d !== "" && d !== "0");
+  if (!parts.length) return "0";
+  if (parts.length === 1) return parts[0];
+  return parts.map((d) => "(" + d + ")").join("+");
+};
+
+function syncActiveWeapon() {
   getSectionIDs("repeating_weapons", function(ids) {
     var fields = [];
     for (var i = 0; i < ids.length; i++) {
@@ -3392,66 +3157,38 @@ function syncActiveWeapon(evt) {
         "repeating_weapons_" + id + "_weapon_base_dmg",
         "repeating_weapons_" + id + "_weapon_rank",
         "repeating_weapons_" + id + "_weapon_attack_bonus_flat",
-        "repeating_weapons_" + id + "_weapon_effects_base"
+        "repeating_weapons_" + id + "_weapon_effects_base",
+        "repeating_weapons_" + id + "_weapon_scaling_expr"
       );
     }
 
     getAttrs(fields, function(v) {
-      var activeIDs = [];
-      for (var j = 0; j < ids.length; j++) {
-        var rid = ids[j];
-        if (String(v["repeating_weapons_" + rid + "_weapon_active"]) === "1") {
-          activeIDs.push(rid);
-        }
+      var g = function(id, f) { return v["repeating_weapons_" + id + "_" + f]; };
+      var act = ids.filter(function(id) { return String(g(id, "weapon_active")) === "1"; });
+
+      var names = act.map(function(id) { return g(id, "weapon_name") || ""; }).filter(Boolean);
+      var hit = act.reduce(function(s, id) { return s + (parseInt(g(id, "weapon_attack_bonus_flat"), 10) || 0); }, 0);
+      var rank = act.reduce(function(m, id) { return Math.max(m, parseInt(g(id, "weapon_rank"), 10) || 0); }, 0);
+
+      var fx = "";
+      if (act.length === 1) {
+        fx = g(act[0], "weapon_effects_base") || "";
+      } else if (act.length > 1) {
+        fx = act.map(function(id) {
+          return { n: g(id, "weapon_name") || "Weapon", f: String(g(id, "weapon_effects_base") || "").trim() };
+        }).filter(function(x) { return x.f; })
+          .map(function(x) { return x.n + ": " + x.f; })
+          .join(" || ");
       }
 
-      var update = {};
-
-      // If multiple actives, prefer the one that triggered the event (when possible)
-      if (activeIDs.length > 1 && evt && evt.sourceAttribute) {
-        // expecting: repeating_weapons_ROWID_weapon_active
-        var parts = evt.sourceAttribute.split("_");
-        var sourceID = parts[2];
-
-        var keep = sourceID;
-        var found = false;
-        for (var k = 0; k < activeIDs.length; k++) {
-          if (activeIDs[k] === keep) { found = true; break; }
-        }
-        if (!found) keep = activeIDs[0];
-
-        for (var m = 0; m < activeIDs.length; m++) {
-          var other = activeIDs[m];
-          if (other !== keep) {
-            update["repeating_weapons_" + other + "_weapon_active"] = 0;
-          }
-        }
-        activeIDs = [keep];
-      } else if (activeIDs.length > 1) {
-        // No evt (sheet opened) — keep first, clear others
-        for (var n = 1; n < activeIDs.length; n++) {
-          update["repeating_weapons_" + activeIDs[n] + "_weapon_active"] = 0;
-        }
-        activeIDs = [activeIDs[0]];
-      }
-
-      // Copy active weapon into global attrs
-      if (activeIDs.length === 1) {
-        var a = activeIDs[0];
-        update["active_weapon_name"] = v["repeating_weapons_" + a + "_weapon_name"] || "";
-        update["active_weapon_base_dmg"] = v["repeating_weapons_" + a + "_weapon_base_dmg"] || "0";
-        update["active_weapon_rank"] = parseInt(v["repeating_weapons_" + a + "_weapon_rank"], 10) || 0;
-        update["active_weapon_attack_bonus_flat"] = parseInt(v["repeating_weapons_" + a + "_weapon_attack_bonus_flat"], 10) || 0;
-        update["weapon_effects_base"] = v["repeating_weapons_" + a + "_weapon_effects_base"] || "";
-      } else {
-        update["active_weapon_name"] = "";
-        update["active_weapon_base_dmg"] = "0";
-        update["active_weapon_rank"] = 0;
-        update["active_weapon_attack_bonus_flat"] = 0;
-        update["weapon_effects_base"] = "";
-      }
-
-      setAttrs(update);
+      setAttrs({
+        active_weapon_name: names.join(" + "),
+        active_weapon_base_dmg: combineWeaponDamage(act.map(function(id) { return g(id, "weapon_base_dmg"); })),
+        active_weapon_rank: rank,
+        active_weapon_attack_bonus_flat: hit,
+        weapon_effects_base: fx,
+        active_weapon_scaling_list: JSON.stringify(uniqueScalings(act.map(function(id) { return g(id, "weapon_scaling_expr"); })))
+      });
     });
   });
 }
@@ -3460,9 +3197,10 @@ function syncActiveWeapon(evt) {
 on(
   "change:repeating_weapons:weapon_active remove:repeating_weapons sheet:opened " +
   "change:repeating_weapons:weapon_name change:repeating_weapons:weapon_base_dmg " +
-  "change:repeating_weapons:weapon_rank change:repeating_weapons:weapon_attack_bonus_flat",
+  "change:repeating_weapons:weapon_rank change:repeating_weapons:weapon_attack_bonus_flat " +
+  "change:repeating_weapons:weapon_effects_base change:repeating_weapons:weapon_scaling_expr",
   function(evt) {
-    syncActiveWeapon(evt);
+    syncActiveWeapon();
   }
 );
 
@@ -3546,54 +3284,56 @@ on("change:repeating_skills:skill_stat_add remove:repeating_skills sheet:opened"
   });
 });
 
-// ===== Skills: if "Add Active Weapon" checked, copy active weapon dmg + hit bonus =====
-function syncSkillWeaponAdds() {
-  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat", "weapon_effects_base"], function(root) {
+// ===== Skills / Ultimates: if "Add Active Weapon" is checked, copy the combined active weapons =====
+// Copies summed weapon damage, summed hit bonus, merged effects, and the de-duplicated weapon
+// scaling. Scaling that matches the skill's own Damage Stat is left out so no stat counts twice.
+function syncWeaponAddsFor(section, p) {
+  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat", "weapon_effects_base", "active_weapon_scaling_list"], function(root) {
     var awDmg = root.active_weapon_base_dmg || "0";
     var awFX  = root.weapon_effects_base || "";
-
     var awHit = parseInt(root.active_weapon_attack_bonus_flat, 10);
     if (isNaN(awHit)) awHit = 0;
+    var awScal = parseScalingList(root.active_weapon_scaling_list);
 
-    getSectionIDs("repeating_skills", function(ids) {
+    getSectionIDs(section, function(ids) {
       if (!ids || !ids.length) return;
 
       var fields = [];
       for (var i = 0; i < ids.length; i++) {
-        var id = ids[i];
+        var pre = section + "_" + ids[i] + "_" + p;
         fields.push(
-          "repeating_skills_" + id + "_skill_uses_weapon",
-          "repeating_skills_" + id + "_skill_weapon_add",
-          "repeating_skills_" + id + "_skill_weapon_hit_bonus",
-          "repeating_skills_" + id + "_skill_weapon_effects"
+          pre + "_uses_weapon",
+          pre + "_weapon_add",
+          pre + "_weapon_hit_bonus",
+          pre + "_weapon_effects",
+          pre + "_weapon_scaling",
+          pre + "_stat_val",
+          pre + "_healing"   // halves the active weapons' damage
         );
       }
 
       getAttrs(fields, function(v) {
         var update = {};
         for (var j = 0; j < ids.length; j++) {
-          var rid = ids[j];
-          var useW = String(v["repeating_skills_" + rid + "_skill_uses_weapon"] || "") === "1";
+          var pfx = section + "_" + ids[j] + "_" + p;
+          var useW = String(v[pfx + "_uses_weapon"] || "") === "1";
 
-          var desiredDmg = useW ? awDmg : "0";
-          var desiredHit = useW ? awHit : 0;
-          var desiredFX  = useW ? awFX  : "";
+          var healing     = String(v[pfx + "_healing"] || "") === "1";
+          var desiredDmg  = useW ? (healing ? halveDamage(awDmg) : awDmg) : "0";
+          var desiredHit  = useW ? awHit : 0;
+          var desiredFX   = useW ? awFX  : "";
+          var desiredScal = useW ? joinScalings(awScal, v[pfx + "_stat_val"]) : "0";
 
-          var currentDmg = v["repeating_skills_" + rid + "_skill_weapon_add"] || "0";
-          var currentFX  = v["repeating_skills_" + rid + "_skill_weapon_effects"] || "";
-
-          var currentHit = parseInt(v["repeating_skills_" + rid + "_skill_weapon_hit_bonus"], 10);
+          var currentDmg  = v[pfx + "_weapon_add"] || "0";
+          var currentFX   = v[pfx + "_weapon_effects"] || "";
+          var currentScal = v[pfx + "_weapon_scaling"] || "0";
+          var currentHit  = parseInt(v[pfx + "_weapon_hit_bonus"], 10);
           if (isNaN(currentHit)) currentHit = 0;
 
-          if (currentDmg !== desiredDmg) {
-            update["repeating_skills_" + rid + "_skill_weapon_add"] = desiredDmg;
-          }
-          if (currentHit !== desiredHit) {
-            update["repeating_skills_" + rid + "_skill_weapon_hit_bonus"] = desiredHit;
-          }
-          if (currentFX !== desiredFX) {
-            update["repeating_skills_" + rid + "_skill_weapon_effects"] = desiredFX;
-          }
+          if (currentDmg !== desiredDmg)   update[pfx + "_weapon_add"] = desiredDmg;
+          if (currentHit !== desiredHit)   update[pfx + "_weapon_hit_bonus"] = desiredHit;
+          if (currentFX !== desiredFX)     update[pfx + "_weapon_effects"] = desiredFX;
+          if (currentScal !== desiredScal) update[pfx + "_weapon_scaling"] = desiredScal;
         }
 
         if (Object.keys(update).length) setAttrs(update);
@@ -3602,9 +3342,13 @@ function syncSkillWeaponAdds() {
   });
 }
 
+function syncSkillWeaponAdds() { syncWeaponAddsFor("repeating_skills", "skill"); }
+
 on(
   "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat change:weapon_effects_base " +
-  "change:repeating_skills:skill_uses_weapon remove:repeating_skills sheet:opened",
+  "change:active_weapon_scaling_list change:repeating_skills:skill_stat_val " +
+  "change:repeating_skills:skill_uses_weapon change:repeating_skills:skill_healing " +
+  "remove:repeating_skills sheet:opened",
   function() {
     syncSkillWeaponAdds();
   }
@@ -3890,47 +3634,14 @@ on("change:repeating_ultimates:ult_stat_add remove:repeating_ultimates sheet:ope
   });
 });
 
-// ===== Ultimates: weapon adds =====
-function syncUltWeaponAdds() {
-  getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat", "weapon_effects_base"], function(root) {
-    var awDmg = root.active_weapon_base_dmg || "0";
-    var awHit = parseInt(root.active_weapon_attack_bonus_flat, 10) || 0;
-    var awFX  = root.weapon_effects_base || "";
-    getSectionIDs("repeating_ultimates", function(ids) {
-      if (!ids || !ids.length) return;
-      var fields = [];
-      for (var i = 0; i < ids.length; i++) {
-        fields.push(
-          "repeating_ultimates_" + ids[i] + "_ult_uses_weapon",
-          "repeating_ultimates_" + ids[i] + "_ult_weapon_add",
-          "repeating_ultimates_" + ids[i] + "_ult_weapon_hit_bonus",
-          "repeating_ultimates_" + ids[i] + "_ult_weapon_effects"
-        );
-      }
-      getAttrs(fields, function(v) {
-        var update = {};
-        for (var j = 0; j < ids.length; j++) {
-          var rid = ids[j];
-          var useW = String(v["repeating_ultimates_" + rid + "_ult_uses_weapon"] || "") === "1";
-          var desiredDmg = useW ? awDmg : "0";
-          var desiredHit = useW ? awHit : 0;
-          var desiredFX  = useW ? awFX  : "";
-          if ((v["repeating_ultimates_" + rid + "_ult_weapon_add"] || "0") !== desiredDmg)
-            update["repeating_ultimates_" + rid + "_ult_weapon_add"] = desiredDmg;
-          if ((parseInt(v["repeating_ultimates_" + rid + "_ult_weapon_hit_bonus"], 10) || 0) !== desiredHit)
-            update["repeating_ultimates_" + rid + "_ult_weapon_hit_bonus"] = desiredHit;
-          if ((v["repeating_ultimates_" + rid + "_ult_weapon_effects"] || "") !== desiredFX)
-            update["repeating_ultimates_" + rid + "_ult_weapon_effects"] = desiredFX;
-        }
-        if (Object.keys(update).length) setAttrs(update);
-      });
-    });
-  });
-}
+// ===== Ultimates: weapon adds (shares syncWeaponAddsFor with Skills) =====
+function syncUltWeaponAdds() { syncWeaponAddsFor("repeating_ultimates", "ult"); }
 
 on(
   "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat change:weapon_effects_base " +
-  "change:repeating_ultimates:ult_uses_weapon remove:repeating_ultimates sheet:opened",
+  "change:active_weapon_scaling_list change:repeating_ultimates:ult_stat_val " +
+  "change:repeating_ultimates:ult_uses_weapon change:repeating_ultimates:ult_healing " +
+  "remove:repeating_ultimates sheet:opened",
   function() { syncUltWeaponAdds(); }
 );
 
@@ -4126,101 +3837,19 @@ on("change:willpower change:wisdom change:finesse change:vitality change:reflex 
    "change:eva change:mov change:spl", rebuildAllReleaseExprs);
 
 // ===== Reapply All Presets =====
-// Iterates every weapon, shield, and armor row and re-reads its preset
-// from the built-in library constants so stats stay current after a sheet update.
+// Iterates every weapon, shield, and armor row and re-reads its preset from the built-in
+// library constants so stats stay current after a sheet update. Fields the player has
+// customized (name, effects, skill, etc.) are left alone; only untouched fields refresh.
 on("clicked:sync_json", function() {
-  // Weapons
   getSectionIDs("repeating_weapons", function(ids) {
-    if (!ids.length) return;
-    var fields = [];
-    ids.forEach(function(id) {
-      fields.push("repeating_weapons_" + id + "_weapon_preset",
-                  "repeating_weapons_" + id + "_weapon_rank");
-    });
-    getAttrs(fields, function(v) {
-      var update = {};
-      ids.forEach(function(id) {
-        var pre = "repeating_weapons_" + id;
-        var preset = (v[pre + "_weapon_preset"] || "custom").toLowerCase();
-        var rank = String(v[pre + "_weapon_rank"] || "1");
-        if (preset === "custom") return;
-        var w = WEAPON_LIBRARY.weapons && WEAPON_LIBRARY.weapons[preset];
-        if (!w) return;
-        var r = w.ranks && w.ranks[rank];
-        if (!r) return;
-        update[pre + "_weapon_name"]              = w.name || preset;
-        update[pre + "_weapon_type"]              = w.type || w.category || "";
-        update[pre + "_weapon_weight"]            = r.weight != null ? r.weight : (w.baseWeight != null ? w.baseWeight : 0);
-        update[pre + "_weapon_base_dmg"]          = r.dmg != null ? r.dmg : 0;
-        update[pre + "_weapon_attack_bonus_flat"] = r.acc != null ? r.acc : 0;
-        update[pre + "_weapon_effects_base"]      = r.effects || "";
-        update[pre + "_weapon_effects_alt"]       = (r.alts && r.alts.length) ? r.alts.map(function(a){return a.label;}).join(" / ") : "";
-        update[pre + "_weapon_req_text"]          = fmtReq(r.req);
-        if (w.defaultScaling) update[pre + "_weapon_scaling_type"] = w.defaultScaling;
-      });
-      if (Object.keys(update).length) setAttrs(update);
-    });
+    ids.forEach(function(id) { applyWeaponPreset("repeating_weapons_" + id, null); });
   });
-
-  // Shields
   getSectionIDs("repeating_shields", function(ids) {
-    if (!ids.length) return;
-    var fields = [];
-    ids.forEach(function(id) {
-      fields.push("repeating_shields_" + id + "_shield_preset",
-                  "repeating_shields_" + id + "_shield_rank");
-    });
-    getAttrs(fields, function(v) {
-      var update = {};
-      ids.forEach(function(id) {
-        var pre = "repeating_shields_" + id;
-        var preset = (v[pre + "_shield_preset"] || "custom").toLowerCase();
-        var rank = String(v[pre + "_shield_rank"] || "1");
-        if (preset === "custom") return;
-        var s = SHIELD_LIBRARY.shields && SHIELD_LIBRARY.shields[preset];
-        if (!s) return;
-        var r = s.ranks && s.ranks[rank];
-        if (!r) return;
-        update[pre + "_shield_name"]      = s.name || preset;
-        update[pre + "_shield_weight"]    = r.weight != null ? r.weight : (s.baseWeight != null ? s.baseWeight : 0);
-        update[pre + "_shield_res_bonus"] = r.res != null ? r.res : 0;
-        update[pre + "_shield_con_bonus"] = r.con != null ? r.con : 0;
-        update[pre + "_shield_req_text"]  = r.req ? fmtReq(r.req) : "";
-        update[pre + "_shield_effect"]    = r.effects || "";
-        update[pre + "_shield_skill_desc"]= r.skill || "";
-      });
-      if (Object.keys(update).length) setAttrs(update);
-    });
+    ids.forEach(function(id) { applyShieldPreset("repeating_shields_" + id, null); });
   });
-
-  // Armor (Equipped rows with slot=Armor)
+  // Armor (Equipped rows with slot=Armor; the slot check happens inside applyArmorPreset)
   getSectionIDs("repeating_equipped", function(ids) {
-    if (!ids.length) return;
-    var fields = [];
-    ids.forEach(function(id) {
-      fields.push("repeating_equipped_" + id + "_item_slot",
-                  "repeating_equipped_" + id + "_item_armor_preset",
-                  "repeating_equipped_" + id + "_item_rank_mode");
-    });
-    getAttrs(fields, function(v) {
-      var update = {};
-      ids.forEach(function(id) {
-        var pre = "repeating_equipped_" + id;
-        if ((v[pre + "_item_slot"] || "Other") !== "Armor") return;
-        var preset = (v[pre + "_item_armor_preset"] || "custom").toLowerCase();
-        var rankMode = v[pre + "_item_rank_mode"] || "R1";
-        if (preset === "custom" || rankMode === "Custom") return;
-        var rank = String(rankMode).replace(/^R/, "");
-        var a = ARMOR_LIBRARY.armors && ARMOR_LIBRARY.armors[preset];
-        if (!a) return;
-        var r = a.ranks && a.ranks[rank];
-        if (!r) return;
-        update[pre + "_item_name"]   = a.name || preset;
-        update[pre + "_item_weight"] = r.weight != null ? r.weight : (a.baseWeight != null ? a.baseWeight : 0);
-        update[pre + "_item_stats"]  = r.effects || "";
-      });
-      if (Object.keys(update).length) setAttrs(update);
-    });
+    ids.forEach(function(id) { applyArmorPreset("repeating_equipped_" + id, null); });
   });
 });
 
