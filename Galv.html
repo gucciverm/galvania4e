@@ -2309,7 +2309,23 @@ const ATTR_ALIASES = {
   fin: "finesse",
   wis: "wisdom",
   wil: "willpower",
+  will: "willpower",
   ref: "reflex",
+
+  // full names (strength through reflex) also work — everything else is already short
+  strength: "strength",
+  dexterity: "dexterity",
+  intelligence: "intelligence",
+  charisma: "charisma",
+  agility: "agility",
+  resistance: "resistance",
+  constitution: "constitution",
+  vitality: "vitality",
+  finesse: "finesse",
+  wisdom: "wisdom",
+  willpower: "willpower",
+  reflex: "reflex",
+
   hp: "hp",
   mp: "mp",
   str_atk: "str_atk",
@@ -2334,24 +2350,16 @@ const WORD_DENYLIST = new Set([
   "d","kh","kl","cs","cf","ro","r","k","dF"
 ]);
 
-function normalizeExpr(input) {
-  let s = (input ?? "").toString().trim();
-  if (!s) return "0";
-
-  // Allow people to type {mov/2} or (mov/2) and not brick it
-  if ((s.startsWith("{") && s.endsWith("}")) || (s.startsWith("(") && s.endsWith(")"))) {
-    s = s.slice(1, -1).trim();
-  }
-
-  // If they already used @{...}, leave it alone (but still do aliasing outside those blocks)
+// Replace bare words that match attributes with @{attr} (e.g. "mov/2 + 3" -> "@{mov}/2 + 3").
+// Anything already wrapped in @{...} is left untouched. Shared by normalizeExpr (whole-field
+// formulas like Custom ACC / Custom Damage Stat) and aliasifyInlineRolls (free text below).
+function aliasWordsIn(str) {
   const preserved = [];
-  s = s.replace(/@\{[^}]+\}/g, (m) => {
+  let s = str.replace(/@\{[^}]+\}/g, (m) => {
     preserved.push(m);
     return `__ATTR${preserved.length - 1}__`;
   });
 
-  // Replace bare words that match attributes with @{attr}
-  // Example: "mov/2 + 3" -> "@{mov}/2 + 3"
   s = s.replace(/\b([A-Za-z_][A-Za-z0-9_]*)\b/g, (full, word) => {
     const w = word.toLowerCase();
     if (WORD_DENYLIST.has(word) || WORD_DENYLIST.has(w)) return full;
@@ -2362,11 +2370,112 @@ function normalizeExpr(input) {
     return `@{${mapped}}`;
   });
 
-  // Restore preserved @{...}
   s = s.replace(/__ATTR(\d+)__/g, (_, i) => preserved[Number(i)]);
+  return s;
+}
 
+function normalizeExpr(input) {
+  let s = (input ?? "").toString().trim();
+  if (!s) return "0";
+
+  // Allow people to type {mov/2} or (mov/2) and not brick it
+  if ((s.startsWith("{") && s.endsWith("}")) || (s.startsWith("(") && s.endsWith(")"))) {
+    s = s.slice(1, -1).trim();
+  }
+
+  s = aliasWordsIn(s);
   return s || "0";
 }
+
+// Same aliasing, but for free-form text (Description / Effect boxes) instead of a pure formula
+// field. Only the contents of [[ ... ]] inline rolls are touched — including nested [[ ]] rolls,
+// like the CRIT buttons use — so flavor text ("...on pure reflex...") is never rewritten. Lets
+// players type "applies a buff to ACC equal to [[(wil/2)+5]]" straight into the text.
+function aliasifyInlineRolls(text) {
+  const s = (text ?? "").toString();
+  if (!s) return s;
+
+  let out = "";
+  let i = 0;
+  while (i < s.length) {
+    if (s.substr(i, 2) === "[[") {
+      let depth = 1;
+      let j = i + 2;
+      while (j < s.length && depth > 0) {
+        if (s.substr(j, 2) === "[[") { depth++; j += 2; }
+        else if (s.substr(j, 2) === "]]") { depth--; j += 2; }
+        else { j++; }
+      }
+      out += aliasWordsIn(s.slice(i, j));
+      i = j;
+    } else {
+      out += s[i];
+      i++;
+    }
+  }
+  return out;
+}
+
+// ===== Free-text boxes: alias shortform stats inside inline rolls =====
+// Same idea as normalizeExpr, but for prose fields that feed a roll button rather than being a
+// pure formula themselves — Skill/Ultimate Description & Effect, Weapon/Shield effects & skill
+// text, Equipment/Inventory description & skill text, Trait Effect, Title Effect. Only what's
+// inside [[ ]] gets touched (see aliasifyInlineRolls), so flavor text is always left alone.
+function syncFreeTextAliases(section, fieldSuffixes) {
+  getSectionIDs(section, function(ids) {
+    if (!ids || !ids.length) return;
+    const fields = [];
+    ids.forEach((id) => fieldSuffixes.forEach((f) => fields.push(`${section}_${id}_${f}`)));
+
+    getAttrs(fields, function(v) {
+      const update = {};
+      ids.forEach((id) => {
+        fieldSuffixes.forEach((f) => {
+          const key = `${section}_${id}_${f}`;
+          const cur = v[key] || "";
+          const next = aliasifyInlineRolls(cur);
+          if (next !== cur) update[key] = next;
+        });
+      });
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  });
+}
+
+on(
+  "change:repeating_skills:skill_description change:repeating_skills:skill_effect sheet:opened",
+  function() { syncFreeTextAliases("repeating_skills", ["skill_description", "skill_effect"]); }
+);
+on(
+  "change:repeating_ultimates:ult_description change:repeating_ultimates:ult_effect sheet:opened",
+  function() { syncFreeTextAliases("repeating_ultimates", ["ult_description", "ult_effect"]); }
+);
+on(
+  "change:repeating_weapons:weapon_effects_base change:repeating_weapons:weapon_effects_alt " +
+  "change:repeating_weapons:weapon_skill_desc sheet:opened",
+  function() { syncFreeTextAliases("repeating_weapons", ["weapon_effects_base", "weapon_effects_alt", "weapon_skill_desc"]); }
+);
+on(
+  "change:repeating_shields:shield_effect change:repeating_shields:shield_skill_desc sheet:opened",
+  function() { syncFreeTextAliases("repeating_shields", ["shield_effect", "shield_skill_desc"]); }
+);
+on(
+  "change:repeating_equipped:item_desc change:repeating_equipped:item_stats " +
+  "change:repeating_equipped:item_skill_effect sheet:opened",
+  function() { syncFreeTextAliases("repeating_equipped", ["item_desc", "item_stats", "item_skill_effect"]); }
+);
+on(
+  "change:repeating_inventory:inv_desc change:repeating_inventory:inv_skill_effect sheet:opened",
+  function() { syncFreeTextAliases("repeating_inventory", ["inv_desc", "inv_skill_effect"]); }
+);
+on(
+  "change:repeating_traits:trait_effect sheet:opened",
+  function() { syncFreeTextAliases("repeating_traits", ["trait_effect"]); }
+);
+on(
+  "change:repeating_titles:library_title_effect sheet:opened",
+  function() { syncFreeTextAliases("repeating_titles", ["library_title_effect"]); }
+);
  
     /* --- SCRIPT 2: TITLE LIBRARY ENFORCER ---
        The two header titles (title_1 / title_2) mirror the first two ACTIVE rows of the Titles list
