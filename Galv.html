@@ -3647,17 +3647,11 @@ const FIELDS = [
     if (rowBase) syncRowRankToBase(rowBase);
   });
 
-  // When any base field changes (user editing), save it back into the selected rank store
+  // When any base field changes (user editing), save it back into the selected rank store.
+  // Built from FIELDS itself (rather than a hand-kept list) so a field can never silently fall
+  // off this trigger again — that gap is exactly what let name/category/DMG edits revert on reopen.
   on(
-    "change:repeating_skills:skill_action " +
-    "change:repeating_skills:skill_kind " +
-    "change:repeating_skills:skill_cost " +
-    "change:repeating_skills:skill_cooldown " +
-    "change:repeating_skills:skill_tags " +
-    "change:repeating_skills:skill_range " +
-    "change:repeating_skills:skill_target " +
-    "change:repeating_skills:skill_description " +
-    "change:repeating_skills:skill_effect",
+    FIELDS.map(f => `change:repeating_skills:${f}`).join(" "),
     function (evt) {
       const rowBase = rowBaseFromEvt(evt);
       if (rowBase) syncBaseToSelectedRankStore(rowBase);
