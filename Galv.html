@@ -2156,11 +2156,12 @@ var uncap = (parseInt(v.uncap_stats, 10) || 0);
     }
 
     // PASS 2: derivative bases
-    finalAttrs.vitality_base  = Math.floor(((finalAttrs.resistance_base + finalAttrs.constitution_base) / 2) + (finalAttrs.strength_total / 3));
-    finalAttrs.wisdom_base    = Math.floor((Math.max(finalAttrs.intelligence_total, finalAttrs.charisma_total) / 2) + (finalAttrs.dexterity_total / 3));
+    // primary stat(s) ÷ 2, plus the highest of two secondary stats ÷ 3
+    finalAttrs.vitality_base  = Math.floor(((finalAttrs.resistance_base + finalAttrs.constitution_base) / 2) + (Math.max(finalAttrs.strength_total, finalAttrs.charisma_total) / 3));
+    finalAttrs.wisdom_base    = Math.floor((finalAttrs.intelligence_total / 2) + (Math.max(finalAttrs.agility_total, finalAttrs.dexterity_total) / 3));
     finalAttrs.finesse_base   = Math.floor((finalAttrs.dexterity_total / 2) + (Math.max(finalAttrs.agility_total, finalAttrs.intelligence_total) / 3));
-    finalAttrs.willpower_base = Math.floor((finalAttrs.charisma_total / 2) + (finalAttrs.strength_total / 3));
-    finalAttrs.reflex_base    = Math.floor((finalAttrs.agility_total / 2) + (Math.max(finalAttrs.dexterity_total, finalAttrs.intelligence_total) / 3));
+    finalAttrs.willpower_base = Math.floor((finalAttrs.charisma_total / 2) + (Math.max(finalAttrs.strength_total, finalAttrs.intelligence_total) / 3));
+    finalAttrs.reflex_base    = Math.floor((finalAttrs.agility_total / 2) + (Math.max(finalAttrs.dexterity_total, finalAttrs.strength_total) / 3));
 
     // PASS 3: derivative totals
     for (var m = 0; m < derivativeNames.length; m++) {
