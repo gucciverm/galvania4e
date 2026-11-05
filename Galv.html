@@ -535,6 +535,13 @@
     <div class="sheet-mini-label">CRT</div>
   </div>
 
+          <!-- BASE DMG modifier: a flat bonus (buffs, effects) added to Base DMG once on every weapon, skill
+               and ultimate damage roll, and multiplied along with it on a CRIT -->
+  <div class="sheet-status-crt-wrap">
+    <input type="number" name="attr_base_dmg_mod" value="0" class="sheet-status-crt" title="Flat bonus to Base DMG for every weapon, skill and ultimate. Counts once per roll and is multiplied on a crit.">
+    <div class="sheet-mini-label">Base DMG</div>
+  </div>
+
         <!-- INIT (1d100, adds to tracker) -->
         <button type="roll" class="sheet-skill-btn" name="roll_init"
           value="&{template:5eDefault} {{ability=1}} {{title=@{character_name} — Initiative}} {{roll=[[1d100 &{tracker}]]}}">
@@ -661,11 +668,11 @@
         <div class="sheet-center">
           <button type="roll" class="sheet-skill-btn" name="roll_shield_skill"
   value="&{template:5eDefault}{{title=@{character_name} — @{shield_name} Skill}}{{outputall=1}}{{Effect=@{shield_skill_desc}}}">
-  SKILL
+  POST SKILL
 </button>
 <button type="roll" class="sheet-skill-btn" name="roll_shield_post"
   value="&{template:5eDefault}{{title=@{character_name} — @{shield_name}}}{{outputall=1}}{{Rank=R@{shield_rank}}}{{Weight=@{shield_weight}}}{{Req=@{shield_req_text}}}{{RES Bonus=@{shield_res_bonus}}}{{CON Bonus=@{shield_con_bonus}}}{{Effects=@{shield_effect}}}{{Skill=@{shield_skill_desc}}}">
-  POST
+  POST GEAR
 </button>
         </div>
       </div>
@@ -720,12 +727,12 @@
       <!-- Attack -->
       <div class="sheet-center">
         <button type="roll" class="sheet-skill-btn" name="roll_attack"
-  value="&{template:5eDefault}{{title=@{character_name} — ATTACK}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{Hit=[[1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}]]}}{{Damage=[[ @{weapon_base_dmg} + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
+  value="&{template:5eDefault}{{title=@{character_name} — ATTACK}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{Roll=[[1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}]]}}{{Damage=[[ @{weapon_base_dmg} + (@{base_dmg_mod}) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
   HIT
   <span class="sheet-defense-sub">1d20 + To-Hit</span>
 </button>
 <button type="roll" class="sheet-skill-btn" name="roll_weapon_crit"
-    value="&{template:5eDefault}{{title=@{character_name} — CRIT}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{CritMult=?{Crit Scaling|2}}}{{CritDamage=[[ ( (@{weapon_base_dmg}) * ?{Crit Scaling|2} ) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
+    value="&{template:5eDefault}{{title=@{character_name} — CRIT}}{{outputall=1}}{{Weapon=@{weapon_name} (Rank @{weapon_rank})}}{{Type=@{weapon_type}}}{{CritMult=?{Crit Scaling|2}}}{{CritDamage=[[ ( ( (@{weapon_base_dmg}) + (@{base_dmg_mod}) ) * ?{Crit Scaling|2} ) + ( @{weapon_scaling_expr} ) ]]}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}">
     CRIT
     <span class="sheet-defense-sub">(DMG×Crit)+Stat</span>
   </button>
@@ -885,11 +892,11 @@
         <div class="sheet-center">
           <button type="roll" class="sheet-skill-btn" name="roll_weapon_skill"
   value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name} Skill}}{{outputall=1}}{{Effect=@{weapon_skill_desc}}}">
-  SKILL
+  POST SKILL
 </button>
 <button type="roll" class="sheet-skill-btn" name="roll_weapon_post"
-  value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name}}}{{outputall=1}}{{Rank=R@{weapon_rank}}}{{Type=@{weapon_type}}}{{Weight=@{weapon_weight}}}{{Req=@{weapon_req_text}}}{{To-Hit=1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}}}{{Damage=@{weapon_base_dmg} + ( @{weapon_scaling_expr} )}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}{{Skill=@{weapon_skill_desc}}}">
-  POST
+  value="&{template:5eDefault}{{title=@{character_name} — @{weapon_name}}}{{outputall=1}}{{Rank=R@{weapon_rank}}}{{Type=@{weapon_type}}}{{Weight=@{weapon_weight}}}{{Req=@{weapon_req_text}}}{{Roll=1d20 + (@{weapon_tohit_expr}) + @{weapon_attack_bonus_flat}}}{{Damage=@{weapon_base_dmg} + ( @{weapon_scaling_expr} )}}{{Effects=@{weapon_effects_base}}}{{Alt=@{weapon_effects_alt}}}{{Skill=@{weapon_skill_desc}}}">
+  POST GEAR
 </button>
         </div>
       </div>
@@ -1029,11 +1036,11 @@
   
  <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_skill_post"
-  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=Attack: [[1d20+@{skill_acc_val}+@{skill_weapon_hit_bonus}]] | Damage: [[@{skill_base_dmg}+(@{skill_weapon_add})+(@{skill_weapon_scaling})+@{skill_stat_val}]]}}{{Weapon=@{skill_weapon_effects}}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
+  value="&{template:5eDefault}{{title=@{character_name} — @{skill_name}}}{{outputall=1}}{{subtitle=@{skill_kind}}}{{cost=@{skill_cost}}}{{cooldown=@{skill_cooldown}}}{{tags=@{skill_tags}}}{{range=@{skill_range}}}{{target=@{skill_target}}}{{Effect=@{skill_roll_part}Damage: [[@{skill_base_dmg}+(@{skill_dmg_mod})+(@{skill_weapon_add})+(@{skill_weapon_scaling})+@{skill_stat_val}]]}}{{Weapon=@{skill_weapon_effects}}}{{desc=@{skill_description}}}{{effect=@{skill_effect}}}">
   USE
 </button>
             <button type="roll" class="sheet-skill-btn" name="roll_skill_crit"
-              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{skill_base_dmg}]] * ?{Crit Scaling|2} + (@{skill_weapon_add}) + (@{skill_weapon_scaling}) + @{skill_stat_val} ]]}}{{Weapon=@{skill_weapon_effects}}}">
+              value="&{template:5eDefault}{{title=@{character_name} — @{skill_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ ( [[@{skill_base_dmg}]] + (@{skill_dmg_mod}) ) * ?{Crit Scaling|2} + (@{skill_weapon_add}) + (@{skill_weapon_scaling}) + @{skill_stat_val} ]]}}{{Weapon=@{skill_weapon_effects}}}">
               CRIT
             </button>
           </div>
@@ -1127,6 +1134,8 @@
 
   <input type="hidden" name="attr_skill_weapon_add" value="0">
   <input type="hidden" name="attr_skill_weapon_scaling" value="0">
+  <input type="hidden" name="attr_skill_dmg_mod" value="0">
+  <input type="hidden" name="attr_skill_roll_part" value="">
   <input type="hidden" name="attr_skill_weapon_effects" value="">
 <input type="hidden" name="attr_skill_weapon_hit_bonus" value="0">
 <input type="hidden" name="attr_skill_stat_val" value="0">
@@ -1194,11 +1203,11 @@
 
         <div class="sheet-row sheet-margin-top-sm">
 <button type="roll" class="sheet-skill-btn" name="roll_ult_use"
-            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{Effect=Attack: [[1d20+@{ult_acc_val}+@{ult_weapon_hit_bonus}]] | Damage: [[@{ult_base_dmg}+(@{ult_weapon_add})+(@{ult_weapon_scaling})+@{ult_stat_val}]]}}{{Weapon=@{ult_weapon_effects}}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name}}}{{outputall=1}}{{subtitle=@{ult_type}}}{{cost=@{ult_cost}}}{{Effect=@{ult_roll_part}Damage: [[@{ult_base_dmg}+(@{ult_dmg_mod})+(@{ult_weapon_add})+(@{ult_weapon_scaling})+@{ult_stat_val}]]}}{{Weapon=@{ult_weapon_effects}}}{{desc=@{ult_description}}}{{effect=@{ult_effect}}}">
             USE
           </button>
           <button type="roll" class="sheet-skill-btn" name="roll_ult_crit"
-            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ [[@{ult_base_dmg}]] * ?{Crit Scaling|2} + (@{ult_weapon_add}) + (@{ult_weapon_scaling}) + @{ult_stat_val} ]]}}{{Weapon=@{ult_weapon_effects}}}">
+            value="&{template:5eDefault}{{title=@{character_name} — @{ult_name} (CRIT)}}{{outputall=1}}{{Effect=Crit: [[ ( [[@{ult_base_dmg}]] + (@{ult_dmg_mod}) ) * ?{Crit Scaling|2} + (@{ult_weapon_add}) + (@{ult_weapon_scaling}) + @{ult_stat_val} ]]}}{{Weapon=@{ult_weapon_effects}}}">
             CRIT
           </button>
         </div>
@@ -1277,6 +1286,8 @@
           </div>
           <input type="hidden" name="attr_ult_weapon_add" value="0">
           <input type="hidden" name="attr_ult_weapon_scaling" value="0">
+          <input type="hidden" name="attr_ult_dmg_mod" value="0">
+          <input type="hidden" name="attr_ult_roll_part" value="">
           <input type="hidden" name="attr_ult_weapon_effects" value="">
           <input type="hidden" name="attr_ult_weapon_hit_bonus" value="0">
           <input type="hidden" name="attr_ult_stat_val" value="0">
@@ -1434,7 +1445,7 @@
               <div class="sheet-row sheet-margin-top-sm sheet-center">
                 <button type="roll" class="sheet-skill-btn" name="roll_item_skill_use"
                   value="&{template:5eDefault}{{title=@{character_name} — @{item_skill_name}}}{{outputall=1}}{{From=@{item_name}}}{{Rank=@{item_rank_display}}}{{Cost=@{item_skill_cost}}}{{Cooldown=@{item_skill_cd}}}{{Effect=@{item_skill_effect}}}">
-                  USE SKILL
+                  POST SKILL
                 </button>
               </div>
             </div>
@@ -1545,7 +1556,7 @@
               <div class="sheet-row sheet-margin-top-sm sheet-center">
                 <button type="roll" class="sheet-skill-btn" name="roll_inv_skill_use"
                   value="&{template:5eDefault}{{title=@{character_name} — @{inv_skill_name}}}{{outputall=1}}{{From=@{inv_name}}}{{Cost=@{inv_skill_cost}}}{{Cooldown=@{inv_skill_cd}}}{{Effect=@{inv_skill_effect}}}">
-                  USE SKILL
+                  POST SKILL
                 </button>
               </div>
             </div>
@@ -2329,8 +2340,12 @@ const ATTR_ALIASES = {
   willpower: "willpower",
   reflex: "reflex",
 
-  hp: "hp",
-  mp: "mp",
+  // HP / MP: the Total boxes (attr_hp_max / attr_mp_max) are the MAX of the hp / mp attributes, so the
+  // total is @{hp|max} / @{mp|max}. A plain @{hp} / @{mp} would be the CURRENT value (what token bars hold).
+  hp: "hp|max",
+  mp: "mp|max",
+  hp_max: "hp|max",
+  mp_max: "mp|max",
   str_atk: "str_atk",
   dex_atk: "dex_atk",
   spl: "spl",
@@ -2353,13 +2368,20 @@ const WORD_DENYLIST = new Set([
   "d","kh","kl","cs","cf","ro","r","k","dF"
 ]);
 
+// A typed "@{mp}" / "@{hp}" (or "@{mp_max}" / "@{hp_max}") means the sheet's Total, so it is written as the
+// documented max reference "@{mp|max}" / "@{hp|max}". Any other reference is returned untouched.
+function fixTotalRef(ref) {
+  const m = /^@\{\s*(hp|mp)(?:_max)?\s*\}$/i.exec(ref);
+  return m ? "@{" + m[1].toLowerCase() + "|max}" : ref;
+}
+
 // Replace bare words that match attributes with @{attr} (e.g. "mov/2 + 3" -> "@{mov}/2 + 3").
 // Anything already wrapped in @{...} is left untouched. Shared by normalizeExpr (whole-field
 // formulas like Custom ACC / Custom Damage Stat) and aliasifyInlineRolls (free text below).
 function aliasWordsIn(str) {
   const preserved = [];
   let s = str.replace(/@\{[^}]+\}/g, (m) => {
-    preserved.push(m);
+    preserved.push(fixTotalRef(m));
     return `__ATTR${preserved.length - 1}__`;
   });
 
@@ -2416,7 +2438,9 @@ function aliasifyInlineRolls(text) {
       i++;
     }
   }
-  return out;
+  // An explicit @{mp} / @{hp} reference is deliberate, so it is fixed anywhere in the text
+  // (bare words outside [[ ]] are still left alone, so flavor text is never rewritten).
+  return out.replace(/@\{\s*(?:hp|mp)(?:_max)?\s*\}/gi, fixTotalRef);
 }
 
 // ===== Free-text boxes: alias shortform stats inside inline rolls =====
@@ -3368,6 +3392,9 @@ on("change:repeating_skills:skill_stat_add remove:repeating_skills sheet:opened"
 // ===== Skills / Ultimates: if "Add Active Weapon" is checked, copy the combined active weapons =====
 // Copies summed weapon damage, summed hit bonus, merged effects, and the de-duplicated weapon
 // scaling. Scaling that matches the skill's own Damage Stat is left out so no stat counts twice.
+// It also keeps the row's hidden *_dmg_mod at "@{base_dmg_mod}" (the Combat tab's Base DMG box) while
+// the row deals damage (Damage ticked, or Add Active Weapon ticked) and "0" otherwise, so that bonus
+// is added exactly once per roll here, never once per active weapon, and never to a utility skill.
 function syncWeaponAddsFor(section, p) {
   getAttrs(["active_weapon_base_dmg", "active_weapon_attack_bonus_flat", "weapon_effects_base", "active_weapon_scaling_list"], function(root) {
     var awDmg = root.active_weapon_base_dmg || "0";
@@ -3389,7 +3416,9 @@ function syncWeaponAddsFor(section, p) {
           pre + "_weapon_effects",
           pre + "_weapon_scaling",
           pre + "_stat_val",
-          pre + "_healing"   // halves the active weapons' damage
+          pre + "_healing",  // halves the active weapons' damage
+          pre + "_has_damage",
+          pre + "_dmg_mod"
         );
       }
 
@@ -3404,13 +3433,17 @@ function syncWeaponAddsFor(section, p) {
           var desiredHit  = useW ? awHit : 0;
           var desiredFX   = useW ? awFX  : "";
           var desiredScal = useW ? joinScalings(awScal, v[pfx + "_stat_val"]) : "0";
+          var dealsDmg    = useW || String(v[pfx + "_has_damage"] || "") === "1";
+          var desiredMod  = dealsDmg ? "@{base_dmg_mod}" : "0";
 
           var currentDmg  = v[pfx + "_weapon_add"] || "0";
           var currentFX   = v[pfx + "_weapon_effects"] || "";
           var currentScal = v[pfx + "_weapon_scaling"] || "0";
+          var currentMod  = v[pfx + "_dmg_mod"] || "0";
           var currentHit  = parseInt(v[pfx + "_weapon_hit_bonus"], 10);
           if (isNaN(currentHit)) currentHit = 0;
 
+          if (currentMod !== desiredMod)   update[pfx + "_dmg_mod"] = desiredMod;
           if (currentDmg !== desiredDmg)   update[pfx + "_weapon_add"] = desiredDmg;
           if (currentHit !== desiredHit)   update[pfx + "_weapon_hit_bonus"] = desiredHit;
           if (currentFX !== desiredFX)     update[pfx + "_weapon_effects"] = desiredFX;
@@ -3429,6 +3462,7 @@ on(
   "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat change:weapon_effects_base " +
   "change:active_weapon_scaling_list change:repeating_skills:skill_stat_val " +
   "change:repeating_skills:skill_uses_weapon change:repeating_skills:skill_healing " +
+  "change:repeating_skills:skill_has_damage " +
   "remove:repeating_skills sheet:opened",
   function() {
     syncSkillWeaponAdds();
@@ -3709,6 +3743,46 @@ on("change:repeating_ultimates:ult_stat_add remove:repeating_ultimates sheet:ope
   });
 });
 
+// ===== Skills / Ultimates: only roll a d20 when "Attack Roll" is ticked =====
+// The USE macro prints @{skill_roll_part} / @{ult_roll_part} just before the Damage text. Ticked, that
+// holds the d20 roll ("Roll: [[1d20+acc+hit]] | "); unticked it is empty, so the skill simply posts with
+// no d20 (passives, buffs, utility). It is stored with fully-qualified row names because the text is
+// expanded from inside another attribute's value rather than from the button itself.
+function syncRollPartFor(section, p) {
+  getSectionIDs(section, function(ids) {
+    if (!ids || !ids.length) return;
+    var fields = [];
+    ids.forEach(function(id) {
+      fields.push(section + "_" + id + "_" + p + "_has_attack", section + "_" + id + "_" + p + "_roll_part");
+    });
+    getAttrs(fields, function(v) {
+      var update = {};
+      ids.forEach(function(id) {
+        var pre = section + "_" + id + "_" + p;
+        var hasAtk = String(v[pre + "_has_attack"] || "") === "1";
+        var desired = hasAtk ? "Roll: [[1d20+@{" + pre + "_acc_val}+@{" + pre + "_weapon_hit_bonus}]] | " : "";
+        if ((v[pre + "_roll_part"] || "") !== desired) update[pre + "_roll_part"] = desired;
+      });
+      if (Object.keys(update).length) setAttrs(update);
+    });
+  });
+}
+on(
+  "change:repeating_skills:skill_has_attack remove:repeating_skills sheet:opened",
+  function() { syncRollPartFor("repeating_skills", "skill"); }
+);
+on(
+  "change:repeating_ultimates:ult_has_attack remove:repeating_ultimates sheet:opened",
+  function() { syncRollPartFor("repeating_ultimates", "ult"); }
+);
+
+// ===== Base DMG modifier box (Combat tab, next to CRT) =====
+// Every weapon / skill / ultimate damage roll references @{base_dmg_mod}, so an emptied box would break
+// all of them at once. Snap a blank (or otherwise non-numeric) entry back to 0.
+on("change:base_dmg_mod", function(eventInfo) {
+  if (isNaN(parseFloat(eventInfo.newValue))) setAttrs({ base_dmg_mod: 0 });
+});
+
 // ===== Ultimates: weapon adds (shares syncWeaponAddsFor with Skills) =====
 function syncUltWeaponAdds() { syncWeaponAddsFor("repeating_ultimates", "ult"); }
 
@@ -3716,6 +3790,7 @@ on(
   "change:active_weapon_base_dmg change:active_weapon_attack_bonus_flat change:weapon_effects_base " +
   "change:active_weapon_scaling_list change:repeating_ultimates:ult_stat_val " +
   "change:repeating_ultimates:ult_uses_weapon change:repeating_ultimates:ult_healing " +
+  "change:repeating_ultimates:ult_has_damage " +
   "remove:repeating_ultimates sheet:opened",
   function() { syncUltWeaponAdds(); }
 );
@@ -3841,10 +3916,10 @@ on("change:repeating_equipped:item_rank_mode change:repeating_equipped:item_rank
 const RELEASE_STAT_FIELDS = [
   "willpower","wisdom","finesse","vitality","reflex","strength",
   "dexterity","intelligence","charisma","agility","resistance","constitution",
-  "acc","macc","eva","mov","spl","str_atk","dex_atk","hp","mp","icw","ecw"
+  "acc","macc","eva","mov","spl","str_atk","dex_atk","hp_max","mp_max","icw","ecw"
 ];
 function resolveReleaseExpr(expr, v) {
-  const s = expr.replace(/@\{([^}]+)\}/g, (_, name) => parseFloat(v[name] || 0));
+  const s = expr.replace(/@\{([^}]+)\}/g, (_, name) => parseFloat(v[name.replace(/\s*\|\s*max\s*$/i, "_max")] || 0));   // "@{mp|max}" -> mp_max
   if (/[a-zA-Z{}\[\]]/.test(s)) return expr;
   try { return String(Math.floor(Function('"use strict";return(' + s + ')')())); }
   catch(e) { return expr; }
@@ -3909,7 +3984,7 @@ on("sheet:opened", rebuildAllReleaseExprs);
 on("change:willpower change:wisdom change:finesse change:vitality change:reflex " +
    "change:strength change:dexterity change:intelligence change:charisma " +
    "change:agility change:resistance change:constitution change:acc change:macc " +
-   "change:eva change:mov change:spl", rebuildAllReleaseExprs);
+   "change:eva change:mov change:spl change:hp_max change:mp_max", rebuildAllReleaseExprs);
 
 // ===== Reapply All Presets =====
 // Iterates every weapon, shield, and armor row and re-reads its preset from the built-in
